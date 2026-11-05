@@ -1,0 +1,65 @@
+name: Refresh profile activity
+
+on:
+  schedule:
+    - cron: '17,47 * * * *' # Every 30 minutes; GitHub may delay scheduled runs.
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/contributions.yml'
+      - 'scripts/update_activity.py'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: profile-contributions
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    if: github.repository == 'taku0193/taku0193'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Check out profile
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+
+      - name: Update contribution pulse and activity summary
+        run: python3 scripts/update_activity.py --out assets --username taku0193
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate light and dark contribution snakes
+        uses: Platane/snk/svg-only@d8f6715049803e982ee5ff501b6b9b7d5deeb09b # v3.5.0
+        with:
+          github_user_name: taku0193
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          outputs: |
+            assets/contributions-light.svg?color_snake=#087f8c
+            assets/contributions-dark.svg?palette=github-dark&color_snake=#62e4d1
+
+      - name: Save updated activity images
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s assets/contributions-light.svg
+          test -s assets/contributions-dark.svg
+          test -s assets/pulse-light.svg
+          test -s assets/pulse-dark.svg
+          test -s assets/overview-light.svg
+          test -s assets/overview-dark.svg
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/contributions-light.svg assets/contributions-dark.svg assets/pulse-light.svg assets/pulse-dark.svg assets/overview-light.svg assets/overview-dark.svg assets/activity-data.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "chore: refresh profile activity"
+          git pull --rebase origin main
+          git push origin HEAD:main

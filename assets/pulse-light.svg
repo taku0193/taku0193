@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="230" viewBox="0 0 900 230" role="img" aria-labelledby="pulse-title pulse-desc">
+<title id="pulse-title">18 contributions today — 2026-11-05 UTC</title>
+<desc id="pulse-desc">The count is from today's GitHub contribution calendar. The waveform grows taller and moves faster as contributions increase. Updated 11/06 03:10 JST.</desc>
+<defs>
+  <pattern id="pulse-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" stroke="#e1ebf0" stroke-width=".7" fill="none"/></pattern>
+  <clipPath id="pulse-window"><rect x="276" y="60" width="592" height="112" rx="5"/></clipPath>
+  <linearGradient id="pulse-fade"><stop stop-color="white" stop-opacity=".12"/><stop offset=".08" stop-color="white"/><stop offset=".92" stop-color="white"/><stop offset="1" stop-color="white" stop-opacity=".12"/></linearGradient>
+  <mask id="pulse-mask"><rect x="276" y="60" width="592" height="112" fill="url(#pulse-fade)"/></mask>
+</defs>
+<style>
+  .wave{animation:trace 1.400000s linear infinite}
+  .heart{transform-box:fill-box;transform-origin:center;animation:beat 1.400000s ease-out infinite}
+  .meter{animation:meter 1.400000s ease-out infinite}
+  @keyframes trace{to{transform:translateX(-140px)}}
+  @keyframes beat{0%,45%,100%{transform:scale(1)}10%{transform:scale(1.2)}23%{transform:scale(1)}31%{transform:scale(1.09)}}
+  @keyframes meter{0%,45%,100%{opacity:.55}10%,30%{opacity:1}}
+  @media(prefers-reduced-motion:reduce){.wave,.heart,.meter{animation:none}}
+</style>
+<rect x=".5" y=".5" width="899" height="229" rx="14" fill="#f6f9fc" stroke="#d9e3ed"/>
+<g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif">
+  <text x="28" y="33" font-size="12" font-weight="650" letter-spacing="1.6" fill="#087f8c">CONTRIBUTION PULSE</text>
+  <text x="868" y="32" text-anchor="end" font-size="11" font-weight="600" fill="#526579">TODAY (UTC) · 2026-11-05</text>
+  <path d="M239 59V196" stroke="#d9e3ed"/>
+  <circle cx="120" cy="130" r="64" stroke="#d9e3ed" stroke-width="4" fill="none"/>
+  <circle cx="120" cy="130" r="74" stroke="#d9e3ed" stroke-width="3" stroke-dasharray="1 10.6" fill="none"/>
+  <circle class="meter" cx="120" cy="130" r="64" stroke="#087f8c" stroke-width="4" stroke-dasharray="228.000 403" stroke-linecap="round" transform="rotate(128 120 130)" fill="none"/>
+  <path class="heart" d="M120 99L112 91C105 84 113 76 120 84C127 76 135 84 128 91Z" fill="#087f8c"/>
+  <text x="120" y="143" text-anchor="middle" font-size="49" font-weight="650" letter-spacing="-1.5" fill="#172b3e">18</text>
+  <text x="120" y="160" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="1.2" fill="#526579">TODAY'S</text>
+  <text x="120" y="175" text-anchor="middle" font-size="9.5" font-weight="650" letter-spacing=".5" fill="#526579">CONTRIBUTIONS</text>
+  <rect x="276" y="60" width="592" height="112" rx="5" fill="url(#pulse-grid)"/>
+  <path d="M276 113H868" stroke="#087f8c" stroke-opacity=".15" fill="none"/>
+  <g clip-path="url(#pulse-window)" mask="url(#pulse-mask)"><g transform="translate(276 0)"><g class="wave" fill="none" stroke="#087f8c" stroke-width="2.720" stroke-linecap="round" stroke-linejoin="round"><path transform="translate(0 0)" d="M0 113H17C22 113 22 108.140 27 108.140S32 113 38 113H47L52 119.480L59 80.600L66 134.060L73 113H85Q96 113 100 100.040Q108 100.040 115 113H140"/><path transform="translate(140 0)" d="M0 113H17C22 113 22 108.140 27 108.140S32 113 38 113H47L52 119.480L59 80.600L66 134.060L73 113H85Q96 113 100 100.040Q108 100.040 115 113H140"/><path transform="translate(280 0)" d="M0 113H17C22 113 22 108.140 27 108.140S32 113 38 113H47L52 119.480L59 80.600L66 134.060L73 113H85Q96 113 100 100.040Q108 100.040 115 113H140"/><path transform="translate(420 0)" d="M0 113H17C22 113 22 108.140 27 108.140S32 113 38 113H47L52 119.480L59 80.600L66 134.060L73 113H85Q96 113 100 100.040Q108 100.040 115 113H140"/><path transform="translate(560 0)" d="M0 113H17C22 113 22 108.140 27 108.140S32 113 38 113H47L52 119.480L59 80.600L66 134.060L73 113H85Q96 113 100 100.040Q108 100.040 115 113H140"/><path transform="translate(700 0)" d="M0 113H17C22 113 22 108.140 27 108.140S32 113 38 113H47L52 119.480L59 80.600L66 134.060L73 113H85Q96 113 100 100.040Q108 100.040 115 113H140"/></g></g></g>
+  <text x="276" y="198" font-size="11" fill="#526579">More contributions. Stronger pulse.</text>
+  <text x="868" y="198" text-anchor="end" font-size="10" fill="#526579">Updated 11/06 03:10 JST</text>
+</g></svg>
