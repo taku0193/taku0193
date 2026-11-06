@@ -71,9 +71,9 @@ def terminal_frame(colors, height, label):
 <text x="59" y="22" font-size="13" fill="{colors["muted"]}">{escape(label)}</text>'''
 
 
-def footstep_light(x, y, delay, color):
+def footstep_light(x, y, delay, color, direction):
     """Leave a lit tile under the planted shoe and send a pulse down the lane."""
-    return f'''<g transform="translate({x:.2f} {y:g}) scale(.65)" fill="{color}" style="--beat-delay:{delay:.6f}s">
+    return f'''<g transform="translate({x:.2f} {y:g}) scale({.65 * direction:g} .65)" fill="{color}" style="--beat-delay:{delay:.6f}s">
   <g class="beat-contact" opacity="0">
     <rect x="-8" y="-1" width="16" height="5" opacity=".24"/>
     <rect x="-4.5" y="0" width="9" height="2.5"/>
@@ -224,28 +224,80 @@ def baseball_pitcher(throwing=False):
     </g>'''
 
 
+CROWD_CSS = """
+.cheer-fan {animation:crowd-hop 1.16s ease-in-out infinite}
+.cheer-group-1 {animation-delay:-.31s}
+.cheer-group-2 {animation-delay:-.61s}
+.cheer-group-3 {animation-delay:-.88s}
+@keyframes crowd-hop {
+  0%,43%,100% {transform:translateY(0)}
+  22% {transform:translateY(-2.5px)}
+}
+.cheer-camera {animation:crowd-camera 2.35s ease-out infinite}
+@keyframes crowd-camera {
+  0%,61%,78%,100% {opacity:0}
+  65% {opacity:.8}
+}
+"""
+
+
+def crowd_cheer():
+    """Raised arms and staggered jumps in the two upper rows of the stands."""
+    colors = ("#d4a86f", "#83c7b8", "#628e9c", "#d6bc96", "#84a9a0")
+    fans = []
+    for row in range(2):
+        for column, x in enumerate(range(12 + 5 * row, 351, 11)):
+            if (column + 3 * row) % 9 in (3, 8):
+                continue
+            y = 67 + 7 * row + round(13 * ((x - 180) / 180) ** 2)
+            group = (column * 3 + row) % 4
+            color = colors[(column + row * 2) % len(colors)]
+            fans.append(
+                f'<g transform="translate({x} {y})" fill="{color}">'
+                f'<use class="cheer-fan cheer-group-{group}" href="#ballpark-raised-arms"/>'
+                '</g>'
+            )
+
+    cameras = []
+    for index, (x, y) in enumerate(((28, 69), (83, 61), (144, 62), (212, 62),
+                                    (273, 63), (336, 70))):
+        delay = -.37 * index
+        cameras.append(
+            f'<g transform="translate({x} {y})">'
+            f'<path class="cheer-camera" d="M-2 0H2M0-2V2" '
+            f'fill="none" stroke="#ffe5a8" opacity="0" style="animation-delay:{delay:g}s"/>'
+            '</g>'
+        )
+
+    return f'''<defs>
+      <g id="ballpark-raised-arms" shape-rendering="crispEdges">
+        <path d="M-3-6h1v2h1v1h2v-1h1v-2h1v3H2v1H1.5v2h-3v-2H-2v-1h-1z"/>
+        <path d="M-1-6h2v2h-2zM-3-7h1v1h-1zM2-7h1v1H2z" fill="#efd1a0"/>
+      </g>
+    </defs>
+    <g aria-hidden="true">
+      {"".join(fans)}
+      {"".join(cameras)}
+    </g>'''
+
+
 def baseball_play():
-    """Choreograph one pitch, hit and trip to first for each of three batters."""
-    turn = 4.8
-    pitch, contact, run_start, turn_corner, first, fade = .88, 1.44, 1.8, 2.2, 3.4, 4.45
+    """Choreograph the pitch, home run and celebration for each batter."""
+    turn = 8.4
+    pitch, contact, run_start, wall = .88, 1.44, 1.8, 2.35
+    first, third, finish, fade = 3.4, 5.8, 7.0, 7.85
     box = (159, 148)
     home = (180, 151)
-    first_base = (235, 123)
+    route = (
+        (run_start, box), (2.2, home), (first, (235, 123)),
+        (4.6, (180, 100)), (third, (125, 123)), (finish, home),
+    )
     stride = .4
     shoe_size = 1.6
     gait_delay = run_start % stride - stride
 
     def pct(seconds, duration=turn):
         return f"{100 * seconds / duration:.5f}%"
-
-    def position_at(seconds):
-        if seconds < turn_corner:
-            start, end = box, home
-            progress = (seconds - run_start) / (turn_corner - run_start)
-        else:
-            start, end = home, first_base
-            progress = (seconds - turn_corner) / (first - turn_corner)
-        return tuple(a + (b - a) * progress for a, b in zip(start, end))
 
     def move_to(point):
         return f"translate({point[0]}px,{point[1]}px)"
@@ -268,7 +320,18 @@ def baseball_play():
         dict(colors, teal="#c6adf4", coral="#ff9b9f", amber="#a1ecc5"),
     )
     stride_a = (-6 * shoe_size, -14 * shoe_size, shoe_size)
-    batters, styles, indicators = [], [], []
+    stride_landings = []
+    for step in range(round((finish - run_start) / (stride / 2))):
+        at = round(run_start + step * stride / 2, 4)
+        for (start_at, (x0, y0)), (end_at, (x1, y1)) in zip(route, route[1:]):
+            if at < end_at:
+                progress = (at - start_at) / (end_at - start_at)
+                facing = 1 if x1 > x0 else -1
+                shoe_x = (5 if step % 2 == 0 else 4) * shoe_size * facing
+                stride_landings.append((at, x0 + (x1 - x0) * progress + shoe_x,
+                                        y0 + (y1 - y0) * progress, facing))
+                break
+    batters, styles, indicators, replay_players = [], [], [], []
     for index, outfit in enumerate(outfits):
         order = f"batting-turn-{index + 1}"
         duration = turn * len(outfits)
@@ -277,26 +340,25 @@ def baseball_play():
             f".{order} {{animation:batting-turn {duration:g}s step-end infinite;"
             f"animation-delay:{delay:g}s}}"
         )
-        lights = []
-        # Both the runner and these fixed lights use the same piecewise-linear path.
-        for step in range(round((first - run_start) / (stride / 2))):
-            at = run_start + step * stride / 2
-            x, y = position_at(at)
-            shoe_x = (5 if step % 2 == 0 else 4) * shoe_size
-            lights.append(footstep_light(x + shoe_x, y, -(turn - at), outfit["teal"]))
+        lights = "".join(
+            footstep_light(x, y, at - turn, outfit["teal"], facing)
+            for at, x, y, facing in stride_landings
+        )
+        swing = baseball_batter(outfit, swing=True) + baseball_swing_scan()
+        replay_players.append(f'<g class="{order}" opacity="{int(index == 0)}">{swing}</g>')
         base_pose = pixel_runner(*stride_a, outfit, STAND_SPRITE)
         batters.append(f'''<g class="{order}" opacity="{int(index == 0)}">
       <g class="batter-at-plate" transform="translate({box[0]} {box[1]})">
         <g class="batter-set">{baseball_batter(outfit)}</g>
-        <g class="batter-hit" opacity="0">{baseball_batter(outfit, swing=True)}{baseball_swing_scan()}</g>
+        <g class="batter-hit" opacity="0">{swing}</g>
       </g>
-      <g class="basepath-lights" opacity="0">{"".join(lights)}</g>
-      <g class="first-base-runner" opacity="0">
-        <g class="basepath-stride">
+      <g class="basepath-lights" opacity="0">{lights}</g>
+      <g class="home-runner" opacity="0">
+        <g class="basepath-stride"><g class="basepath-facing">
           <g class="basepath-step-a">{pixel_runner(*stride_a, outfit)}</g>
           <g class="basepath-step-b" opacity="0">{pixel_runner(*stride_a, outfit, STRIDE_SPRITE)}</g>
-        </g>
-        <g class="first-base-stand" opacity="0">{base_pose}</g>
+        </g></g>
+        <g class="home-plate-stand" opacity="0">{base_pose}</g>
       </g>
     </g>''')
         indicators.append(f'''<rect x="{320 + 11 * index}" y="181" width="6" height="6" fill="{outfit["teal"]}" opacity=".24"/>
@@ -306,8 +368,9 @@ def baseball_play():
         ("play-ready", "AT BAT", 0, pitch),
         ("play-pitch", "PITCH", pitch, contact),
         ("play-contact", "CONTACT", contact, run_start),
-        ("play-run", "RUN TO FIRST", run_start, first),
-        ("play-safe", "ON FIRST", first, turn),
+        ("play-run", "IN PLAY", run_start, wall),
+        ("play-homer", "HOME RUN", wall, finish),
+        ("play-home", "BACK HOME", finish, turn),
     )
     for name, _, start, end in phase_labels:
         styles.append(phase_rule(name, start, end, initial=int(start == 0)))
@@ -318,22 +381,32 @@ def baseball_play():
         ("batter-at-plate", 0, run_start, 1),
         ("batter-set", 0, contact, 1),
         ("batter-hit", contact, run_start, 0),
-        ("basepath-lights", run_start, first + .3, 0),
-        ("basepath-stride", 0, first, 1),
-        ("first-base-stand", first, turn, 0),
+        ("basepath-lights", run_start, finish + .3, 0),
+        ("basepath-stride", 0, finish, 1),
+        ("home-plate-stand", finish, turn, 0),
+        ("baseball-tail", contact, wall + .15, 0),
     ):
         styles.append(phase_rule(name, start, end, initial))
     phase_css = "\n".join(styles)
+    route_css = "\n".join(
+        f"  {pct(at)} {{opacity:1;transform:{move_to(point)}}}"
+        for at, point in route
+    )
     animation = f'''
 {phase_css}
+{CROWD_CSS}
 @keyframes batting-turn {{0% {{opacity:1}} {100 / len(outfits):.6f}%,100% {{opacity:0}}}}
-.first-base-runner {{animation:first-base-runner {turn}s linear infinite}}
-@keyframes first-base-runner {{
+.home-runner {{animation:home-runner {turn}s linear infinite}}
+@keyframes home-runner {{
   0%,{pct(run_start - .001)} {{opacity:0;transform:{move_to(box)}}}
-  {pct(run_start)} {{opacity:1;transform:{move_to(box)}}}
-  {pct(turn_corner)} {{opacity:1;transform:{move_to(home)}}}
-  {pct(first)},{pct(fade)} {{opacity:1;transform:{move_to(first_base)}}}
-  100% {{opacity:0;transform:{move_to(first_base)}}}
+{route_css}
+  {pct(fade)} {{opacity:1;transform:{move_to(home)}}}
+  100% {{opacity:0;transform:{move_to(home)}}}
+}}
+.basepath-facing {{animation:basepath-facing {turn}s step-end infinite}}
+@keyframes basepath-facing {{
+  0%,{pct(third)},100% {{transform:scaleX(1)}}
+  {pct(first)} {{transform:scaleX(-1)}}
 }}
 .basepath-step-a {{animation:step-a {stride}s step-end infinite {gait_delay:.4f}s}}
 .basepath-step-b {{animation:step-b {stride}s step-end infinite {gait_delay:.4f}s}}
@@ -353,19 +426,36 @@ def baseball_play():
   {pct(pitch)} {{opacity:1;transform:translate(169px,114px)}}
   {pct(contact - .17)} {{opacity:1;transform:translate(174px,125px)}}
   {pct(contact)} {{opacity:1;transform:translate(173px,136px)}}
-  {pct(1.61)} {{opacity:1;transform:translate(153px,107px)}}
-  {pct(1.83)} {{opacity:1;transform:translate(129px,84px)}}
-  {pct(2.07)} {{opacity:1;transform:translate(108px,78px)}}
-  {pct(2.27)} {{opacity:1;transform:translate(91px,87px)}}
-  {pct(2.4)} {{opacity:1;transform:translate(83px,102px)}}
-  {pct(2.51)} {{opacity:.86;transform:translate(78px,97px)}}
-  {pct(2.79)},100% {{opacity:0;transform:translate(70px,102px)}}
+  {pct(1.61)} {{opacity:1;transform:translate(190px,105px)}}
+  {pct(1.83)} {{opacity:1;transform:translate(209px,77px)}}
+  {pct(2.07)} {{opacity:1;transform:translate(231px,57px)}}
+  {pct(wall)} {{opacity:1;transform:translate(254px,53px)}}
+  {pct(2.55)} {{opacity:1;transform:translate(271px,60px)}}
+  {pct(2.71)},100% {{opacity:0;transform:translate(283px,69px)}}
 }}
 .swing-flash {{animation:swing-flash {turn}s ease-out infinite}}
 @keyframes swing-flash {{
   0%,{pct(contact - .001)} {{opacity:0}}
   {pct(contact)} {{opacity:1}}
   {pct(contact + .24)},100% {{opacity:0}}
+}}
+.crowd-cheer {{animation:crowd-cheer {turn}s ease-out infinite}}
+@keyframes crowd-cheer {{
+  0%,{pct(wall)} {{opacity:0}}
+  {pct(wall + .16)},{pct(finish + .38)} {{opacity:1}}
+  {pct(fade)},100% {{opacity:0}}
+}}
+.homer-banner {{animation:homer-banner {turn}s ease-out infinite}}
+@keyframes homer-banner {{
+  0%,{pct(wall)} {{opacity:0;transform:translateY(5px)}}
+  {pct(wall + .2)},{pct(finish + .38)} {{opacity:1;transform:translateY(0)}}
+  {pct(fade)},100% {{opacity:0;transform:translateY(-2px)}}
+}}
+.swing-replay {{animation:swing-replay {turn}s ease-out infinite}}
+@keyframes swing-replay {{
+  0%,{pct(contact)} {{opacity:0}}
+  {pct(contact + .12)},{pct(4.2)} {{opacity:1}}
+  {pct(4.48)},100% {{opacity:0}}
 }}
 '''
     labels = "".join(
@@ -374,7 +464,8 @@ def baseball_play():
         for name, label, start, _ in phase_labels
     )
     set_pitcher = baseball_pitcher()
-    scene = f'''<g transform="translate(180 124)">
+    scene = f'''<g class="crowd-cheer" opacity="0">{crowd_cheer()}</g>
+    <g transform="translate(180 124)">
       <g class="pitcher-set">{set_pitcher}</g>
       <g class="pitcher-throw" opacity="0">{baseball_pitcher(throwing=True)}</g>
       <g class="pitcher-reset" opacity="0">{set_pitcher}</g>
@@ -384,26 +475,41 @@ def baseball_play():
       <path d="M172 128h1v5h-1zm0 11h1v5h-1zm-8-4h5v1h-5zm12 0h5v1h-5z"/>
     </g>
     <g class="baseball" opacity="0">
+      <path class="baseball-tail" opacity="0" d="M-14 6l10-5 2 1-11 6z" fill="#ffd585"/>
       <circle r="2.35" fill="#fff3d6" stroke="#524030" stroke-width=".7"/>
       <path d="M-.75-1.65q1.5 1.6 0 3.3" fill="none" stroke="#c97969" stroke-width=".65"/>
+    </g>
+    <g class="homer-banner" opacity="0">
+      <rect x="94" y="32" width="173" height="24" rx="2" fill="#281f1c" stroke="#b98952"/>
+      <path d="M102 44h8m140 0h8" stroke="#ffbc73"/>
+      <text x="180.5" y="50" text-anchor="middle" font-size="18" font-weight="800"
+            letter-spacing="1.8" fill="#ffe4a4">HOME RUN!</text>
     </g>
     {labels}
     <text x="312" y="187" text-anchor="end" font-size="8" letter-spacing="1.15" fill="#c0d3c8">BATTING ORDER</text>
     {"".join(indicators)}'''
-    return animation, scene
+    replay = f'''<g class="swing-replay" opacity="0">
+      <rect x="371" y="77" width="109" height="84" rx="3" fill="#0b1822" stroke="#416267"/>
+      <path d="M380 99v-5h6m79 0h6v5m0 50v5h-6m-79 0h-6v-5" fill="none" stroke="#5d9e9d"/>
+      <text x="425.5" y="89" text-anchor="middle" font-size="8" letter-spacing="1.1" fill="#b3e4d9">SWING REPLAY</text>
+      <path d="M387 149h77" stroke="#35585c"/>
+      <g transform="translate(420 146) scale(2.25)">{"".join(replay_players)}</g>
+    </g>'''
+    return animation, scene, replay
 
 
 def hero_svg(theme):
     """Show a night game next to the profile scoreboard."""
     c = THEMES[theme]
     scene_x = 513
-    play_css, play = baseball_play()
+    play_css, play, replay = baseball_play()
     trace = "M338 205h19l4-3 4 3h10l4 5 6-14 6 16 5-7h13l4-3 4 3h9l4 5 6-14 6 16 5-7h17"
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="274" viewBox="0 0 900 274" role="img" aria-labelledby="hero-title hero-desc">
 <title id="hero-title">taku0193 — Motion. Rhythm. Code.</title>
-<desc id="hero-desc">A pitcher throws, a batter makes contact, and the batter runs to first under the lights at Motion Lab Field.</desc>
+<desc id="hero-desc">A batter hits a home run, the crowd cheers, and the batter circles the bases. The scoreboard replays the swing with joint landmarks.</desc>
 <style>
 .trace-light {{stroke-dasharray:9 91; animation:trace 3.2s linear infinite}}
+@keyframes trace {{to {{stroke-dashoffset:-100}}}}
 {play_css}
 @media (prefers-reduced-motion: reduce) {{
   .trace-light {{display:none}}
@@ -449,6 +555,7 @@ def hero_svg(theme):
     <text x="56" y="214" font-size="12" fill="#b7cad6">LIVE HEART-RATE TOOLS</text>
     <path d="{trace}" fill="none" stroke="#5d9e9d" stroke-width="1.4" opacity=".55"/>
     <path class="trace-light" d="{trace}" pathLength="100" fill="none" stroke="#a1f4de" stroke-width="1.7"/>
+    {replay}
   </g>
   </g>
   <rect x="25" y="52" width="849" height="200" rx="5" fill="none" stroke="#50616a"/>
