@@ -125,8 +125,80 @@ def footstep_light(x, y, delay, color):
 </g>'''
 
 
+def ballpark_scene():
+    """Night baseball park viewed from the near side of the warm-up lane."""
+    spectators = []
+    crowd_colors = ("#527888", "#7a8f93", "#977b68", "#43667c", "#a1a98d")
+    for row in range(3):
+        for column in range(59):
+            x = 5 + column * 6
+            # The bowl drops toward the center of the picture.
+            y = 67 + row * 5 + round(13 * ((x - 180) / 180) ** 2)
+            if column % 10 != 9 and (column * 3 + row * 7) % 11 < 8:
+                color = crowd_colors[(column + row * 2) % len(crowd_colors)]
+                spectators.append(f'<rect x="{x}" y="{y}" width="2" height="2" fill="{color}"/>')
+
+    return f'''<defs>
+      <linearGradient id="ballpark-sky" x2="0" y2="1">
+        <stop stop-color="#0b1527"/><stop offset="1" stop-color="#20394b"/>
+      </linearGradient>
+      <radialGradient id="ballpark-lamp-glow">
+        <stop stop-color="#e8f4c4" stop-opacity=".34"/>
+        <stop offset="1" stop-color="#e8f4c4" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="ballpark-beam" x2="0" y2="1">
+        <stop stop-color="#f0f3d1" stop-opacity=".17"/>
+        <stop offset="1" stop-color="#f0f3d1" stop-opacity="0"/>
+      </linearGradient>
+      <path id="ballpark-turf" d="M0 109 37 98 83 90 132 85 180 84 229 85 278 90 324 98 361 109V154H0Z"/>
+      <clipPath id="ballpark-grass-clip"><use href="#ballpark-turf"/></clipPath>
+      <g id="ballpark-light-tower" shape-rendering="crispEdges">
+        <path d="M-12 49 -3 7H3l9 42Z" fill="#223f4d"/>
+        <path d="M-7 38H7M-5 29H5M-4 20H4M-7 38l11-18M7 38-4 20" fill="none" stroke="#406071"/>
+        <rect x="-17" y="-6" width="34" height="13" fill="#182d3d" stroke="#70858a"/>
+        <path d="M-14-3h4v3h-4zm6 0h4v3h-4zm6 0h4v3h-4zm6 0h4v3H4zm6 0h4v3h-4zM-14 2h4v2h-4zm6 0h4v2h-4zm6 0h4v2h-4zm6 0h4v2H4zm6 0h4v2h-4z" fill="#f2f1c9"/>
+      </g>
+    </defs>
+    <rect width="361" height="200" fill="url(#ballpark-sky)"/>
+    <path d="M120 40h2v2h-2zm33-6h1v1h-1zm44 11h2v1h-2zm22-13h1v2h-1zm46 10h2v2h-2z" fill="#a5bbc3" opacity=".49"/>
+    <circle cx="278" cy="24" r="7" fill="#d7ddbc"/>
+    <circle cx="281" cy="21" r="7" fill="#0d172a"/>
+
+    <ellipse cx="47" cy="42" rx="43" ry="27" fill="url(#ballpark-lamp-glow)"/>
+    <ellipse cx="315" cy="41" rx="43" ry="27" fill="url(#ballpark-lamp-glow)"/>
+    <use href="#ballpark-light-tower" x="47" y="42"/>
+    <use href="#ballpark-light-tower" x="315" y="41"/>
+
+    <path d="M0 75 36 66 86 58 134 55 181 54 228 55 276 58 326 66 361 75V113H0Z" fill="#152938"/>
+    <path d="M0 76 36 67 86 60 134 57 181 56 228 57 276 60 326 67 361 76" fill="none" stroke="#3c5968" stroke-width="2"/>
+    <path d="M0 83Q180 51 361 83M0 88Q180 56 361 88M0 93Q180 61 361 93M0 98Q180 66 361 98" fill="none" stroke="#36505e" stroke-width="1.15"/>
+    <g shape-rendering="crispEdges" opacity=".72">{"".join(spectators)}</g>
+    <path d="M0 102 37 91 83 82 132 78 180 77 229 78 278 82 324 91 361 102v9l-37-10-46-9-49-5-49-1-48 1-49 5-46 9-37 10z" fill="#264744"/>
+    <path d="M0 102 37 91 83 82 132 78 180 77 229 78 278 82 324 91 361 102" fill="none" stroke="#79a293" stroke-width="1.35"/>
+    <path d="M37 92v6m46-15v7m49-11v6m48-7v6m49-5v6m49-2v7m46 2v6" stroke="#5a7b74"/>
+
+    <use href="#ballpark-turf" fill="#284337"/>
+    <g clip-path="url(#ballpark-grass-clip)" fill="#355747">
+      <path d="M-5 91 38 84 2 154h-61zM74 84h38l-9 70H56zM148 82h30l26 72h-48zM212 82h34l62 72h-52zM288 83l36 6 71 65h-49z"/>
+    </g>
+    <path d="M109 120 136 100 157 94 180 92 204 94 225 100 251 120 195 150h-29z" fill="#724d37"/>
+    <path d="m180 107 42 17-42 18-42-18z" fill="#345646"/>
+    <path d="m180 142 11 5-1 7h-20l-1-7z" fill="#80553b"/>
+    <path d="M22 84 180 148 339 84" fill="none" stroke="#e0cda6" stroke-width="1.15" opacity=".85"/>
+    <ellipse cx="180" cy="124" rx="9" ry="3.6" fill="#8b6546"/>
+    <path d="M177.5 123h5v1h-5z" fill="#f1dec0"/>
+    <path d="m180 98 4 2-4 2-4-2zm-55 23 5 2-5 2-5-2zm110 0 5 2-5 2-5-2zm-58 24h6v2l-3 2-3-2z" fill="#fff2d7"/>
+
+    <path d="M32 45H62l86 107H0ZM301 44h29l31 108h-148z" fill="url(#ballpark-beam)"/>
+    <rect y="154" width="361" height="46" fill="#302521"/>
+    <path d="M0 154.5H361" stroke="#886549"/>
+    <path d="M0 160H361" stroke="#a3856a" stroke-opacity=".55"/>
+    <path d="M0 189.5H361" stroke="#564132"/>
+    <path d="M12 164h2m10 21h3m56-22h3m18 24h4m16-20h2m35 16h2m43-17h3m47 20h2m34-20h3m30 17h2m28-20h3" stroke="#8b6a53" stroke-opacity=".5"/>'''
+
+
 def hero_svg(theme):
-    """A quiet, layered night city with three passing pixel runners."""
+    """A night ballpark with a lit scoreboard and a runner warm-up lane."""
     c = THEMES[theme]
     scene_x = 513
     scene_width = 361
@@ -181,42 +253,14 @@ def hero_svg(theme):
     runner_css = "\n".join(runner_styles)
     lane_x = gate_exit - scene_x + 5
     lane_tiles = "".join(
-        f'<rect x="{x}" y="172" width="7" height="2" fill="#294754"/>'
+        f'<rect x="{x}" y="172" width="7" height="2" fill="#735344"/>'
         for x in range(lane_x, scene_width - 7, 12)
     )
-
-    # One seamless 384px city tile, repeated beyond the clipped viewport.
-    buildings = []
-    blocks = ((4, 26, 36), (39, 34, 49), (88, 22, 62), (125, 44, 42),
-              (185, 28, 56), (233, 39, 32), (284, 32, 58), (337, 35, 40))
-    for index, (x, width, height) in enumerate(blocks):
-        top = 154 - height
-        buildings.append(f'<rect x="{x}" y="{top}" width="{width}" height="{height}" fill="{"#173446" if index % 2 else "#1c3d4d"}"/>')
-        buildings.append(f'<path d="M{x} {top}h{width}" stroke="#2b5461" stroke-width="1"/>')
-        if index in (2, 6):
-            buildings.append(f'<path d="M{x+width//2} {top}v-9" stroke="#335d6a" stroke-width="2"/>')
-        for row in range(2, height // 9):
-            for col in range(1, width // 8):
-                lit = (row + col + index) % 4 == 0
-                color = "#6bb6a9" if lit else "#294957"
-                klass = f' class="window-light window-{index % 3}"' if lit and row == 3 else ""
-                buildings.append(f'<rect{klass} x="{x+col*8-2}" y="{top+row*8-4}" width="3" height="4" fill="{color}" opacity="{.8 if lit else .45}"/>')
-    # Lamps form a middle-distance layer; their glow is intentionally very small.
-    buildings.append('<path d="M165 155v-25h8m151 25v-34h8" fill="none" stroke="#396271" stroke-width="2"/>')
-    buildings.append('<path d="M169 130h5m154-9h5" stroke="#a9d8b8" stroke-width="2"/>')
-    stars = "".join(
-        f'<rect class="star star-{i % 3}" x="{x}" y="{y}" width="{size}" height="{size}" fill="#a4c6ce" opacity=".45"/>'
-        for i, (x, y, size) in enumerate(((31, 41, 2), (83, 32, 1.5), (143, 43, 2),
-                                        (213, 32, 1.5), (264, 43, 2), (343, 59, 1.5)))
-    )
-    trace = "M18 70h34l6-4 6 4h26l6 7 8-18 8 20 7-9h38l6-4 6 4h25l7 7 8-18 8 20 7-9h31l6-4 6 4h66"
+    trace = "M338 205h19l4-3 4 3h10l4 5 6-14 6 16 5-7h13l4-3 4 3h9l4 5 6-14 6 16 5-7h17"
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="274" viewBox="0 0 900 274" role="img" aria-labelledby="hero-title hero-desc">
 <title id="hero-title">taku0193 — Motion. Rhythm. Code.</title>
-<desc id="hero-desc">Three runners pass through a layered night city. A motion capture gate traces their joints, then each footfall sends a flash of their color along the road.</desc>
+<desc id="hero-desc">A night baseball stadium with taku0193 on its scoreboard. Three runners cross a motion capture gate and send pulses of light down the warm-up lane.</desc>
 <style>
-.hero-far {{animation:hero-landscape 100s linear infinite}}
-.hero-city {{animation:hero-landscape 38s linear infinite}}
-.hero-road {{animation:hero-road 1.05s linear infinite}}
 .trace-light {{stroke-dasharray:9 91; animation:trace 3.2s linear infinite}}
 .track-runner {{animation:pass-through {lap_seconds}s linear infinite;animation-delay:var(--run-offset)}}
 {runner_css}
@@ -226,14 +270,6 @@ def hero_svg(theme):
 .step-b {{opacity:0;animation:step-b var(--stride-time) step-end infinite;animation-delay:var(--run-offset)}}
 .beat-contact {{animation:beat-contact {lap_seconds}s linear infinite;animation-delay:var(--beat-delay)}}
 .beat-ray {{animation:beat-ray {lap_seconds}s ease-out infinite;animation-delay:var(--beat-delay)}}
-.star {{animation:star-glow 7s ease-in-out infinite}}
-.star-1 {{animation-delay:-2.3s}}
-.star-2 {{animation-delay:-4.6s}}
-.window-light {{animation:window-glow 9s ease-in-out infinite}}
-.window-1 {{animation-delay:-3s}}
-.window-2 {{animation-delay:-6s}}
-@keyframes hero-landscape {{from {{transform:translateX(0)}} to {{transform:translateX(-384px)}}}}
-@keyframes hero-road {{from {{transform:translateX(0)}} to {{transform:translateX(-48px)}}}}
 @keyframes pass-through {{from {{transform:translateX(0)}} to {{transform:translateX({travel}px)}}}}
 @keyframes scan-pose {{
   0%,{scan_enter:.4f}% {{opacity:0}}
@@ -253,65 +289,66 @@ def hero_svg(theme):
   {.045 / lap_seconds * 100:.4f}% {{opacity:.82;transform:translateX(4px)}}
   {.29 / lap_seconds * 100:.4f}%,100% {{opacity:0;transform:translateX(20px)}}
 }}
-@keyframes star-glow {{0%,100% {{opacity:.28}} 50% {{opacity:.64}}}}
-@keyframes window-glow {{0%,100% {{opacity:.45}} 45%,65% {{opacity:.85}}}}
 @media (prefers-reduced-motion: reduce) {{
   .trace-light {{display:none}}
-  .hero-far, .hero-city, .hero-road, .track-runner, .pulse-stride,
-  .step-a, .step-b, .star, .window-light, .pose-scan,
+  .track-runner, .pulse-stride, .step-a, .step-b, .pose-scan,
   .beat-contact, .beat-ray {{animation:none}}
 }}
 </style>
 <defs>
-  <clipPath id="hero-scene-clip"><rect x="513" y="52" width="361" height="200" rx="3"/></clipPath>
+  <clipPath id="hero-scene-clip"><rect x="513" y="52" width="361" height="200"/></clipPath>
+  <clipPath id="stadium-frame"><rect x="25" y="52" width="849" height="200" rx="5"/></clipPath>
   <clipPath id="runner-track"><rect x="513" y="156" width="361" height="60"/></clipPath>
-  <g id="hero-hills" shape-rendering="crispEdges">
-    <path d="M0 124h20v-7h18v-9h23v-11h20v-7h24v8h17v12h24v9h31v-8h18v-11h22v-7h28v9h21v14h28v6h20v-9h20v-8h27v9h23v40H0Z" fill="#142b3b"/>
-    <path d="M0 135h30v-5h19v-6h29v8h24v7h28v-5h30v-7h27v6h18v8h40v-8h22v-8h28v8h24v5h22v-6h26v6h17v16H0Z" fill="#19313f"/>
-  </g>
-  <g id="hero-buildings" shape-rendering="crispEdges">{''.join(buildings)}</g>
-  <pattern id="hero-road-mark" width="48" height="16" patternUnits="userSpaceOnUse"><path d="M0 8h19" stroke="#477b83" stroke-width="2"/></pattern>
+  <pattern id="scoreboard-leds" width="5" height="5" patternUnits="userSpaceOnUse">
+    <rect x="1" y="1" width="1" height="1" fill="#75c1b8" opacity=".14"/>
+  </pattern>
 </defs>
 <g font-family="ui-monospace, Menlo, Consolas, monospace">
   {terminal_frame(c, 274, "taku0193@github: ~/motion-lab")}
-  <text x="32" y="69" font-size="14" font-weight="700" fill="{c["teal"]}">$ whoami</text>
-  <text x="30" y="124" font-size="57" font-weight="800" letter-spacing="-2" fill="{c["ink"]}">taku0193</text>
-  <text x="32" y="158" font-size="25" font-weight="650" fill="{c["teal"]}">Motion. Rhythm. Code.</text>
-  <text x="32" y="193" font-size="14" fill="{c["muted"]}">POSE TRACKING / INTERACTIVE GAMES</text>
-  <text x="32" y="215" font-size="14" fill="{c["muted"]}">LIVE HEART-RATE TOOLS</text>
-  <path d="M32 237H480" stroke="{c["edge"]}"/>
-  <text x="32" y="256" font-size="11" letter-spacing="1.1" fill="{c["muted"]}">MOTION LAB</text>
-  <rect x="512" y="51" width="363" height="202" rx="4" fill="#0c1726" stroke="#314a60"/>
+  <g clip-path="url(#stadium-frame)">
+  <rect x="25" y="52" width="849" height="200" fill="#0c1726"/>
+  <path d="M25 127H513V154H25Z" fill="#152938"/>
+  <path d="M25 128H513" stroke="#3c5968" stroke-width="2"/>
+  <path d="M25 154H513V163H25Z" fill="#264744"/>
+  <path d="M25 154H513" stroke="#79a293" stroke-width="1.35"/>
+  <path d="M25 163H513V206H25Z" fill="#284337"/>
+  <path d="M25 206H513V252H25Z" fill="#302521"/>
+  <path d="M25 206.5H513" stroke="#886549"/>
+  <path d="M25 212H513" stroke="#a3856a" opacity=".55"/>
+  <path d="M25 241.5H513" stroke="#564132"/>
   <g clip-path="url(#hero-scene-clip)"><g transform="translate({scene_x} 52)">
-    <rect width="361" height="200" fill="#0c1726"/>
-    {stars}
-    <circle cx="320" cy="42" r="9" fill="#b2cbb9" opacity=".8"/>
-    <circle cx="324" cy="38" r="9" fill="#0c1726"/>
-    <path d="{trace}" fill="none" stroke="#5d9e9d" stroke-width="1.3" opacity=".32"/>
-    <path class="trace-light" d="{trace}" pathLength="100" fill="none" stroke="#86e4cf" stroke-width="1.6" opacity=".65"/>
-    <g class="hero-far"><use href="#hero-hills"/><use href="#hero-hills" x="384"/></g>
-    <g class="hero-city"><use href="#hero-buildings"/><use href="#hero-buildings" x="384"/></g>
-    <rect y="154" width="361" height="46" fill="#102431"/>
-    <path d="M0 155H361" stroke="#335664"/>
-    <rect y="159" width="361" height="3" fill="#264954"/>
-    <path d="M0 160H361" stroke="#73c6b4" stroke-opacity=".3"/>
-    <g class="hero-road"><rect x="0" y="166" width="432" height="16" fill="url(#hero-road-mark)"/></g>
-    <rect x="{lane_x - 4}" y="166" width="{scene_width - lane_x + 4}" height="16" fill="#102431"/>
+    {ballpark_scene()}
     {lane_tiles}
-    <path d="M0 189H361" stroke="#294754"/>
     <g transform="translate({gate_local} 0)">
       <rect x="-39" y="108" width="78" height="55" fill="#71efd4" opacity=".055"/>
       <path d="M-39 121v-13h11m56 0h11v13m0 29v13h-11m-56 0h-11v-13"
             fill="none" stroke="#71efd4" stroke-width="1.2" opacity=".72"/>
       <path d="M-39 124v24m78-24v24" fill="none" stroke="#71efd4"
             stroke-dasharray="1 4" opacity=".5"/>
-      <text x="0" y="102" text-anchor="middle" font-size="8" letter-spacing="1.35" fill="#91d6c9">POSE GATE</text>
+      <text x="0" y="193" text-anchor="middle" font-size="8" letter-spacing="1.35" fill="#91d6c9">POSE GATE</text>
     </g>
-    <text x="16" y="23" font-size="10" letter-spacing="1.1" fill="#a6bfd2">STAGE 01 / NIGHT RUN</text>
-    <text x="345" y="193" text-anchor="end" font-size="8" letter-spacing="1.6" fill="#91c5c5">BEAT TRACK</text>
+    <text x="16" y="23" font-size="10" letter-spacing="1.1" fill="#c4d7d8">STAGE 01 / NIGHT GAME</text>
+    <text x="345" y="193" text-anchor="end" font-size="8" letter-spacing="1.6" fill="#c0d3c8">BEAT TRACK</text>
   </g></g>
+  <g aria-label="Stadium scoreboard">
+    <path d="M66 207h13v37H66zm385 0h13v37h-13z" fill="#15252d"/>
+    <rect x="37" y="62" width="460" height="167" rx="5" fill="#070e17" stroke="#435964" stroke-width="2"/>
+    <rect x="44" y="69" width="446" height="100" rx="2" fill="#101e2a"/>
+    <rect x="44" y="69" width="446" height="100" rx="2" fill="url(#scoreboard-leds)"/>
+    <path d="M44 174H490M326 181V220" stroke="#34505c"/>
+    <rect x="56" y="80" width="4" height="4" fill="#ffd585"/>
+    <text x="67" y="85" font-size="10" letter-spacing="1.65" fill="#a6bfd2">MOTION LAB FIELD</text>
+    <text x="56" y="133" font-size="53" font-weight="800" letter-spacing="-2" fill="#f0f7ff">taku0193</text>
+    <text x="58" y="158" font-size="23" font-weight="650" fill="#89efd6">Motion. Rhythm. Code.</text>
+    <text x="56" y="194" font-size="12" fill="#b7cad6">POSE TRACKING / INTERACTIVE GAMES</text>
+    <text x="56" y="214" font-size="12" fill="#b7cad6">LIVE HEART-RATE TOOLS</text>
+    <path d="{trace}" fill="none" stroke="#5d9e9d" stroke-width="1.4" opacity=".55"/>
+    <path class="trace-light" d="{trace}" pathLength="100" fill="none" stroke="#a1f4de" stroke-width="1.7"/>
+  </g>
   <g clip-path="url(#hero-scene-clip)" aria-hidden="true">{''.join(footsteps)}</g>
   <g clip-path="url(#runner-track)">{''.join(runners)}</g>
+  </g>
+  <rect x="25" y="52" width="849" height="200" rx="5" fill="none" stroke="#50616a"/>
 </g></svg>'''
 
 
