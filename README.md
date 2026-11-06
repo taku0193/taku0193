@@ -44,15 +44,15 @@ I build apps that connect body movement, music, and heart-rate data.
   <table>
     <thead><tr><th scope="col">Area</th><th scope="col">Tools</th></tr></thead>
     <tbody>
-      <tr><th scope="row">AI Assistants</th><td>Claude · ChatGPT · Cursor</td></tr>
-      <tr><th scope="row">LLM Inference</th><td>TensorRT-LLM · vLLM · Ollama</td></tr>
-      <tr><th scope="row">Vision, Audio &amp; Data</th><td>Ultralytics YOLO · Transformers · MusicGen · librosa · NumPy</td></tr>
-      <tr><th scope="row">Web Development</th><td>JavaScript · HTML5 · CSS · React · Next.js · Vite · Node.js</td></tr>
-      <tr><th scope="row">Databases &amp; Cloud</th><td>SQLite · PostgreSQL · Google Cloud</td></tr>
-      <tr><th scope="row">Testing</th><td>Vitest · Playwright · pytest</td></tr>
-      <tr><th scope="row">Development Environment</th><td>Docker · Git · GitHub Actions · Linux · macOS</td></tr>
-      <tr><th scope="row">Research &amp; Writing</th><td>MATLAB · LaTeX · Overleaf · Notion · Obsidian</td></tr>
-      <tr><th scope="row">3D Graphics</th><td>Blender</td></tr>
+      <tr><th scope="row"><img src="./assets/tool-icons/assistants.svg" width="24" height="24" alt="">&nbsp; AI Assistants</th><td>Claude · ChatGPT · Cursor</td></tr>
+      <tr><th scope="row"><img src="./assets/tool-icons/inference.svg" width="24" height="24" alt="">&nbsp; LLM Inference</th><td>TensorRT-LLM · vLLM · Ollama</td></tr>
+      <tr><th scope="row"><img src="./assets/tool-icons/signals.svg" width="24" height="24" alt="">&nbsp; Vision, Audio &amp; Data</th><td>Ultralytics YOLO · Transformers · MusicGen · librosa · NumPy</td></tr>
+      <tr><th scope="row"><img src="./assets/tool-icons/browser.svg" width="24" height="24" alt="">&nbsp; Web Development</th><td>JavaScript · HTML5 · CSS · React · Next.js · Vite · Node.js</td></tr>
+      <tr><th scope="row"><img src="./assets/tool-icons/database.svg" width="24" height="24" alt="">&nbsp; Databases &amp; Cloud</th><td>SQLite · PostgreSQL · Google Cloud</td></tr>
+      <tr><th scope="row"><img src="./assets/tool-icons/testing.svg" width="24" height="24" alt="">&nbsp; Testing</th><td>Vitest · Playwright · pytest</td></tr>
+      <tr><th scope="row"><img src="./assets/tool-icons/terminal.svg" width="24" height="24" alt="">&nbsp; Development Environment</th><td>Docker · Git · GitHub Actions · Linux · macOS</td></tr>
+      <tr><th scope="row"><img src="./assets/tool-icons/notebook.svg" width="24" height="24" alt="">&nbsp; Research &amp; Writing</th><td>MATLAB · LaTeX · Overleaf · Notion · Obsidian</td></tr>
+      <tr><th scope="row"><img src="./assets/tool-icons/cube.svg" width="24" height="24" alt="">&nbsp; 3D Graphics</th><td>Blender</td></tr>
     </tbody>
   </table>
 </details>
