@@ -3,7 +3,7 @@
   <source media="(prefers-reduced-motion: reduce)" srcset="./assets/header-light-still.svg">
   <source media="(prefers-color-scheme: dark)" srcset="./assets/header-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/header-light.svg">
-  <img src="./assets/header-light.svg" width="100%" alt="taku0193 — Motion. Rhythm. Code. Pose tracking, interactive games, and live heart-rate tools. A night baseball stadium with taku0193 on its scoreboard. A batter hits a home run and circles the bases as the crowd cheers. The scoreboard replays the swing with joint landmarks.">
+  <img src="./assets/header-light.svg" width="100%" alt="taku0193 — Motion. Rhythm. Code. Pose tracking, interactive games, and live heart-rate tools. A night baseball stadium with taku0193 on its scoreboard. A batter hits a home run and circles the bases as the crowd cheers. At home plate, the camera zooms in on the celebration jump and traces the batter’s joints.">
 </picture>
 
 ## 👋 About Me

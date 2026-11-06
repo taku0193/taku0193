@@ -281,13 +281,91 @@ def crowd_cheer():
     </g>'''
 
 
+def baseball_celebration(colors, pose):
+    """Draw an expressive pose and its joint overlay at the feet origin."""
+    poses = {
+        "crouch": {
+            "shoulder_y": -12, "hip_y": -7,
+            "arms": (((-3, -12), (-7, -10), (-5, -7)),
+                     ((3, -12), (7, -10), (5, -7))),
+            "legs": (((-2, -7), (-6, -5), (-5, -1)),
+                     ((2, -7), (6, -5), (5, -1))),
+        },
+        "jump": {
+            "shoulder_y": -15, "hip_y": -9,
+            "arms": (((-3, -15), (-7, -18), (-8, -23)),
+                     ((3, -15), (7, -18), (8, -23))),
+            "legs": (((-2, -9), (-6, -5), (-8, -3)),
+                     ((2, -9), (6, -6), (5, -1))),
+        },
+        "land": {
+            "shoulder_y": -14, "hip_y": -8,
+            "arms": (((-3, -14), (-8, -17), (-9, -21)),
+                     ((3, -14), (8, -17), (9, -21))),
+            "legs": (((-2, -8), (-4, -4), (-5, -1)),
+                     ((2, -8), (4, -4), (5, -1))),
+        },
+    }
+    frame = poses[pose]
+    shoulder_y, hip_y = frame["shoulder_y"], frame["hip_y"]
+    arms, legs = frame["arms"], frame["legs"]
+    cap, shirt, trim = colors["amber"], colors["teal"], colors["coral"]
+    skin, pants, ink = "#f8dcba", "#e5eaf1", "#19212e"
+
+    def joint_path(chain):
+        return "M" + " ".join(f"{x},{y}" for x, y in chain)
+
+    def limbs(chains, color, width):
+        paths = " ".join(joint_path(chain) for chain in chains)
+        return f'<path d="{paths}" fill="none" stroke="{color}" stroke-width="{width}"/>'
+
+    fists = "".join(
+        f'<rect x="{x - 1.5}" y="{y - 1.5}" width="3" height="3" fill="{skin}"/>'
+        for _, _, (x, y) in arms
+    )
+    cleats = "".join(
+        f'<rect x="{x - 2}" y="{y}" width="4" height="1" fill="{ink}"/>'
+        for _, _, (x, y) in legs
+    )
+    torso = ((0, shoulder_y - 1), (0, shoulder_y), (0, hip_y))
+    scan_chains = (*arms, *legs, torso)
+    scan_path = " ".join(joint_path(chain) for chain in scan_chains)
+    joints = dict.fromkeys(point for chain in scan_chains for point in chain)
+    dots = "".join(f'<circle cx="{x}" cy="{y}" r=".72"/>' for x, y in joints)
+    face = "M-1-3h2v1h-2z" if pose == "crouch" else "M-2-3h1v1h2v-1h1v2h-4z"
+    return f'''<g>
+      <g shape-rendering="crispEdges" stroke-linecap="square" stroke-linejoin="bevel">
+        {limbs(legs, pants, 3.3)}
+        {cleats}
+        {limbs(arms, skin, 2.2)}
+        {fists}
+        <path d="M-4,{shoulder_y - 1}H4V{hip_y}H-4Z" fill="{shirt}"/>
+        <rect x="-4" y="{hip_y - 1}" width="8" height="1" fill="{trim}"/>
+        <g transform="translate(0 {shoulder_y})">
+          <path d="M-3-8h6v1h1v2h-8v-2h1z" fill="{cap}"/>
+          <path d="M-3-5h6v4h-6z" fill="{skin}"/>
+          <path d="M-2-5h1v1h-1zm3 0h1v1H1z{face}" fill="{ink}"/>
+        </g>
+      </g>
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path d="{scan_path}" stroke="#162c34" stroke-width="1.45" opacity=".82"/>
+        <path d="{scan_path}" stroke="#b5fff0" stroke-width=".58"/>
+        <g fill="#e1fff6" stroke="#28535a" stroke-width=".24">{dots}</g>
+      </g>
+    </g>'''
+
+
 def baseball_play():
     """Choreograph the pitch, home run and celebration for each batter."""
-    turn = 8.4
+    turn = 9.6
     pitch, contact, run_start, wall = .88, 1.44, 1.8, 2.35
-    first, third, finish, fade = 3.4, 5.8, 7.0, 7.85
+    first, third, finish, fade = 3.4, 5.8, 7.0, 9.05
+    zoom_ready, launch, apex, landing = 7.38, 7.53, 7.8, 8.09
+    zoom_release, wide = 8.95, 9.46
     box = (159, 148)
     home = (180, 151)
+    zoom = 2.65
+    zoom_transform = f"translate({180 - zoom * home[0]:g}px,{145 - zoom * home[1]:g}px) scale({zoom:g})"
     route = (
         (run_start, box), (2.2, home), (first, (235, 123)),
         (4.6, (180, 100)), (third, (125, 123)), (finish, home),
@@ -346,7 +424,6 @@ def baseball_play():
         )
         swing = baseball_batter(outfit, swing=True) + baseball_swing_scan()
         replay_players.append(f'<g class="{order}" opacity="{int(index == 0)}">{swing}</g>')
-        base_pose = pixel_runner(*stride_a, outfit, STAND_SPRITE)
         batters.append(f'''<g class="{order}" opacity="{int(index == 0)}">
       <g class="batter-at-plate" transform="translate({box[0]} {box[1]})">
         <g class="batter-set">{baseball_batter(outfit)}</g>
@@ -358,7 +435,14 @@ def baseball_play():
           <g class="basepath-step-a">{pixel_runner(*stride_a, outfit)}</g>
           <g class="basepath-step-b" opacity="0">{pixel_runner(*stride_a, outfit, STRIDE_SPRITE)}</g>
         </g></g>
-        <g class="home-plate-stand" opacity="0">{base_pose}</g>
+        <g class="home-celebration" opacity="0">
+          <ellipse cy=".6" rx="7" ry="1.6" fill="#161c24" opacity=".48"/>
+          <g class="celebration-lift">
+            <g class="celebration-crouch">{baseball_celebration(outfit, "crouch")}</g>
+            <g class="celebration-jump" opacity="0">{baseball_celebration(outfit, "jump")}</g>
+            <g class="celebration-land" opacity="0">{baseball_celebration(outfit, "land")}</g>
+          </g>
+        </g>
       </g>
     </g>''')
         indicators.append(f'''<rect x="{320 + 11 * index}" y="181" width="6" height="6" fill="{outfit["teal"]}" opacity=".24"/>
@@ -370,7 +454,8 @@ def baseball_play():
         ("play-contact", "CONTACT", contact, run_start),
         ("play-run", "IN PLAY", run_start, wall),
         ("play-homer", "HOME RUN", wall, finish),
-        ("play-home", "BACK HOME", finish, turn),
+        ("play-home", "BACK HOME", finish, zoom_ready),
+        ("play-celebrate", "HOME PLATE / CELEBRATION", zoom_ready, turn),
     )
     for name, _, start, end in phase_labels:
         styles.append(phase_rule(name, start, end, initial=int(start == 0)))
@@ -383,7 +468,10 @@ def baseball_play():
         ("batter-hit", contact, run_start, 0),
         ("basepath-lights", run_start, finish + .3, 0),
         ("basepath-stride", 0, finish, 1),
-        ("home-plate-stand", finish, turn, 0),
+        ("home-celebration", finish, turn, 0),
+        ("celebration-crouch", 0, launch, 1),
+        ("celebration-jump", launch, landing, 0),
+        ("celebration-land", landing, turn, 0),
         ("baseball-tail", contact, wall + .15, 0),
     ):
         styles.append(phase_rule(name, start, end, initial))
@@ -448,14 +536,38 @@ def baseball_play():
 .homer-banner {{animation:homer-banner {turn}s ease-out infinite}}
 @keyframes homer-banner {{
   0%,{pct(wall)} {{opacity:0;transform:translateY(5px)}}
-  {pct(wall + .2)},{pct(finish + .38)} {{opacity:1;transform:translateY(0)}}
-  {pct(fade)},100% {{opacity:0;transform:translateY(-2px)}}
+  {pct(wall + .2)},{pct(finish)} {{opacity:1;transform:translateY(0)}}
+  {pct(zoom_ready)},100% {{opacity:0;transform:translateY(-2px)}}
 }}
 .swing-replay {{animation:swing-replay {turn}s ease-out infinite}}
 @keyframes swing-replay {{
   0%,{pct(contact)} {{opacity:0}}
   {pct(contact + .12)},{pct(4.2)} {{opacity:1}}
   {pct(4.48)},100% {{opacity:0}}
+}}
+.home-camera {{animation:home-camera {turn}s ease-in-out infinite;transform-origin:0 0}}
+@keyframes home-camera {{
+  0%,{pct(finish)} {{transform:translate(0,0) scale(1)}}
+  {pct(zoom_ready)},{pct(zoom_release)} {{transform:{zoom_transform}}}
+  {pct(wide)},100% {{transform:translate(0,0) scale(1)}}
+}}
+.field-pitcher {{animation:field-pitcher {turn}s ease-in-out infinite}}
+@keyframes field-pitcher {{
+  0%,{pct(finish)} {{opacity:1}}
+  {pct(zoom_ready)},{pct(zoom_release)} {{opacity:.22}}
+  {pct(wide)},100% {{opacity:1}}
+}}
+.celebration-lift {{animation:celebration-lift {turn}s linear infinite}}
+@keyframes celebration-lift {{
+  0%,{pct(launch)} {{transform:translateY(0);animation-timing-function:ease-out}}
+  {pct(apex)} {{transform:translateY(-8px);animation-timing-function:ease-in}}
+  {pct(landing)},100% {{transform:translateY(0)}}
+}}
+.pose-camera-hud {{animation:pose-camera-hud {turn}s ease-out infinite}}
+@keyframes pose-camera-hud {{
+  0%,{pct(finish)} {{opacity:0}}
+  {pct(zoom_ready)},{pct(zoom_release)} {{opacity:1}}
+  {pct(wide)},100% {{opacity:0}}
 }}
 '''
     labels = "".join(
@@ -465,7 +577,7 @@ def baseball_play():
     )
     set_pitcher = baseball_pitcher()
     scene = f'''<g class="crowd-cheer" opacity="0">{crowd_cheer()}</g>
-    <g transform="translate(180 124)">
+    <g class="field-pitcher" transform="translate(180 124)">
       <g class="pitcher-set">{set_pitcher}</g>
       <g class="pitcher-throw" opacity="0">{baseball_pitcher(throwing=True)}</g>
       <g class="pitcher-reset" opacity="0">{set_pitcher}</g>
@@ -478,12 +590,19 @@ def baseball_play():
       <path class="baseball-tail" opacity="0" d="M-14 6l10-5 2 1-11 6z" fill="#ffd585"/>
       <circle r="2.35" fill="#fff3d6" stroke="#524030" stroke-width=".7"/>
       <path d="M-.75-1.65q1.5 1.6 0 3.3" fill="none" stroke="#c97969" stroke-width=".65"/>
-    </g>
-    <g class="homer-banner" opacity="0">
+    </g>'''
+    hud = f'''<g class="homer-banner" opacity="0">
       <rect x="94" y="32" width="173" height="24" rx="2" fill="#281f1c" stroke="#b98952"/>
       <path d="M102 44h8m140 0h8" stroke="#ffbc73"/>
       <text x="180.5" y="50" text-anchor="middle" font-size="18" font-weight="800"
             letter-spacing="1.8" fill="#ffe4a4">HOME RUN!</text>
+    </g>
+    <g class="pose-camera-hud" opacity="0">
+      <path d="M127 64V53h12m82 0h12v11m0 81v11h-12m-82 0h-12v-11"
+            fill="none" stroke="#a5f1dc" stroke-width="1.4" opacity=".72"/>
+      <rect x="275" y="12" width="74" height="16" rx="2" fill="#0c1c27" stroke="#3b6b6c"/>
+      <circle cx="285" cy="20" r="2" fill="#a5f1dc"/>
+      <text x="292" y="23" font-size="8" letter-spacing=".65" fill="#d0f2ea">POSE CAM</text>
     </g>
     {labels}
     <text x="312" y="187" text-anchor="end" font-size="8" letter-spacing="1.15" fill="#c0d3c8">BATTING ORDER</text>
@@ -495,18 +614,18 @@ def baseball_play():
       <path d="M387 149h77" stroke="#35585c"/>
       <g transform="translate(420 146) scale(2.25)">{"".join(replay_players)}</g>
     </g>'''
-    return animation, scene, replay
+    return animation, scene, hud, replay
 
 
 def hero_svg(theme):
     """Show a night game next to the profile scoreboard."""
     c = THEMES[theme]
     scene_x = 513
-    play_css, play, replay = baseball_play()
+    play_css, play, hud, replay = baseball_play()
     trace = "M338 205h19l4-3 4 3h10l4 5 6-14 6 16 5-7h13l4-3 4 3h9l4 5 6-14 6 16 5-7h17"
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="274" viewBox="0 0 900 274" role="img" aria-labelledby="hero-title hero-desc">
 <title id="hero-title">taku0193 — Motion. Rhythm. Code.</title>
-<desc id="hero-desc">A batter hits a home run, the crowd cheers, and the batter circles the bases. The scoreboard replays the swing with joint landmarks.</desc>
+<desc id="hero-desc">A batter hits a home run and circles the bases as the crowd cheers. At home plate the camera zooms in on a celebration jump with joint landmarks.</desc>
 <style>
 .trace-light {{stroke-dasharray:9 91; animation:trace 3.2s linear infinite}}
 @keyframes trace {{to {{stroke-dashoffset:-100}}}}
@@ -537,8 +656,11 @@ def hero_svg(theme):
   <path d="M25 212H513" stroke="#a3856a" opacity=".55"/>
   <path d="M25 241.5H513" stroke="#564132"/>
   <g clip-path="url(#hero-scene-clip)"><g transform="translate({scene_x} 52)">
-    {ballpark_scene()}
-    {play}
+    <g class="home-camera">
+      {ballpark_scene()}
+      {play}
+    </g>
+    {hud}
     <text x="16" y="23" font-size="10" letter-spacing="1.1" fill="#c4d7d8">STAGE 01 / NIGHT GAME</text>
   </g></g>
   <g aria-label="Stadium scoreboard">
