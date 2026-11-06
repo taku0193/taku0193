@@ -39,12 +39,22 @@ SPRITE = (
     ".WWC.....CC.",
     ".WW.......WW",
 )
+STRIDE_SPRITE = SPRITE[:6] + (
+    "...TTTTTT...",
+    "..WW.TTTWW..",
+    ".....TT.....",
+    "....CCCT....",
+    "....CC.CC...",
+    ".....CC..CC.",
+    ".....WCC..W.",
+    "....WW...WW.",
+)
 
 
-def pixel_runner(x, y, size, colors):
+def pixel_runner(x, y, size, colors, pose=SPRITE):
     palette = {"Y": colors["amber"], "W": colors["ink"], "T": colors["teal"], "C": colors["coral"]}
     pixels = []
-    for row, line in enumerate(SPRITE):
+    for row, line in enumerate(pose):
         for col, char in enumerate(line):
             if char != ".":
                 pixels.append(f'<rect x="{col * size}" y="{row * size}" width="{size}" height="{size}" fill="{palette[char]}"/>')
@@ -65,11 +75,37 @@ def terminal_frame(colors, height, label):
 def hero_svg(theme):
     c = THEMES[theme]
     trace = "M530 123h36l9-7h9l9 7h24l8 11 13-34 12 31 8-8h31l7-7h9l8 7h24l9 12 13-35 12 30 8-7h78"
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="274" viewBox="0 0 900 274" role="img" aria-labelledby="hero-title">
+    dark = THEMES["dark"]
+    outfits = (
+        dark,
+        dict(dark, teal="#ffb782", coral="#79d7f7", amber="#f1a9bf"),
+        dict(dark, teal="#c6adf4", coral="#ff9b9f", amber="#a1ecc5"),
+    )
+    runners = []
+    for index, outfit in enumerate(outfits, 1):
+        runners.append(f'''<g class="track-runner runner-{index}">
+    <g class="pulse-stride">
+      <g class="step-a">{pixel_runner(450, 152, 4.2, outfit)}</g>
+      <g class="step-b">{pixel_runner(450, 152, 4.2, outfit, STRIDE_SPRITE)}</g>
+    </g>
+  </g>''')
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="274" viewBox="0 0 900 274" role="img" aria-labelledby="hero-title hero-desc">
 <title id="hero-title">taku0193 — Motion. Rhythm. Code.</title>
+<desc id="hero-desc">Three pixel runners cross the Motion Lab track below a pulsing waveform.</desc>
 <style>
 .trace-light {{stroke-dasharray:11 89; animation:trace 2.8s linear infinite}}
+.track-runner {{animation:pass-through 8.4s linear infinite}}
+.runner-1 {{animation-delay:-1.7s;transform:translateX(104px)}}
+.runner-2 {{animation-delay:-4.5s;transform:translateX(215px)}}
+.runner-3 {{animation-delay:-7.3s;transform:translateX(326px)}}
 .pulse-stride {{animation:stride 2.8s steps(1,end) infinite}}
+.step-a {{animation:step-a .44s step-end infinite}}
+.step-b {{opacity:0;animation:step-b .44s step-end infinite}}
+.runner-2 .step-a, .runner-2 .step-b {{animation-delay:-.15s}}
+.runner-3 .step-a, .runner-3 .step-b {{animation-delay:-.30s}}
+@keyframes pass-through {{from {{transform:translateX(0)}} to {{transform:translateX(430px)}}}}
+@keyframes step-a {{0%,100% {{opacity:1}} 50% {{opacity:0}}}}
+@keyframes step-b {{0%,100% {{opacity:0}} 50% {{opacity:1}}}}
 @keyframes trace {{to {{stroke-dashoffset:-100}}}}
 @keyframes stride {{
   0%, 44%, 79%, 100% {{transform:translateY(0)}}
@@ -78,7 +114,7 @@ def hero_svg(theme):
 }}
 @media (prefers-reduced-motion: reduce) {{
   .trace-light {{display:none}}
-  .pulse-stride {{animation:none}}
+  .track-runner, .pulse-stride, .step-a, .step-b {{animation:none}}
 }}
 </style>
 <defs>
@@ -88,6 +124,7 @@ def hero_svg(theme):
   <pattern id="track" width="32" height="8" patternUnits="userSpaceOnUse">
     <path d="M0 4H16" stroke="#69c8ba" stroke-width="2"/>
   </pattern>
+  <clipPath id="runner-track"><rect x="513" y="142" width="361" height="81"/></clipPath>
 </defs>
 <g font-family="ui-monospace, Menlo, Consolas, monospace">
   {terminal_frame(c, 274, "taku0193@github: ~/motion-lab")}
@@ -108,7 +145,7 @@ def hero_svg(theme):
   <path d="M542 200h36m-27 8h20m239-36h34m-44 8h20" stroke="#427687" stroke-width="2"/>
   <rect x="831" y="195" width="7" height="7" fill="#ffd585"/>
   <rect x="848" y="183" width="7" height="7" fill="#ff928d"/>
-  <g class="pulse-stride">{pixel_runner(683, 143, 5, THEMES["dark"])}</g>
+  <g clip-path="url(#runner-track)">{''.join(runners)}</g>
 </g></svg>'''
 
 
