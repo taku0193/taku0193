@@ -1,31 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="260" viewBox="0 0 900 260" role="img" aria-labelledby="title desc">
-<title id="title">Hi, I'm taku0193. Motion. Rhythm. Code.</title>
-<desc id="desc">Pose estimation, interactive games, and heart-rate apps. A pose skeleton and a moving pulse line illustrate the theme.</desc>
-<defs><pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#d9e3ed" stroke-width=".65"/></pattern><linearGradient id="fade"><stop stop-color="#087f8c" stop-opacity="0"/><stop offset=".55" stop-color="#087f8c"/><stop offset="1" stop-color="#087f8c" stop-opacity="0"/></linearGradient></defs>
-<style>.signal{stroke-dasharray:65 360;animation:flow 6s linear infinite}@keyframes flow{to{stroke-dashoffset:-425}}@media(prefers-reduced-motion:reduce){.signal{animation:none;stroke-dasharray:none}}</style>
-<rect x=".5" y=".5" width="899" height="259" rx="16" fill="#f6f9fc" stroke="#d9e3ed"/>
-<path d="M570 1H884Q899 1 899 16V244Q899 259 884 259H570Z" fill="url(#grid)"/>
-<circle cx="742" cy="128" r="91" fill="none" stroke="#d9e3ed"/>
-<circle cx="742" cy="128" r="71" fill="none" stroke="#d9e3ed" stroke-dasharray="3 7"/>
-<g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif">
-<text x="42" y="48" font-size="12" font-weight="600" letter-spacing="2.4" fill="#087f8c">HELLO, I'M</text>
-<text x="39" y="119" font-size="64" font-weight="750" letter-spacing="-2.5" fill="#172b3e">taku0193</text>
-<text x="42" y="158" font-size="24" font-weight="500" fill="#526579">Motion. Rhythm. Code.</text>
-<path d="M42 182H478" stroke="#d9e3ed"/>
-<text x="42" y="215" font-size="12" letter-spacing="1" font-weight="600" fill="#526579">POSE ESTIMATION</text>
-<circle cx="190" cy="211" r="2" fill="#087f8c"/>
-<text x="207" y="215" font-size="12" letter-spacing="1" font-weight="600" fill="#526579">INTERACTIVE GAMES</text>
-<circle cx="371" cy="211" r="2" fill="#087f8c"/>
-<text x="388" y="215" font-size="12" letter-spacing="1" font-weight="600" fill="#526579">HEART RATE</text>
-</g>
-<g stroke="#087f8c" stroke-width="3" fill="#f6f9fc" stroke-linecap="round" stroke-linejoin="round">
-<path d="M730 94L714 125L686 109M730 94L759 98L781 70M730 94L740 143L711 169L691 201M740 143L765 166L798 174" fill="none"/>
-<path d="M730 94L730 81"/>
-<circle cx="730" cy="68" r="12"/>
-<circle cx="730" cy="94" r="4"/><circle cx="714" cy="125" r="4"/><circle cx="686" cy="109" r="4"/>
-<circle cx="759" cy="98" r="4"/><circle cx="781" cy="70" r="4"/><circle cx="740" cy="143" r="4"/>
-<circle cx="711" cy="169" r="4"/><circle cx="691" cy="201" r="4"/><circle cx="765" cy="166" r="4"/><circle cx="798" cy="174" r="4"/>
-</g>
-<path d="M595 228H659L670 217L681 236L695 201L707 228H875" stroke="#d9e3ed" stroke-width="2" fill="none"/>
-<path class="signal" d="M595 228H659L670 217L681 236L695 201L707 228H875" stroke="#087f8c" stroke-width="2" fill="none"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="274" viewBox="0 0 900 274" role="img" aria-labelledby="hero-title">
+<title id="hero-title">taku0193 — Motion. Rhythm. Code.</title>
+<defs>
+  <pattern id="scene-grid" width="16" height="16" patternUnits="userSpaceOnUse">
+    <path d="M16 0H0V16" fill="none" stroke="#22394d" stroke-width="1"/>
+  </pattern>
+  <pattern id="track" width="32" height="8" patternUnits="userSpaceOnUse">
+    <path d="M0 4H16" stroke="#69c8ba" stroke-width="2"/>
+  </pattern>
+</defs>
+<g font-family="ui-monospace, Menlo, Consolas, monospace">
+  
+<rect x=".5" y=".5" width="899" height="273" rx="10" fill="#f0f7f9" stroke="#afc8d4"/>
+<path d="M10 1H890Q899 1 899 10V34H1V10Q1 1 10 1Z" fill="#dcebf0"/>
+<path d="M1 34H899" stroke="#afc8d4"/>
+<rect x="16" y="15" width="6" height="6" fill="#a6404a"/>
+<rect x="28" y="15" width="6" height="6" fill="#855500"/>
+<rect x="40" y="15" width="6" height="6" fill="#08786f"/>
+<text x="59" y="22" font-size="13" fill="#465f75">taku0193@github: ~/motion-lab</text>
+  <text x="32" y="69" font-size="14" font-weight="700" fill="#08786f">$ whoami</text>
+  <text x="30" y="124" font-size="57" font-weight="800" letter-spacing="-2" fill="#142c41">taku0193</text>
+  <text x="32" y="158" font-size="25" font-weight="650" fill="#08786f">Motion. Rhythm. Code.</text>
+  <text x="32" y="193" font-size="14" fill="#465f75">POSE TRACKING / INTERACTIVE GAMES</text>
+  <text x="32" y="215" font-size="14" fill="#465f75">LIVE HEART-RATE TOOLS</text>
+  <path d="M32 237H480" stroke="#afc8d4"/>
+  <text x="32" y="256" font-size="11" letter-spacing="1.1" fill="#465f75">MOTION LAB</text>
+  <rect x="512" y="51" width="363" height="202" rx="4" fill="#0c1422" stroke="#314a60"/>
+  <rect x="513" y="52" width="361" height="182" fill="url(#scene-grid)"/>
+  <text x="530" y="76" font-size="11" letter-spacing="1.2" fill="#a6bfd2">STAGE 01 / MOTION TRACK</text>
+  <path d="M530 123h36l9-7h9l9 7h24l8 11 13-34 12 31 8-8h31l7-7h9l8 7h24l9 12 13-35 12 30 8-7h78"
+        fill="none" stroke="#71efd4" stroke-width="2" opacity=".73"/>
+  <path d="M513 223H875" stroke="#31546a" stroke-width="2"/>
+  <rect x="513" y="229" width="361" height="8" fill="url(#track)"/>
+  <path d="M542 200h36m-27 8h20m239-36h34m-44 8h20" stroke="#427687" stroke-width="2"/>
+  <rect x="831" y="195" width="7" height="7" fill="#ffd585"/>
+  <rect x="848" y="183" width="7" height="7" fill="#ff928d"/>
+  <g transform="translate(683 143)" shape-rendering="crispEdges"><rect x="25" y="0" width="5" height="5" fill="#ffd585"/><rect x="30" y="0" width="5" height="5" fill="#ffd585"/><rect x="35" y="0" width="5" height="5" fill="#ffd585"/><rect x="40" y="0" width="5" height="5" fill="#ffd585"/><rect x="20" y="5" width="5" height="5" fill="#ffd585"/><rect x="25" y="5" width="5" height="5" fill="#ffd585"/><rect x="30" y="5" width="5" height="5" fill="#ffd585"/><rect x="35" y="5" width="5" height="5" fill="#ffd585"/><rect x="40" y="5" width="5" height="5" fill="#ffd585"/><rect x="45" y="5" width="5" height="5" fill="#ffd585"/><rect x="20" y="10" width="5" height="5" fill="#ffd585"/><rect x="25" y="10" width="5" height="5" fill="#f0f7ff"/><rect x="30" y="10" width="5" height="5" fill="#f0f7ff"/><rect x="35" y="10" width="5" height="5" fill="#f0f7ff"/><rect x="40" y="10" width="5" height="5" fill="#f0f7ff"/><rect x="45" y="10" width="5" height="5" fill="#f0f7ff"/><rect x="25" y="15" width="5" height="5" fill="#f0f7ff"/><rect x="30" y="15" width="5" height="5" fill="#f0f7ff"/><rect x="40" y="15" width="5" height="5" fill="#f0f7ff"/><rect x="30" y="20" width="5" height="5" fill="#f0f7ff"/><rect x="35" y="20" width="5" height="5" fill="#f0f7ff"/><rect x="40" y="20" width="5" height="5" fill="#f0f7ff"/><rect x="25" y="25" width="5" height="5" fill="#71efd4"/><rect x="30" y="25" width="5" height="5" fill="#71efd4"/><rect x="35" y="25" width="5" height="5" fill="#71efd4"/><rect x="10" y="30" width="5" height="5" fill="#71efd4"/><rect x="15" y="30" width="5" height="5" fill="#71efd4"/><rect x="20" y="30" width="5" height="5" fill="#71efd4"/><rect x="25" y="30" width="5" height="5" fill="#71efd4"/><rect x="30" y="30" width="5" height="5" fill="#71efd4"/><rect x="35" y="30" width="5" height="5" fill="#71efd4"/><rect x="40" y="30" width="5" height="5" fill="#71efd4"/><rect x="5" y="35" width="5" height="5" fill="#f0f7ff"/><rect x="10" y="35" width="5" height="5" fill="#f0f7ff"/><rect x="25" y="35" width="5" height="5" fill="#71efd4"/><rect x="30" y="35" width="5" height="5" fill="#71efd4"/><rect x="35" y="35" width="5" height="5" fill="#71efd4"/><rect x="40" y="35" width="5" height="5" fill="#71efd4"/><rect x="45" y="35" width="5" height="5" fill="#71efd4"/><rect x="25" y="40" width="5" height="5" fill="#71efd4"/><rect x="30" y="40" width="5" height="5" fill="#71efd4"/><rect x="45" y="40" width="5" height="5" fill="#f0f7ff"/><rect x="50" y="40" width="5" height="5" fill="#f0f7ff"/><rect x="20" y="45" width="5" height="5" fill="#ff928d"/><rect x="25" y="45" width="5" height="5" fill="#ff928d"/><rect x="30" y="45" width="5" height="5" fill="#ff928d"/><rect x="35" y="45" width="5" height="5" fill="#71efd4"/><rect x="15" y="50" width="5" height="5" fill="#ff928d"/><rect x="20" y="50" width="5" height="5" fill="#ff928d"/><rect x="25" y="50" width="5" height="5" fill="#ff928d"/><rect x="35" y="50" width="5" height="5" fill="#ff928d"/><rect x="40" y="50" width="5" height="5" fill="#ff928d"/><rect x="10" y="55" width="5" height="5" fill="#ff928d"/><rect x="15" y="55" width="5" height="5" fill="#ff928d"/><rect x="20" y="55" width="5" height="5" fill="#ff928d"/><rect x="40" y="55" width="5" height="5" fill="#ff928d"/><rect x="45" y="55" width="5" height="5" fill="#ff928d"/><rect x="5" y="60" width="5" height="5" fill="#f0f7ff"/><rect x="10" y="60" width="5" height="5" fill="#f0f7ff"/><rect x="15" y="60" width="5" height="5" fill="#ff928d"/><rect x="45" y="60" width="5" height="5" fill="#ff928d"/><rect x="50" y="60" width="5" height="5" fill="#ff928d"/><rect x="5" y="65" width="5" height="5" fill="#f0f7ff"/><rect x="10" y="65" width="5" height="5" fill="#f0f7ff"/><rect x="50" y="65" width="5" height="5" fill="#f0f7ff"/><rect x="55" y="65" width="5" height="5" fill="#f0f7ff"/></g>
+</g></svg>

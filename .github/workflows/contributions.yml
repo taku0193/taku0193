@@ -9,6 +9,7 @@ on:
     paths:
       - '.github/workflows/contributions.yml'
       - 'scripts/update_activity.py'
+      - 'scripts/motion_lab.py'
 
 permissions:
   contents: read
@@ -35,28 +36,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Generate light and dark contribution snakes
-        uses: Platane/snk/svg-only@d8f6715049803e982ee5ff501b6b9b7d5deeb09b # v3.5.0
-        with:
-          github_user_name: taku0193
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          outputs: |
-            assets/contributions-light.svg?color_snake=#087f8c
-            assets/contributions-dark.svg?palette=github-dark&color_snake=#62e4d1
+      - name: Render Motion Lab and Beat Runner
+        run: python3 scripts/motion_lab.py --assets assets
 
       - name: Save updated activity images
         shell: bash
         run: |
           set -euo pipefail
-          test -s assets/contributions-light.svg
-          test -s assets/contributions-dark.svg
+          test -s assets/header-light.svg
+          test -s assets/header-dark.svg
+          test -s assets/beat-runner-light.svg
+          test -s assets/beat-runner-dark.svg
           test -s assets/pulse-light.svg
           test -s assets/pulse-dark.svg
           test -s assets/overview-light.svg
           test -s assets/overview-dark.svg
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/contributions-light.svg assets/contributions-dark.svg assets/pulse-light.svg assets/pulse-dark.svg assets/overview-light.svg assets/overview-dark.svg assets/activity-data.json
+          git add assets/header-light.svg assets/header-dark.svg assets/beat-runner-light.svg assets/beat-runner-dark.svg assets/pulse-light.svg assets/pulse-dark.svg assets/overview-light.svg assets/overview-dark.svg assets/activity-data.json
           if git diff --cached --quiet; then
             exit 0
           fi

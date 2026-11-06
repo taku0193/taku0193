@@ -1,7 +1,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/header-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/header-light.svg">
-  <img src="./assets/header-light.svg" width="100%" alt="Hi, I'm taku0193 — Motion. Rhythm. Code. Pose estimation, interactive games, and heart-rate apps.">
+  <img src="./assets/header-light.svg" width="100%" alt="taku0193 — Motion. Rhythm. Code. Pose tracking, interactive games, and live heart-rate tools.">
 </picture>
 
 ## 👋 About Me
@@ -51,7 +51,7 @@ I build apps that connect body movement, music, and heart-rate data.
   <img src="./assets/overview-light.svg" width="100%" alt="Activity over the past year: total contributions, recent activity, active days, longest streak, and contribution types. Includes anonymized private counts.">
 </picture>
 
-## 🐍 Contributions
+## Contributions
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/pulse-dark.svg">
@@ -59,15 +59,11 @@ I build apps that connect body movement, music, and heart-rate data.
   <img src="./assets/pulse-light.svg" width="100%" alt="Today's GitHub contribution count (UTC). The waveform grows taller and moves faster as contributions increase.">
 </picture>
 
-A year of building, one contribution at a time.
-
-<a href="https://github.com/taku0193?tab=overview">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/contributions-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="./assets/contributions-light.svg">
-    <img src="./assets/contributions-light.svg" width="100%" alt="An animated snake eating taku0193's GitHub contribution calendar. Click to view activity.">
-  </picture>
-</a>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/beat-runner-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/beat-runner-light.svg">
+  <img src="./assets/beat-runner-light.svg" width="100%" alt="Beat Runner, an animated pixel runner crossing my past year of GitHub contributions.">
+</picture>
 
 ---
 
