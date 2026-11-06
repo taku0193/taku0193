@@ -3,7 +3,7 @@
   <source media="(prefers-reduced-motion: reduce)" srcset="./assets/header-light-still.svg">
   <source media="(prefers-color-scheme: dark)" srcset="./assets/header-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/header-light.svg">
-  <img src="./assets/header-light.svg" width="100%" alt="taku0193 — Motion. Rhythm. Code. Pose tracking, interactive games, and live heart-rate tools. Three pixel runners pass through a motion capture gate.">
+  <img src="./assets/header-light.svg" width="100%" alt="taku0193 — Motion. Rhythm. Code. Pose tracking, interactive games, and live heart-rate tools. Three pixel runners pass through a motion capture gate and light the track with their footsteps.">
 </picture>
 
 ## 👋 About Me

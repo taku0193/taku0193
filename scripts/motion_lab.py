@@ -110,12 +110,30 @@ def terminal_frame(colors, height, label):
 <text x="59" y="22" font-size="13" fill="{colors["muted"]}">{escape(label)}</text>'''
 
 
+def footstep_light(x, y, delay, color):
+    """Leave a lit tile under the planted shoe and send a pulse down the lane."""
+    return f'''<g transform="translate({x:.2f} {y:g})" fill="{color}" style="--beat-delay:{delay:.6f}s">
+  <g class="beat-contact" opacity="0">
+    <rect x="-8" y="-1" width="16" height="5" opacity=".24"/>
+    <rect x="-4.5" y="0" width="9" height="2.5"/>
+    <path d="M-7-3h2v2h-2zM5-3h2v2H5z" opacity=".66"/>
+  </g>
+  <g class="beat-ray" opacity="0">
+    <path d="M-6 11h10v2H-6zM7 11h6v2H7zM16 11h3v2h-3z"/>
+    <path d="M-7 13h28v1H-7z" opacity=".3"/>
+  </g>
+</g>'''
+
+
 def hero_svg(theme):
     """A quiet, layered night city with three passing pixel runners."""
     c = THEMES[theme]
     scene_x = 513
+    scene_width = 361
     gate_x = 693
+    gate_exit = gate_x + 39
     runner_x, runner_y, pixel_size = 466, 170, 3
+    road_y = runner_y + len(SPRITE) * pixel_size
     travel, lap_seconds = 438, 8.4
     shoulder_x = runner_x + (RUN_JOINTS["shoulder"][0] + .5) * pixel_size
     scan_enter, scan_lock, scan_release, scan_exit = (
@@ -132,7 +150,18 @@ def hero_svg(theme):
         dict(runner_colors, teal="#c6adf4", coral="#ff9b9f", amber="#a1ecc5"),
     )
     runners = []
-    for index, outfit in enumerate(outfits, 1):
+    runner_styles = []
+    footsteps = []
+    # Each cadence divides a full pass, so the planted foot and its light stay
+    # on the same clock when the runner wraps around the scene.
+    for index, (outfit, offset, rest_x, strides) in enumerate(
+        zip(outfits, (1.7, 4.5, 7.3), (88, 212, 318), (20, 15, 24)), 1
+    ):
+        stride_seconds = lap_seconds / strides
+        runner_styles.append(
+            f".runner-{index} {{--run-offset:-{offset}s;--stride-time:{stride_seconds:g}s;"
+            f"transform:translateX({rest_x}px)}}"
+        )
         runners.append(f'''<g class="track-runner runner-{index}">
     <rect x="472" y="212" width="26" height="2" fill="#07121c" opacity=".7"/>
     <g class="pulse-stride">
@@ -140,6 +169,21 @@ def hero_svg(theme):
       <g class="step-b">{pixel_runner(runner_x, runner_y, pixel_size, outfit, STRIDE_SPRITE)}{scan_b}</g>
     </g>
   </g>''')
+        for step_index in range(2 * strides):
+            at = step_index * stride_seconds / 2
+            distance = travel * at / lap_seconds
+            # The front shoes occupy columns 10–11 in pose A and 9–10 in B.
+            foot_col = 11 if step_index % 2 == 0 else 10
+            foot_x = runner_x + foot_col * pixel_size + distance
+            if shoulder_x + distance >= gate_exit and foot_x < scene_x + scene_width:
+                delay = -((offset - at) % lap_seconds)
+                footsteps.append(footstep_light(foot_x, road_y, delay, outfit["teal"]))
+    runner_css = "\n".join(runner_styles)
+    lane_x = gate_exit - scene_x + 5
+    lane_tiles = "".join(
+        f'<rect x="{x}" y="172" width="7" height="2" fill="#294754"/>'
+        for x in range(lane_x, scene_width - 7, 12)
+    )
 
     # One seamless 384px city tile, repeated beyond the clipped viewport.
     buildings = []
@@ -168,22 +212,20 @@ def hero_svg(theme):
     trace = "M18 70h34l6-4 6 4h26l6 7 8-18 8 20 7-9h38l6-4 6 4h25l7 7 8-18 8 20 7-9h31l6-4 6 4h66"
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="274" viewBox="0 0 900 274" role="img" aria-labelledby="hero-title hero-desc">
 <title id="hero-title">taku0193 — Motion. Rhythm. Code.</title>
-<desc id="hero-desc">Three runners pass through a layered night city. A motion capture gate briefly traces each runner's joints as they pass.</desc>
+<desc id="hero-desc">Three runners pass through a layered night city. A motion capture gate traces their joints, then each footfall sends a flash of their color along the road.</desc>
 <style>
 .hero-far {{animation:hero-landscape 100s linear infinite}}
 .hero-city {{animation:hero-landscape 38s linear infinite}}
 .hero-road {{animation:hero-road 1.05s linear infinite}}
 .trace-light {{stroke-dasharray:9 91; animation:trace 3.2s linear infinite}}
 .track-runner {{animation:pass-through {lap_seconds}s linear infinite;animation-delay:var(--run-offset)}}
-.runner-1 {{--run-offset:-1.7s;transform:translateX(88px)}}
-.runner-2 {{--run-offset:-4.5s;transform:translateX(212px)}}
-.runner-3 {{--run-offset:-7.3s;transform:translateX(318px)}}
+{runner_css}
 .pose-scan {{animation:scan-pose {lap_seconds}s linear infinite;animation-delay:var(--run-offset)}}
-.pulse-stride {{animation:stride .42s ease-in-out infinite}}
-.step-a {{animation:step-a .42s step-end infinite}}
-.step-b {{opacity:0;animation:step-b .42s step-end infinite}}
-.runner-2 .pulse-stride, .runner-2 .step-a, .runner-2 .step-b {{animation-delay:-.14s}}
-.runner-3 .pulse-stride, .runner-3 .step-a, .runner-3 .step-b {{animation-delay:-.28s}}
+.pulse-stride {{animation:stride var(--stride-time) ease-in-out infinite;animation-delay:var(--run-offset)}}
+.step-a {{animation:step-a var(--stride-time) step-end infinite;animation-delay:var(--run-offset)}}
+.step-b {{opacity:0;animation:step-b var(--stride-time) step-end infinite;animation-delay:var(--run-offset)}}
+.beat-contact {{animation:beat-contact {lap_seconds}s linear infinite;animation-delay:var(--beat-delay)}}
+.beat-ray {{animation:beat-ray {lap_seconds}s ease-out infinite;animation-delay:var(--beat-delay)}}
 .star {{animation:star-glow 7s ease-in-out infinite}}
 .star-1 {{animation-delay:-2.3s}}
 .star-2 {{animation-delay:-4.6s}}
@@ -202,12 +244,22 @@ def hero_svg(theme):
 @keyframes step-b {{0%,100% {{opacity:0}} 50% {{opacity:1}}}}
 @keyframes trace {{to {{stroke-dashoffset:-100}}}}
 @keyframes stride {{0%,50%,100% {{transform:translateY(0)}} 25%,75% {{transform:translateY(-1px)}}}}
+@keyframes beat-contact {{
+  0% {{opacity:1}}
+  {.19 / lap_seconds * 100:.4f}%,100% {{opacity:0}}
+}}
+@keyframes beat-ray {{
+  0% {{opacity:0;transform:translateX(0)}}
+  {.045 / lap_seconds * 100:.4f}% {{opacity:.82;transform:translateX(4px)}}
+  {.29 / lap_seconds * 100:.4f}%,100% {{opacity:0;transform:translateX(20px)}}
+}}
 @keyframes star-glow {{0%,100% {{opacity:.28}} 50% {{opacity:.64}}}}
 @keyframes window-glow {{0%,100% {{opacity:.45}} 45%,65% {{opacity:.85}}}}
 @media (prefers-reduced-motion: reduce) {{
   .trace-light {{display:none}}
   .hero-far, .hero-city, .hero-road, .track-runner, .pulse-stride,
-  .step-a, .step-b, .star, .window-light, .pose-scan {{animation:none}}
+  .step-a, .step-b, .star, .window-light, .pose-scan,
+  .beat-contact, .beat-ray {{animation:none}}
 }}
 </style>
 <defs>
@@ -244,6 +296,8 @@ def hero_svg(theme):
     <rect y="159" width="361" height="3" fill="#264954"/>
     <path d="M0 160H361" stroke="#73c6b4" stroke-opacity=".3"/>
     <g class="hero-road"><rect x="0" y="166" width="432" height="16" fill="url(#hero-road-mark)"/></g>
+    <rect x="{lane_x - 4}" y="166" width="{scene_width - lane_x + 4}" height="16" fill="#102431"/>
+    {lane_tiles}
     <path d="M0 189H361" stroke="#294754"/>
     <g transform="translate({gate_local} 0)">
       <rect x="-39" y="108" width="78" height="55" fill="#71efd4" opacity=".055"/>
@@ -254,8 +308,9 @@ def hero_svg(theme):
       <text x="0" y="102" text-anchor="middle" font-size="8" letter-spacing="1.35" fill="#91d6c9">POSE GATE</text>
     </g>
     <text x="16" y="23" font-size="10" letter-spacing="1.1" fill="#a6bfd2">STAGE 01 / NIGHT RUN</text>
-    <text x="345" y="193" text-anchor="end" font-size="8" letter-spacing="1.6" fill="#70939f">KEEP MOVING</text>
+    <text x="345" y="193" text-anchor="end" font-size="8" letter-spacing="1.6" fill="#91c5c5">BEAT TRACK</text>
   </g></g>
+  <g clip-path="url(#hero-scene-clip)" aria-hidden="true">{''.join(footsteps)}</g>
   <g clip-path="url(#runner-track)">{''.join(runners)}</g>
 </g></svg>'''
 
