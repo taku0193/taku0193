@@ -62,7 +62,7 @@ I build apps that connect body movement, music, and heart-rate data.
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/beat-runner-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/beat-runner-light.svg">
-  <img src="./assets/beat-runner-light.svg" width="100%" alt="Beat Runner, an animated pixel runner crossing my past year of GitHub contributions.">
+    <img src="./assets/beat-runner-light.svg" width="100%" alt="Beat Runner collects one energy drink for each active day in my GitHub contribution calendar.">
 </picture>
 
 ---
