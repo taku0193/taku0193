@@ -73,58 +73,96 @@ def terminal_frame(colors, height, label):
 
 
 def hero_svg(theme):
+    """A quiet, layered night city with three passing pixel runners."""
     c = THEMES[theme]
-    trace = "M530 123h36l9-7h9l9 7h24l8 11 13-34 12 31 8-8h31l7-7h9l8 7h24l9 12 13-35 12 30 8-7h78"
-    dark = THEMES["dark"]
+    runner_colors = THEMES["dark"]
     outfits = (
-        dark,
-        dict(dark, teal="#ffb782", coral="#79d7f7", amber="#f1a9bf"),
-        dict(dark, teal="#c6adf4", coral="#ff9b9f", amber="#a1ecc5"),
+        runner_colors,
+        dict(runner_colors, teal="#ffb782", coral="#79d7f7", amber="#f1a9bf"),
+        dict(runner_colors, teal="#c6adf4", coral="#ff9b9f", amber="#a1ecc5"),
     )
     runners = []
     for index, outfit in enumerate(outfits, 1):
         runners.append(f'''<g class="track-runner runner-{index}">
+    <rect x="472" y="212" width="26" height="2" fill="#07121c" opacity=".7"/>
     <g class="pulse-stride">
-      <g class="step-a">{pixel_runner(450, 152, 4.2, outfit)}</g>
-      <g class="step-b">{pixel_runner(450, 152, 4.2, outfit, STRIDE_SPRITE)}</g>
+      <g class="step-a">{pixel_runner(466, 170, 3, outfit)}</g>
+      <g class="step-b">{pixel_runner(466, 170, 3, outfit, STRIDE_SPRITE)}</g>
     </g>
   </g>''')
+
+    # One seamless 384px city tile, repeated beyond the clipped viewport.
+    buildings = []
+    blocks = ((4, 26, 36), (39, 34, 49), (88, 22, 62), (125, 44, 42),
+              (185, 28, 56), (233, 39, 32), (284, 32, 58), (337, 35, 40))
+    for index, (x, width, height) in enumerate(blocks):
+        top = 154 - height
+        buildings.append(f'<rect x="{x}" y="{top}" width="{width}" height="{height}" fill="{"#173446" if index % 2 else "#1c3d4d"}"/>')
+        buildings.append(f'<path d="M{x} {top}h{width}" stroke="#2b5461" stroke-width="1"/>')
+        if index in (2, 6):
+            buildings.append(f'<path d="M{x+width//2} {top}v-9" stroke="#335d6a" stroke-width="2"/>')
+        for row in range(2, height // 9):
+            for col in range(1, width // 8):
+                lit = (row + col + index) % 4 == 0
+                color = "#6bb6a9" if lit else "#294957"
+                klass = f' class="window-light window-{index % 3}"' if lit and row == 3 else ""
+                buildings.append(f'<rect{klass} x="{x+col*8-2}" y="{top+row*8-4}" width="3" height="4" fill="{color}" opacity="{.8 if lit else .45}"/>')
+    # Lamps form a middle-distance layer; their glow is intentionally very small.
+    buildings.append('<path d="M165 155v-25h8m151 25v-34h8" fill="none" stroke="#396271" stroke-width="2"/>')
+    buildings.append('<path d="M169 130h5m154-9h5" stroke="#a9d8b8" stroke-width="2"/>')
+    stars = "".join(
+        f'<rect class="star star-{i % 3}" x="{x}" y="{y}" width="{size}" height="{size}" fill="#a4c6ce" opacity=".45"/>'
+        for i, (x, y, size) in enumerate(((31, 41, 2), (83, 32, 1.5), (143, 43, 2),
+                                        (213, 32, 1.5), (264, 43, 2), (343, 59, 1.5)))
+    )
+    trace = "M18 70h34l6-4 6 4h26l6 7 8-18 8 20 7-9h38l6-4 6 4h25l7 7 8-18 8 20 7-9h31l6-4 6 4h66"
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="274" viewBox="0 0 900 274" role="img" aria-labelledby="hero-title hero-desc">
 <title id="hero-title">taku0193 — Motion. Rhythm. Code.</title>
-<desc id="hero-desc">Three pixel runners cross the Motion Lab track below a pulsing waveform.</desc>
+<desc id="hero-desc">Three runners pass through a layered night city. Distant hills drift slowly, buildings glide behind them, and road markings move faster below a soft heart-rate trace.</desc>
 <style>
-.trace-light {{stroke-dasharray:11 89; animation:trace 2.8s linear infinite}}
+.hero-far {{animation:hero-landscape 100s linear infinite}}
+.hero-city {{animation:hero-landscape 38s linear infinite}}
+.hero-road {{animation:hero-road 1.05s linear infinite}}
+.trace-light {{stroke-dasharray:9 91; animation:trace 3.2s linear infinite}}
 .track-runner {{animation:pass-through 8.4s linear infinite}}
-.runner-1 {{animation-delay:-1.7s;transform:translateX(104px)}}
-.runner-2 {{animation-delay:-4.5s;transform:translateX(215px)}}
-.runner-3 {{animation-delay:-7.3s;transform:translateX(326px)}}
-.pulse-stride {{animation:stride 2.8s steps(1,end) infinite}}
-.step-a {{animation:step-a .44s step-end infinite}}
-.step-b {{opacity:0;animation:step-b .44s step-end infinite}}
-.runner-2 .step-a, .runner-2 .step-b {{animation-delay:-.15s}}
-.runner-3 .step-a, .runner-3 .step-b {{animation-delay:-.30s}}
-@keyframes pass-through {{from {{transform:translateX(0)}} to {{transform:translateX(430px)}}}}
+.runner-1 {{animation-delay:-1.7s;transform:translateX(88px)}}
+.runner-2 {{animation-delay:-4.5s;transform:translateX(212px)}}
+.runner-3 {{animation-delay:-7.3s;transform:translateX(318px)}}
+.pulse-stride {{animation:stride .42s ease-in-out infinite}}
+.step-a {{animation:step-a .42s step-end infinite}}
+.step-b {{opacity:0;animation:step-b .42s step-end infinite}}
+.runner-2 .pulse-stride, .runner-2 .step-a, .runner-2 .step-b {{animation-delay:-.14s}}
+.runner-3 .pulse-stride, .runner-3 .step-a, .runner-3 .step-b {{animation-delay:-.28s}}
+.star {{animation:star-glow 7s ease-in-out infinite}}
+.star-1 {{animation-delay:-2.3s}}
+.star-2 {{animation-delay:-4.6s}}
+.window-light {{animation:window-glow 9s ease-in-out infinite}}
+.window-1 {{animation-delay:-3s}}
+.window-2 {{animation-delay:-6s}}
+@keyframes hero-landscape {{from {{transform:translateX(0)}} to {{transform:translateX(-384px)}}}}
+@keyframes hero-road {{from {{transform:translateX(0)}} to {{transform:translateX(-48px)}}}}
+@keyframes pass-through {{from {{transform:translateX(0)}} to {{transform:translateX(438px)}}}}
 @keyframes step-a {{0%,100% {{opacity:1}} 50% {{opacity:0}}}}
 @keyframes step-b {{0%,100% {{opacity:0}} 50% {{opacity:1}}}}
 @keyframes trace {{to {{stroke-dashoffset:-100}}}}
-@keyframes stride {{
-  0%, 44%, 79%, 100% {{transform:translateY(0)}}
-  34% {{transform:translateY(-4px)}}
-  69% {{transform:translateY(-3px)}}
-}}
+@keyframes stride {{0%,50%,100% {{transform:translateY(0)}} 25%,75% {{transform:translateY(-1px)}}}}
+@keyframes star-glow {{0%,100% {{opacity:.28}} 50% {{opacity:.64}}}}
+@keyframes window-glow {{0%,100% {{opacity:.45}} 45%,65% {{opacity:.85}}}}
 @media (prefers-reduced-motion: reduce) {{
   .trace-light {{display:none}}
-  .track-runner, .pulse-stride, .step-a, .step-b {{animation:none}}
+  .hero-far, .hero-city, .hero-road, .track-runner, .pulse-stride,
+  .step-a, .step-b, .star, .window-light {{animation:none}}
 }}
 </style>
 <defs>
-  <pattern id="scene-grid" width="16" height="16" patternUnits="userSpaceOnUse">
-    <path d="M16 0H0V16" fill="none" stroke="#22394d" stroke-width="1"/>
-  </pattern>
-  <pattern id="track" width="32" height="8" patternUnits="userSpaceOnUse">
-    <path d="M0 4H16" stroke="#69c8ba" stroke-width="2"/>
-  </pattern>
-  <clipPath id="runner-track"><rect x="513" y="142" width="361" height="81"/></clipPath>
+  <clipPath id="hero-scene-clip"><rect x="513" y="52" width="361" height="200" rx="3"/></clipPath>
+  <clipPath id="runner-track"><rect x="513" y="156" width="361" height="60"/></clipPath>
+  <g id="hero-hills" shape-rendering="crispEdges">
+    <path d="M0 124h20v-7h18v-9h23v-11h20v-7h24v8h17v12h24v9h31v-8h18v-11h22v-7h28v9h21v14h28v6h20v-9h20v-8h27v9h23v40H0Z" fill="#142b3b"/>
+    <path d="M0 135h30v-5h19v-6h29v8h24v7h28v-5h30v-7h27v6h18v8h40v-8h22v-8h28v8h24v5h22v-6h26v6h17v16H0Z" fill="#19313f"/>
+  </g>
+  <g id="hero-buildings" shape-rendering="crispEdges">{''.join(buildings)}</g>
+  <pattern id="hero-road-mark" width="48" height="16" patternUnits="userSpaceOnUse"><path d="M0 8h19" stroke="#477b83" stroke-width="2"/></pattern>
 </defs>
 <g font-family="ui-monospace, Menlo, Consolas, monospace">
   {terminal_frame(c, 274, "taku0193@github: ~/motion-lab")}
@@ -135,18 +173,28 @@ def hero_svg(theme):
   <text x="32" y="215" font-size="14" fill="{c["muted"]}">LIVE HEART-RATE TOOLS</text>
   <path d="M32 237H480" stroke="{c["edge"]}"/>
   <text x="32" y="256" font-size="11" letter-spacing="1.1" fill="{c["muted"]}">MOTION LAB</text>
-  <rect x="512" y="51" width="363" height="202" rx="4" fill="#0c1422" stroke="#314a60"/>
-  <rect x="513" y="52" width="361" height="182" fill="url(#scene-grid)"/>
-  <text x="530" y="76" font-size="11" letter-spacing="1.2" fill="#a6bfd2">STAGE 01 / MOTION TRACK</text>
-  <path d="{trace}" fill="none" stroke="#71efd4" stroke-width="2" opacity=".53"/>
-  <path class="trace-light" d="{trace}" pathLength="100" fill="none" stroke="#9effec" stroke-width="3"/>
-  <path d="M513 223H875" stroke="#31546a" stroke-width="2"/>
-  <rect x="513" y="229" width="361" height="8" fill="url(#track)"/>
-  <path d="M542 200h36m-27 8h20m239-36h34m-44 8h20" stroke="#427687" stroke-width="2"/>
-  <rect x="831" y="195" width="7" height="7" fill="#ffd585"/>
-  <rect x="848" y="183" width="7" height="7" fill="#ff928d"/>
+  <rect x="512" y="51" width="363" height="202" rx="4" fill="#0c1726" stroke="#314a60"/>
+  <g clip-path="url(#hero-scene-clip)"><g transform="translate(513 52)">
+    <rect width="361" height="200" fill="#0c1726"/>
+    {stars}
+    <circle cx="320" cy="42" r="9" fill="#b2cbb9" opacity=".8"/>
+    <circle cx="324" cy="38" r="9" fill="#0c1726"/>
+    <path d="{trace}" fill="none" stroke="#5d9e9d" stroke-width="1.3" opacity=".32"/>
+    <path class="trace-light" d="{trace}" pathLength="100" fill="none" stroke="#86e4cf" stroke-width="1.6" opacity=".65"/>
+    <g class="hero-far"><use href="#hero-hills"/><use href="#hero-hills" x="384"/></g>
+    <g class="hero-city"><use href="#hero-buildings"/><use href="#hero-buildings" x="384"/></g>
+    <rect y="154" width="361" height="46" fill="#102431"/>
+    <path d="M0 155H361" stroke="#335664"/>
+    <rect y="159" width="361" height="3" fill="#264954"/>
+    <path d="M0 160H361" stroke="#73c6b4" stroke-opacity=".3"/>
+    <g class="hero-road"><rect x="0" y="166" width="432" height="16" fill="url(#hero-road-mark)"/></g>
+    <path d="M0 189H361" stroke="#294754"/>
+    <text x="16" y="23" font-size="10" letter-spacing="1.1" fill="#a6bfd2">STAGE 01 / NIGHT RUN</text>
+    <text x="345" y="193" text-anchor="end" font-size="8" letter-spacing="1.6" fill="#70939f">KEEP MOVING</text>
+  </g></g>
   <g clip-path="url(#runner-track)">{''.join(runners)}</g>
 </g></svg>'''
+
 
 
 def contribution_grid(days):
@@ -188,13 +236,35 @@ def ordered_pickups(active_by_week, start_y):
     return min(choices, key=lambda option: option[0] + abs(start_y - option[1][0][1]))[1]
 
 
-def pickup_animation(pickups, start, week_width):
-    """Sweep the calendar, then return to the center for a recharge."""
+STAND_SPRITE = SPRITE[:6] + (
+    '....TTTTT...',
+    '...W.TTT.W..',
+    '...W.TTT.W..',
+    '....CCCCC...',
+    '....CC.CC...',
+    '....CC.CC...',
+    '....WW.WW...',
+    '...WWW.WWW..',
+)
+DRINK_SPRITE = SPRITE[:6] + (
+    '....TTTTT...',
+    '...W.TTT....',
+    '...W.TTT....',
+    '....CCCCC...',
+    '....CC.CC...',
+    '....CC.CC...',
+    '....WW.WW...',
+    '...WWW.WWW..',
+)
+
+
+def pickup_timeline(pickups, start, week_width):
+    """One clock drives the route, pickups, poses and the final pit stop."""
     if not pickups:
-        return "", [], []
+        return None
     x, y = start
     elapsed = 0.0
-    waypoints = []
+    waypoints = [(0.0, x, y)]
     arrivals = []
 
     def move(next_x, next_y, speed):
@@ -208,71 +278,115 @@ def pickup_animation(pickups, start, week_width):
     for target_x, target_y, _, _, _ in pickups:
         if target_x > x:
             gate = max(x, target_x - week_width / 2)
-            gap = gate - x
-            move(gate, y, 105 + min(gap, 400) * .65)
+            move(gate, y, 105 + min(gate - x, 400) * .65)
             move(gate, target_y, 125)
         move(target_x, target_y, 115)
         arrivals.append(elapsed)
         elapsed += .10
         waypoints.append((elapsed, x, y))
 
-    play_time = min(35, max(6, elapsed))
-    return_time = 1.1 + abs(x - 450) / 500
-    recovery_start = play_time + return_time
-    recovery_end = recovery_start + 1.65
-    duration = recovery_end + .25
-
-    def percent(seconds):
-        return 100 * seconds / duration
-
-    def course_percent(seconds):
-        return percent(play_time * seconds / elapsed)
-
-    frames = [f"0% {{transform:translate({start[0]}px,{start[1]}px);opacity:0}}", "2% {opacity:1}"]
-    for at, x, y in waypoints:
-        frames.append(f"{course_percent(at):.4f}% {{transform:translate({x:.2f}px,{y:.2f}px)}}")
-    frames.extend([
-        f"{percent(play_time + .23):.4f}% {{transform:translate({x:.2f}px,205px)}}",
-        f"{percent(recovery_start - .25):.4f}% {{transform:translate(450px,205px)}}",
-        f"{percent(recovery_start):.4f}% {{transform:translate(450px,154px)}}",
-        f"{percent(recovery_end):.4f}% {{opacity:1}}",
-        "100% {transform:translate(450px,154px);opacity:0}",
+    play = min(38, max(7, elapsed))
+    scale = play / elapsed
+    waypoints = [(at * scale, px, py) for at, px, py in waypoints]
+    arrivals = [at * scale for at in arrivals]
+    recovery = play + 1.7 + abs(x - 450) / 550
+    waypoints.extend([
+        (play + .35, x, 205),
+        (recovery - .65, 450, 205),
+        (recovery, 450, 162),
     ])
-    effects, cans, sparks = [], [], []
-    for index, ((x, y, color, day, count), at) in enumerate(zip(pickups, arrivals)):
-        position = course_percent(at)
-        flash_end = min(99, position + (4 if index == len(pickups) - 1 else 1.6))
+    drink_start = recovery + .30
+    drink_end = drink_start + 1.40
+    breathe_end = drink_end + 1.55
+    ready_end = breathe_end + .65
+    duration = ready_end + .45
+    waypoints.append((duration, 450, 162))
+    return dict(waypoints=waypoints, arrivals=arrivals, play=play,
+                recovery=recovery, drink_start=drink_start, drink_end=drink_end,
+                breathe_end=breathe_end, ready_end=ready_end, duration=duration,
+                return_left=x > 450)
+
+
+def pickup_animation(pickups, start, week_width):
+    timeline = pickup_timeline(pickups, start, week_width)
+    if timeline is None:
+        return '', [], [], None
+    t = timeline
+    duration = t['duration']
+
+    def pct(at):
+        return f'{100 * at / duration:.5f}%'
+
+    frames = []
+    for at, x, y in t['waypoints']:
+        easing = ';animation-timing-function:ease-out' if abs(at - (t['recovery'] - .65)) < .0001 else ''
+        frames.append(f'{pct(at)} {{transform:translate({x:.3f}px,{y:.3f}px){easing}}}')
+    effects = [
+        f'.pickup-runner,.trail-route {{animation:collect-route {duration:.5f}s linear infinite}}',
+        f'@keyframes collect-route {{{"".join(frames)}}}',
+        f'.runner-presence {{animation:runner-presence {duration:.5f}s linear infinite}}',
+        f'@keyframes runner-presence {{0% {{opacity:0}} {pct(.18)},{pct(t["ready_end"])} {{opacity:1}} 100% {{opacity:0}}}}',
+        f'.trail-window {{animation:trail-window {duration:.5f}s linear infinite}}',
+        f'@keyframes trail-window {{0%,{pct(.25)} {{opacity:0}} {pct(.35)},{pct(t["play"])} {{opacity:.16}} {pct(t["play"]+.20)},100% {{opacity:0}}}}',
+        '.trail-1 {animation-delay:.10s}.trail-2 {animation-delay:.20s;opacity:.5}',
+        f'.run-pose {{animation:run-pose {duration:.5f}s step-end infinite}}',
+        f'@keyframes run-pose {{0% {{opacity:1}} {pct(t["recovery"])},100% {{opacity:0}}}}',
+        f'.stand-pose {{animation:stand-pose {duration:.5f}s step-end infinite}}',
+        f'@keyframes stand-pose {{0% {{opacity:0}} {pct(t["recovery"])} {{opacity:1}} {pct(t["drink_start"])} {{opacity:0}} {pct(t["drink_end"])},100% {{opacity:1}}}}',
+        f'.drink-pose {{animation:drink-pose {duration:.5f}s step-end infinite}}',
+        f'@keyframes drink-pose {{0% {{opacity:0}} {pct(t["drink_start"])} {{opacity:1}} {pct(t["drink_end"])},100% {{opacity:0}}}}',
+        f'.avatar-size {{animation:avatar-size {duration:.5f}s ease-out infinite}}',
+        f'@keyframes avatar-size {{0%,{pct(t["recovery"]-.2)} {{transform:scale(1)}} {pct(t["recovery"]+.22)},100% {{transform:scale(1.65)}}}}',
+        f'.sip-arm {{transform-origin:2px -13px;animation:sip {duration:.5f}s ease-in-out infinite}}',
+        f'@keyframes sip {{0%,{pct(t["drink_start"])} {{transform:rotate(35deg)}} {pct(t["drink_start"]+.38)},{pct(t["drink_end"]-.34)} {{transform:rotate(-6deg)}} {pct(t["drink_end"])},100% {{transform:rotate(35deg)}}}}',
+        f'.breathing {{animation:breathing {duration:.5f}s ease-in-out infinite}}',
+        f'@keyframes breathing {{0%,{pct(t["drink_end"])} {{transform:scaleY(1)}} {pct(t["drink_end"]+.48)} {{transform:scaleY(1.045)}} {pct(t["drink_end"]+1.05)} {{transform:scaleY(.985)}} {pct(t["breathe_end"])},100% {{transform:scaleY(1)}}}}',
+    ]
+    if t['return_left']:
         effects.extend([
-            f".can-{index} {{animation:take-{index} {duration:.4f}s step-end infinite}}",
-            f"@keyframes take-{index} {{0% {{opacity:1}} {position:.4f}%,100% {{opacity:0}}}}",
-            f".spark-{index} {{animation:flash-{index} {duration:.4f}s linear infinite}}",
-            f"@keyframes flash-{index} {{0%,{max(0, position-.02):.4f}% {{opacity:0}} {position:.4f}% {{opacity:1}} {flash_end:.4f}%,100% {{opacity:0}}}}",
+            f'.runner-facing {{animation:runner-facing {duration:.5f}s step-end infinite}}',
+            f'@keyframes runner-facing {{0% {{transform:scaleX(1)}} {pct(t["play"]+.35)} {{transform:scaleX(-1)}} {pct(t["recovery"])},100% {{transform:scaleX(1)}}}}',
         ])
-        cans.append(f'<g class="pickup-can can-{index}"><title>{day}: {count} contributions</title>{drink(x-3.5, y-4.5, color, "#b0cadf")}</g>')
-        sparks.append(f'<path class="pickup-spark spark-{index}" d="M{x-6:.2f} {y-6:.2f}l-3 -3m14 3 3 -3m-1 14 3 3" fill="none" stroke="#ffd585" stroke-width="1.5" opacity="0"/>')
-    recovery_in = percent(recovery_start)
-    recovery_visible = percent(recovery_start + .18)
-    recovery_out = percent(recovery_end)
+    cans, sparks = [], []
+    combo = 0
+    for index, ((x, y, color, day, count), at) in enumerate(zip(pickups, t['arrivals'])):
+        combo = combo + 1 if index and at - t['arrivals'][index - 1] <= .65 else 1
+        strength = 1 + min(combo - 1, 4) * .13
+        effects.extend([
+            f'.can-{index} {{animation:take-{index} {duration:.5f}s step-end infinite}}',
+            f'@keyframes take-{index} {{0% {{opacity:1}} {pct(at)},100% {{opacity:0}}}}',
+            f'.spark-{index} {{animation:flash-{index} {duration:.5f}s ease-out infinite}}',
+            f'@keyframes flash-{index} {{0%,{pct(max(0,at-.001))} {{opacity:0;transform:scale(.4)}} {pct(at)} {{opacity:1;transform:scale(.55)}} {pct(at+.32)},100% {{opacity:0;transform:scale({strength:.2f})}}}}',
+        ])
+        cans.append(f'<g class="pickup-can can-{index}"><title>{day}: {count} contributions</title>{drink(x-3.5,y-4.5,color,"#b0cadf")}</g>')
+        extra = '<rect x="-1" y="-10" width="2" height="2" fill="#71efd4"/><rect x="8" y="2" width="2" height="2" fill="#71efd4"/>' if combo > 1 else ''
+        sparks.append(f'<g transform="translate({x:.3f} {y:.3f})"><g class="pickup-spark spark-{index}" opacity="0" shape-rendering="crispEdges"><path d="M-5-4h2v2h-2zM5-5h2v2H5zM-4 5h2v2h-2z" fill="#ffd585"/>{extra}</g></g>')
+
     effects.extend([
-        f".pickup-runner {{animation:collect-route {duration:.4f}s linear infinite}}",
-        f"@keyframes collect-route {{{''.join(frames)}}}",
-        f".recovery {{animation:recovery {duration:.4f}s linear infinite}}",
-        f"@keyframes recovery {{0%,{recovery_in:.4f}% {{opacity:0}} {recovery_visible:.4f}%,{recovery_out:.4f}% {{opacity:1}} 100% {{opacity:0}}}}",
-        f".heal-plus {{animation:heal-plus {duration:.4f}s linear infinite}}",
-        f"@keyframes heal-plus {{0%,{recovery_visible:.4f}% {{opacity:0;transform:translateY(4px)}} {percent(recovery_start+.45):.4f}% {{opacity:1}} {percent(recovery_start+1.25):.4f}%,100% {{opacity:0;transform:translateY(-9px)}}}}",
+        f'.recovery {{animation:recovery {duration:.5f}s linear infinite}}',
+        f'@keyframes recovery {{0%,{pct(t["recovery"]-.45)} {{opacity:0}} {pct(t["recovery"]-.12)},{pct(t["ready_end"])} {{opacity:1}} 100% {{opacity:0}}}}',
+        f'.breath-ring {{transform-origin:450px 148px;animation:breath-ring {duration:.5f}s ease-out infinite}}',
+        f'@keyframes breath-ring {{0%,{pct(t["drink_end"])} {{opacity:0;transform:scale(.65)}} {pct(t["drink_end"]+.12)} {{opacity:.35}} {pct(t["breathe_end"])},100% {{opacity:0;transform:scale(1.4)}}}}',
+        f'.heal-plus {{animation:heal-plus {duration:.5f}s ease-out infinite}}',
+        f'@keyframes heal-plus {{0%,{pct(t["drink_start"]+.35)} {{opacity:0;transform:translateY(3px)}} {pct(t["drink_start"]+.55)} {{opacity:.8}} {pct(t["breathe_end"])},100% {{opacity:0;transform:translateY(-10px)}}}}',
     ])
-    for index in range(4):
-        fill_at = percent(recovery_start + .36 + .28 * index)
+    for name, begin, end in [('hydrate',t['recovery'],t['drink_end']),('breathe',t['drink_end'],t['breathe_end']),('ready',t['breathe_end'],duration)]:
         effects.extend([
-            f".charge-{index} {{animation:charge-{index} {duration:.4f}s step-end infinite}}",
-            f"@keyframes charge-{index} {{0% {{opacity:0}} {fill_at:.4f}%,100% {{opacity:1}}}}",
+            f'.state-{name} {{animation:state-{name} {duration:.5f}s step-end infinite}}',
+            f'@keyframes state-{name} {{0% {{opacity:0}} {pct(begin)} {{opacity:1}} {pct(end)} {{opacity:0}}}}',
         ])
-    return "\n".join(effects), cans, sparks
+    for index in range(4):
+        fill_at = t['drink_start'] + .45 + .55 * index
+        effects.extend([
+            f'.charge-{index} {{animation:charge-{index} {duration:.5f}s step-end infinite}}',
+            f'@keyframes charge-{index} {{0% {{opacity:0}} {pct(fill_at)},100% {{opacity:1}}}}',
+        ])
+    return '\n'.join(effects), cans, sparks, timeline
 
 
 def runner_svg(data, theme):
     c = THEMES[theme]
-    weeks, cells = contribution_grid(data["days"])
+    weeks, cells = contribution_grid(data['days'])
     first_x, first_y = 78, 114
     step = 744 / weeks
     rows = []
@@ -281,57 +395,74 @@ def runner_svg(data, theme):
         level = 0 if count == 0 else 1 if count <= 2 else 2 if count <= 5 else 3 if count <= 10 else 4
         x = first_x + week * step
         y = first_y + weekday * 13
-        rows.append(f'<rect x="{x:.2f}" y="{y}" width="{step - 3:.2f}" height="10" rx="1" fill="{c["blank"]}"><title>{day}: {count} contributions</title></rect>')
+        rows.append(f'<rect x="{x:.2f}" y="{y}" width="{step-3:.2f}" height="10" rx="1" fill="{c["blank"]}"><title>{day}: {count} contributions</title></rect>')
         if level:
-            active_by_week[week].append((x + (step - 3) / 2, y + 5, c["levels"][level - 1], day, count))
-    start = (first_x - 13, first_y + 5)
-    route = ordered_pickups(active_by_week, start[1])
-    animation, cans, sparks = pickup_animation(route, start, step)
-    for i, label in ((1, "M"), (3, "W"), (5, "F")):
-        rows.append(f'<text x="55" y="{first_y + i * 13 + 9}" font-size="11" fill="{c["muted"]}">{label}</text>')
+            active_by_week[week].append((x+(step-3)/2,y+5,c['levels'][level-1],day,count))
+    start = (first_x-13,first_y+5)
+    route = ordered_pickups(active_by_week,start[1])
+    animation,cans,sparks,timeline = pickup_animation(route,start,step)
+    for i,label in ((1,'M'),(3,'W'),(5,'F')):
+        rows.append(f'<text x="55" y="{first_y+i*13+9}" font-size="11" fill="{c["muted"]}">{label}</text>')
     months = []
-    for week, weekday, day, _ in cells:
+    for week,weekday,day,_ in cells:
         if day.day == 1:
-            months.append(f'<text x="{first_x + week * step:.2f}" y="218" font-size="10" fill="{c["muted"]}">{day:%b}</text>')
-    legend = "".join(f'<rect x="{739 + 15 * i}" y="235" width="11" height="10" fill="{color}"/>' for i, color in enumerate((c["blank"], *c["levels"])))
-    charge = "".join(
-        f'<rect x="{427 + i * 12}" y="171" width="10" height="7" rx="1" fill="{c["blank"]}"/>'
-        f'<rect class="charge-{i}" x="{427 + i * 12}" y="171" width="10" height="7" rx="1" fill="{c["teal"]}" opacity="0"/>'
-        for i in range(4)
-    )
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="265" viewBox="0 0 900 265" role="img" aria-labelledby="runner-title">
-<title id="runner-title">Beat Runner — collect energy drinks and recharge after {data["year_contributions"]} GitHub contributions</title>
+            months.append(f'<text x="{first_x+week*step:.2f}" y="218" font-size="10" fill="{c["muted"]}">{day:%b}</text>')
+    legend = ''.join(f'<rect x="{739+15*i}" y="235" width="11" height="10" fill="{color}"/>' for i,color in enumerate((c['blank'],*c['levels'])))
+    charge = ''.join(f'<rect x="{424+i*14}" y="175" width="12" height="6" rx="1" fill="{c["blank"]}"/><rect class="charge-{i}" x="{424+i*14}" y="175" width="12" height="6" rx="1" fill="{c["teal"]}" opacity="0"/>' for i in range(4))
+    avatar = pixel_runner(-8.4,-19.6,1.4,c)
+    stride = pixel_runner(-8.4,-19.6,1.4,c,STRIDE_SPRITE)
+    stand = pixel_runner(-8.4,-19.6,1.4,c,STAND_SPRITE)
+    sipping = pixel_runner(-8.4,-19.6,1.4,c,DRINK_SPRITE)
+    motion = '' if timeline is None else f'''
+  <g class="trail-window" opacity="0"><g class="trail-route trail-2">{avatar}</g><g class="trail-route trail-1">{avatar}</g></g>
+  <g class="recovery" opacity="0">
+    <rect x="382" y="99" width="136" height="103" rx="6" fill="{c['body']}" stroke="{c['edge']}"/>
+    <path d="M390 125V119H510V125M390 165H510" fill="none" stroke="{c['teal']}" stroke-width="2"/>
+    <text x="450" y="113" text-anchor="middle" font-size="9" letter-spacing="1" fill="{c['teal']}">PIT STOP</text>
+    <path d="M397 139h12v23h-12zM395 137h16v3h-16z" fill="{c['blank']}"/>
+    <path d="M400 143h6v12h-6z" fill="{c['teal']}" opacity=".6"/>
+    <path d="M492 148h12v14h-12zM490 146h16v3h-16z" fill="{c['blank']}"/>
+    <g transform="translate(494 137)">{drink(0,0,c['teal'],c['muted'])}</g>
+    <ellipse cx="450" cy="163" rx="19" ry="3" fill="{c['blank']}"/>
+    <circle class="breath-ring" cx="450" cy="148" r="17" fill="none" stroke="{c['teal']}" opacity="0"/>
+    <g class="heal-plus" fill="{c['teal']}" opacity="0"><path d="M424 133h2v3h3v2h-3v3h-2v-3h-3v-2h3zM477 128h2v3h3v2h-3v3h-2v-3h-3v-2h3z"/></g>
+    {charge}
+    <g text-anchor="middle" font-size="8" letter-spacing="1" fill="{c['muted']}"><text class="state-hydrate" x="450" y="194" opacity="0">HYDRATE</text><text class="state-breathe" x="450" y="194" opacity="0">BREATHE</text><text class="state-ready" x="450" y="194" fill="{c['teal']}" opacity="0">READY TO RUN</text></g>
+  </g>'''
+    pose_markup = f'''<g class="avatar-size"><g class="run-pose"><g class="jog"><g class="step-a">{avatar}</g><g class="step-b" opacity="0">{stride}</g></g></g>
+    <g class="stand-pose" opacity="0"><g class="breathing">{stand}</g></g>
+    <g class="drink-pose" opacity="0">{sipping}<g class="sip-arm"><path d="M1-13h4v-4h5" fill="none" stroke="{c['ink']}" stroke-width="2.8"/><g transform="translate(7 -22) scale(.65)">{drink(0,0,c['teal'],c['ink'])}</g></g></g></g>''' if timeline else stand
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="265" viewBox="0 0 900 265" role="img" aria-labelledby="runner-title runner-desc">
+<title id="runner-title">Beat Runner — {data['year_contributions']} contributions, energy pickups and a recovery pit stop</title>
+<desc id="runner-desc">One drink for each active day. A runner collects them, returns to the center, drinks and catches their breath before the next lap.</desc>
 <style>
 {animation}
-@media (prefers-reduced-motion: reduce) {{
-  .pickup-runner, .pickup-can, .pickup-spark, .recovery {{animation:none}}
-}}
+.step-a {{animation:step-a .38s step-end infinite}} .step-b {{animation:step-b .38s step-end infinite}}
+.jog {{animation:jog .38s ease-in-out infinite}}
+@keyframes step-a {{0%,100% {{opacity:1}} 50% {{opacity:0}}}}
+@keyframes step-b {{0%,100% {{opacity:0}} 50% {{opacity:1}}}}
+@keyframes jog {{0%,50%,100% {{transform:translateY(0)}} 25%,75% {{transform:translateY(-1.4px)}}}}
+@media (prefers-reduced-motion: reduce) {{* {{animation:none !important}}}}
 </style>
 <g font-family="ui-monospace, Menlo, Consolas, monospace">
-  {terminal_frame(c, 265, "taku0193@github: ~/contributions")}
-  <text x="32" y="68" font-size="14" font-weight="700" fill="{c["teal"]}">$ ./beat-runner</text>
-  <text x="868" y="68" text-anchor="end" font-size="13" fill="{c["muted"]}">{data["year_contributions"]:,} contributions / past year</text>
-  <path d="M76 107H822" stroke="{c["edge"]}" stroke-width="1"/>
-  {"".join(rows)}
-  {"".join(cans)}
-  {"".join(sparks)}
-  <g class="recovery" opacity="0">
-    <rect x="397" y="111" width="106" height="78" rx="7" fill="{c["body"]}" stroke="{c["teal"]}"/>
-    <text x="450" y="129" text-anchor="middle" font-size="10" font-weight="700" letter-spacing="1" fill="{c["teal"]}">RECOVERY</text>
-    <g class="heal-plus" fill="{c["teal"]}" opacity="0" shape-rendering="crispEdges">
-      <path d="M426 145h2v3h3v2h-3v3h-2v-3h-3v-2h3z"/>
-      <path d="M474 141h2v3h3v2h-3v3h-2v-3h-3v-2h3z"/>
-    </g>
-    {charge}
-  </g>
-  <g class="pickup-runner" style="transform:translate({start[0]}px,{start[1]}px)">{pixel_runner(-9, -16, 1.4, c)}</g>
-  {"".join(months)}
-  <text x="32" y="245" font-size="12" fill="{c["muted"]}">Contribution calendar / {data["period_end"]} UTC</text>
-  <text x="455" y="245" text-anchor="middle" font-size="11" fill="{c["muted"]}">1 active day = 1 can</text>
-  <text x="730" y="244" text-anchor="end" font-size="11" fill="{c["muted"]}">Less</text>
-  {legend}
-  <text x="823" y="244" font-size="11" fill="{c["muted"]}">More</text>
+  {terminal_frame(c,265,'taku0193@github: ~/contributions')}
+  <text x="32" y="68" font-size="14" font-weight="700" fill="{c['teal']}">$ ./beat-runner</text>
+  <text x="868" y="68" text-anchor="end" font-size="13" fill="{c['muted']}">{data['year_contributions']:,} contributions / past year</text>
+  <path d="M76 107H822" stroke="{c['edge']}"/>
+  {''.join(rows)}{''.join(cans)}{''.join(sparks)}{motion}
+  <g class="runner-presence"><g class="pickup-runner" style="transform:translate({start[0]}px,{start[1]}px)"><g class="runner-facing">{pose_markup}</g></g></g>
+  {''.join(months)}
+  <text x="32" y="245" font-size="12" fill="{c['muted']}">Contribution calendar / {data['period_end']} UTC</text>
+  <text x="455" y="245" text-anchor="middle" font-size="11" fill="{c['muted']}">1 active day = 1 can</text>
+  <text x="730" y="244" text-anchor="end" font-size="11" fill="{c['muted']}">Less</text>{legend}
+  <text x="823" y="244" font-size="11" fill="{c['muted']}">More</text>
 </g></svg>'''
+
+
+def still_svg(svg):
+    """Keep the authored resting poses; disable animation in the asset itself."""
+    return svg.replace('</style>', '* {animation:none !important}\n</style>')
+
 
 
 def main():
@@ -343,6 +474,8 @@ def main():
     for theme in THEMES:
         files[f'header-{theme}.svg'] = hero_svg(theme)
         files[f'beat-runner-{theme}.svg'] = runner_svg(activity, theme)
+        for name in ('header', 'beat-runner'):
+            files[f'{name}-{theme}-still.svg'] = still_svg(files[f'{name}-{theme}.svg'])
     for svg in files.values():
         ET.fromstring(svg)
     for name, svg in files.items():
@@ -352,3 +485,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

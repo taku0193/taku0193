@@ -51,12 +51,17 @@ jobs:
           test -s assets/pulse-dark.svg
           test -s assets/overview-light.svg
           test -s assets/overview-dark.svg
+          test -s assets/header-light-still.svg
+          test -s assets/header-dark-still.svg
+          test -s assets/beat-runner-light-still.svg
+          test -s assets/beat-runner-dark-still.svg
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/header-light.svg assets/header-dark.svg assets/beat-runner-light.svg assets/beat-runner-dark.svg assets/pulse-light.svg assets/pulse-dark.svg assets/overview-light.svg assets/overview-dark.svg assets/activity-data.json
+          git add assets/header-light.svg assets/header-dark.svg assets/beat-runner-light.svg assets/beat-runner-dark.svg assets/pulse-light.svg assets/pulse-dark.svg assets/overview-light.svg assets/overview-dark.svg assets/activity-data.json assets/header-light-still.svg assets/header-dark-still.svg assets/beat-runner-light-still.svg assets/beat-runner-dark-still.svg
           if git diff --cached --quiet; then
             exit 0
           fi
           git commit -m "chore: refresh profile activity"
           git pull --rebase origin main
           git push origin HEAD:main
+

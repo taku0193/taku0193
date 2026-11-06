@@ -1,4 +1,6 @@
 <picture>
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="./assets/header-dark-still.svg">
+  <source media="(prefers-reduced-motion: reduce)" srcset="./assets/header-light-still.svg">
   <source media="(prefers-color-scheme: dark)" srcset="./assets/header-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/header-light.svg">
   <img src="./assets/header-light.svg" width="100%" alt="taku0193 — Motion. Rhythm. Code. Pose tracking, interactive games, and live heart-rate tools.">
@@ -74,11 +76,14 @@ I build apps that connect body movement, music, and heart-rate data.
 </picture>
 
 <picture>
+  <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="./assets/beat-runner-dark-still.svg">
+  <source media="(prefers-reduced-motion: reduce)" srcset="./assets/beat-runner-light-still.svg">
   <source media="(prefers-color-scheme: dark)" srcset="./assets/beat-runner-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/beat-runner-light.svg">
-    <img src="./assets/beat-runner-light.svg" width="100%" alt="Beat Runner collects one energy drink for each active day in my GitHub contribution calendar.">
+    <img src="./assets/beat-runner-light.svg" width="100%" alt="Beat Runner collects energy drinks from my contribution calendar, then returns to the center to hydrate and recover.">
 </picture>
 
 ---
 
 <p align="center"><i>Motion. Rhythm. Code.</i></p>
+
