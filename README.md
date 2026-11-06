@@ -3,7 +3,7 @@
   <source media="(prefers-reduced-motion: reduce)" srcset="./assets/header-light-still.svg">
   <source media="(prefers-color-scheme: dark)" srcset="./assets/header-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/header-light.svg">
-  <img src="./assets/header-light.svg" width="100%" alt="taku0193 — Motion. Rhythm. Code. Pose tracking, interactive games, and live heart-rate tools. A night baseball stadium with taku0193 on its scoreboard. Three runners cross a motion capture gate and light the warm-up lane with their footsteps.">
+  <img src="./assets/header-light.svg" width="100%" alt="taku0193 — Motion. Rhythm. Code. Pose tracking, interactive games, and live heart-rate tools. A night baseball stadium with taku0193 on its scoreboard. A pitcher throws, a batter hits, and their footsteps light up the baseline as they run to first.">
 </picture>
 
 ## 👋 About Me

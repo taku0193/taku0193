@@ -50,24 +50,6 @@ STRIDE_SPRITE = SPRITE[:6] + (
     "....WW...WW.",
 )
 
-POSE_LINKS = (
-    ("head", "shoulder", "hip"),
-    ("wrist_back", "elbow_back", "shoulder", "elbow_front", "wrist_front"),
-    ("ankle_back", "knee_back", "hip", "knee_front", "ankle_front"),
-)
-RUN_JOINTS = {
-    "head": (6, 2), "shoulder": (6, 6), "hip": (5, 9),
-    "elbow_back": (3, 6), "wrist_back": (2, 7),
-    "elbow_front": (8, 7), "wrist_front": (10, 8),
-    "knee_back": (3, 11), "ankle_back": (2, 13),
-    "knee_front": (8, 11), "ankle_front": (10, 13),
-}
-STRIDE_JOINTS = dict(
-    RUN_JOINTS, elbow_front=(8, 6), wrist_front=(9, 7),
-    knee_back=(6, 12), ankle_back=(5, 13), knee_front=(8, 10),
-)
-
-
 def pixel_runner(x, y, size, colors, pose=SPRITE):
     palette = {"Y": colors["amber"], "W": colors["ink"], "T": colors["teal"], "C": colors["coral"]}
     pixels = []
@@ -76,27 +58,6 @@ def pixel_runner(x, y, size, colors, pose=SPRITE):
             if char != ".":
                 pixels.append(f'<rect x="{col * size}" y="{row * size}" width="{size}" height="{size}" fill="{palette[char]}"/>')
     return f'<g transform="translate({x} {y})" shape-rendering="crispEdges">{"".join(pixels)}</g>'
-
-
-def pose_overlay(x, y, size, joints):
-    """Draw the landmarks in the same pixel coordinates as the stride sprite."""
-    points = {
-        name: (x + (col + .5) * size, y + (row + .5) * size)
-        for name, (col, row) in joints.items()
-    }
-    paths = " ".join(
-        "M" + " ".join(f"{px:g},{py:g}" for px, py in (points[name] for name in chain))
-        for chain in POSE_LINKS
-    )
-    dots = "".join(
-        f'<circle cx="{px:g}" cy="{py:g}" r="1.45"/>'
-        for px, py in points.values()
-    )
-    return f'''<g class="pose-scan" opacity="0" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path d="{paths}" stroke="#0a1722" stroke-width="2.6"/>
-  <path d="{paths}" stroke="#9df7ee" stroke-width="1.15"/>
-  <g fill="#c8fff6" stroke="#0a1722" stroke-width=".65">{dots}</g>
-</g>'''
 
 
 def terminal_frame(colors, height, label):
@@ -112,7 +73,7 @@ def terminal_frame(colors, height, label):
 
 def footstep_light(x, y, delay, color):
     """Leave a lit tile under the planted shoe and send a pulse down the lane."""
-    return f'''<g transform="translate({x:.2f} {y:g})" fill="{color}" style="--beat-delay:{delay:.6f}s">
+    return f'''<g transform="translate({x:.2f} {y:g}) scale(.65)" fill="{color}" style="--beat-delay:{delay:.6f}s">
   <g class="beat-contact" opacity="0">
     <rect x="-8" y="-1" width="16" height="5" opacity=".24"/>
     <rect x="-4.5" y="0" width="9" height="2.5"/>
@@ -197,108 +158,261 @@ def ballpark_scene():
     <path d="M12 164h2m10 21h3m56-22h3m18 24h4m16-20h2m35 16h2m43-17h3m47 20h2m34-20h3m30 17h2m28-20h3" stroke="#8b6a53" stroke-opacity=".5"/>'''
 
 
+def baseball_batter(colors, swing=False):
+    """A right-handed batter, anchored at the ground between the cleats."""
+    cap, shirt, trim = colors["amber"], colors["teal"], colors["coral"]
+    skin, pants = "#f8dcba", "#e5eaf1"
+    if swing:
+        head = '<path d="M-1-22h6v2h3v2H0v-1h-1z"/><path d="M0-18h6v4H1v-1H0z" fill="#f8dcba"/>'
+        bat = '<path d="M6-12 19-15h3v2L7-10z" fill="#e9b978" stroke="#72533a" stroke-width=".55"/>'
+        body = f'''
+        <path d="M-3-14h7v3H3v4H-4v-5h1z" fill="{shirt}"/>
+        <path d="M-1-13h4v1H1v5h-2z" fill="{trim}"/>
+        <path d="M2-14h3v2h5v2H5v-1H1z" fill="{skin}"/>
+        <path d="M-4-8h7v3H2v3h2v1H0l-2-4-2 2h-2v2h-2v-3l3-2z" fill="{pants}"/>
+        <path d="M-9-2h5v2h-6v-1h1zm9 0h4v1h3v1H0z" fill="#19212e"/>'''
+    else:
+        head = '<path d="M-3-22h6v2h3v2h-9z"/><path d="M-2-18h6v3H2v1h-3v-1h-1z" fill="#f8dcba"/>'
+        bat = '<path d="m-6-12-8-11v-3h2l9 13z" fill="#e9b978" stroke="#72533a" stroke-width=".55"/>'
+        body = f'''
+        <path d="M-3-14h7v3H3v4h-6v-2h-2v-3h2z" fill="{shirt}"/>
+        <path d="M-1-13h2v6h-2z" fill="{trim}"/>
+        <path d="M0-13v2h-4v-2h-3v-2h4v1h5v1z" fill="{skin}"/>
+        <path d="M-4-8h8v3h1v3h2v1H3L1-5h-2l-2 3h-1v1h-3v-2l2-1z" fill="{pants}"/>
+        <path d="M-8-2h5v2h-6v-1h1zm11 0h3v1h3v1H3z" fill="#19212e"/>'''
+    return f'''<g shape-rendering="crispEdges">
+      <ellipse cy=".4" rx="10" ry="1.35" fill="#15232b" opacity=".42"/>
+      {bat}<g fill="{cap}">{head}</g>{body}
+    </g>'''
+
+
+def baseball_swing_scan():
+    """Match the scan dots to the batter's visible follow-through joints."""
+    joints = ((2, -18), (1, -13), (6, -11), (10, -11),
+              (-1, -7), (-5, -4), (-7, -1), (1, -4), (3, -1))
+    dots = "".join(f'<circle cx="{x}" cy="{y}" r=".85"/>' for x, y in joints)
+    return f'''<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2-18 1-13-1-7m2-6 5 2h4m-11 4-4 3-2 3m6-6 2 3 2 3"
+            stroke="#17343a" stroke-width="1.8"/>
+      <path d="M2-18 1-13-1-7m2-6 5 2h4m-11 4-4 3-2 3m6-6 2 3 2 3"
+            stroke="#a0f9e6" stroke-width=".8"/>
+      <g fill="#c9fff4">{dots}</g>
+    </g>'''
+
+
+def baseball_pitcher(throwing=False):
+    """A pitcher facing the plate, anchored at the mound."""
+    if throwing:
+        limbs = '''
+        <path d="M-4-13h-3v2h-5v2h6v-1h4z" fill="#f6d8b4"/>
+        <path d="M2-12h4v4H4v-1H2z" fill="#ae7754"/>
+        <path d="M-4-8h7v3h4v3H4L1-4h-3l-3 3h-4v-2l4-3z" fill="#cfdeeb"/>
+        <path d="M-10-2h6v2h-7v-1h1zm14-1h5v2H4z" fill="#182330"/>'''
+    else:
+        limbs = '''
+        <path d="M-4-13h2v2h5v2h-7v-1h-2v-2h2z" fill="#f6d8b4"/>
+        <path d="M1-12h5v4H1z" fill="#ae7754"/>
+        <path d="M-4-8h8v3h1v4H2v-3H-1v3h-4v-4h1z" fill="#cfdeeb"/>
+        <path d="M-6-2h5v2h-6v-1h1zm8 0h4v1h2v1H2z" fill="#182330"/>'''
+    return f'''<g shape-rendering="crispEdges">
+      <ellipse cy=".4" rx="9" ry="1.2" fill="#15232b" opacity=".42"/>
+      <path d="M-3-20h6v2h2v2h-8z" fill="#ff9b89"/>
+      <path d="M-3-16h6v3h-1v1h-4v-1h-1z" fill="#f6d8b4"/>
+      <path d="M-3-13h7v2h1v4h-9v-2h-1v-2h2z" fill="#739ed0"/>
+      <path d="M-1-12h1v4h-1z" fill="#b9d7ee"/>
+      {limbs}
+    </g>'''
+
+
+def baseball_play():
+    """Choreograph one pitch, hit and trip to first for each of three batters."""
+    turn = 4.8
+    pitch, contact, run_start, turn_corner, first, fade = .88, 1.44, 1.8, 2.2, 3.4, 4.45
+    box = (159, 148)
+    home = (180, 151)
+    first_base = (235, 123)
+    stride = .4
+    shoe_size = 1.6
+    gait_delay = run_start % stride - stride
+
+    def pct(seconds, duration=turn):
+        return f"{100 * seconds / duration:.5f}%"
+
+    def position_at(seconds):
+        if seconds < turn_corner:
+            start, end = box, home
+            progress = (seconds - run_start) / (turn_corner - run_start)
+        else:
+            start, end = home, first_base
+            progress = (seconds - turn_corner) / (first - turn_corner)
+        return tuple(a + (b - a) * progress for a, b in zip(start, end))
+
+    def move_to(point):
+        return f"translate({point[0]}px,{point[1]}px)"
+
+    def phase_rule(name, start, end, initial=0):
+        frames = [f"0% {{opacity:{initial}}}"]
+        if start:
+            frames.append(f"{pct(start)} {{opacity:1}}")
+        if end < turn:
+            frames.append(f"{pct(end)} {{opacity:0}}")
+        return (
+            f".{name} {{animation:{name} {turn}s step-end infinite}}\n"
+            f"@keyframes {name} {{{' '.join(frames)}}}"
+        )
+
+    colors = THEMES["dark"]
+    outfits = (
+        colors,
+        dict(colors, teal="#ffb782", coral="#79d7f7", amber="#f1a9bf"),
+        dict(colors, teal="#c6adf4", coral="#ff9b9f", amber="#a1ecc5"),
+    )
+    stride_a = (-6 * shoe_size, -14 * shoe_size, shoe_size)
+    batters, styles, indicators = [], [], []
+    for index, outfit in enumerate(outfits):
+        order = f"batting-turn-{index + 1}"
+        duration = turn * len(outfits)
+        delay = -((duration - index * turn) % duration)
+        styles.append(
+            f".{order} {{animation:batting-turn {duration:g}s step-end infinite;"
+            f"animation-delay:{delay:g}s}}"
+        )
+        lights = []
+        # Both the runner and these fixed lights use the same piecewise-linear path.
+        for step in range(round((first - run_start) / (stride / 2))):
+            at = run_start + step * stride / 2
+            x, y = position_at(at)
+            shoe_x = (5 if step % 2 == 0 else 4) * shoe_size
+            lights.append(footstep_light(x + shoe_x, y, -(turn - at), outfit["teal"]))
+        base_pose = pixel_runner(*stride_a, outfit, STAND_SPRITE)
+        batters.append(f'''<g class="{order}" opacity="{int(index == 0)}">
+      <g class="batter-at-plate" transform="translate({box[0]} {box[1]})">
+        <g class="batter-set">{baseball_batter(outfit)}</g>
+        <g class="batter-hit" opacity="0">{baseball_batter(outfit, swing=True)}{baseball_swing_scan()}</g>
+      </g>
+      <g class="basepath-lights" opacity="0">{"".join(lights)}</g>
+      <g class="first-base-runner" opacity="0">
+        <g class="basepath-stride">
+          <g class="basepath-step-a">{pixel_runner(*stride_a, outfit)}</g>
+          <g class="basepath-step-b" opacity="0">{pixel_runner(*stride_a, outfit, STRIDE_SPRITE)}</g>
+        </g>
+        <g class="first-base-stand" opacity="0">{base_pose}</g>
+      </g>
+    </g>''')
+        indicators.append(f'''<rect x="{320 + 11 * index}" y="181" width="6" height="6" fill="{outfit["teal"]}" opacity=".24"/>
+      <rect class="{order}" x="{320 + 11 * index}" y="181" width="6" height="6" fill="{outfit["teal"]}" opacity="{int(index == 0)}"/>''')
+
+    phase_labels = (
+        ("play-ready", "AT BAT", 0, pitch),
+        ("play-pitch", "PITCH", pitch, contact),
+        ("play-contact", "CONTACT", contact, run_start),
+        ("play-run", "RUN TO FIRST", run_start, first),
+        ("play-safe", "ON FIRST", first, turn),
+    )
+    for name, _, start, end in phase_labels:
+        styles.append(phase_rule(name, start, end, initial=int(start == 0)))
+    for name, start, end, initial in (
+        ("pitcher-set", 0, pitch, 1),
+        ("pitcher-throw", pitch, 1.7, 0),
+        ("pitcher-reset", 1.7, turn, 0),
+        ("batter-at-plate", 0, run_start, 1),
+        ("batter-set", 0, contact, 1),
+        ("batter-hit", contact, run_start, 0),
+        ("basepath-lights", run_start, first + .3, 0),
+        ("basepath-stride", 0, first, 1),
+        ("first-base-stand", first, turn, 0),
+    ):
+        styles.append(phase_rule(name, start, end, initial))
+    phase_css = "\n".join(styles)
+    animation = f'''
+{phase_css}
+@keyframes batting-turn {{0% {{opacity:1}} {100 / len(outfits):.6f}%,100% {{opacity:0}}}}
+.first-base-runner {{animation:first-base-runner {turn}s linear infinite}}
+@keyframes first-base-runner {{
+  0%,{pct(run_start - .001)} {{opacity:0;transform:{move_to(box)}}}
+  {pct(run_start)} {{opacity:1;transform:{move_to(box)}}}
+  {pct(turn_corner)} {{opacity:1;transform:{move_to(home)}}}
+  {pct(first)},{pct(fade)} {{opacity:1;transform:{move_to(first_base)}}}
+  100% {{opacity:0;transform:{move_to(first_base)}}}
+}}
+.basepath-step-a {{animation:step-a {stride}s step-end infinite {gait_delay:.4f}s}}
+.basepath-step-b {{animation:step-b {stride}s step-end infinite {gait_delay:.4f}s}}
+.beat-contact {{animation:beat-contact {turn}s linear infinite;animation-delay:var(--beat-delay)}}
+.beat-ray {{animation:beat-ray {turn}s ease-out infinite;animation-delay:var(--beat-delay)}}
+@keyframes step-a {{0%,100% {{opacity:1}} 50% {{opacity:0}}}}
+@keyframes step-b {{0%,100% {{opacity:0}} 50% {{opacity:1}}}}
+@keyframes beat-contact {{0% {{opacity:1}} {pct(.18)},100% {{opacity:0}}}}
+@keyframes beat-ray {{
+  0% {{opacity:0;transform:translateX(0)}}
+  {pct(.045)} {{opacity:.76;transform:translateX(3px)}}
+  {pct(.27)},100% {{opacity:0;transform:translateX(15px)}}
+}}
+.baseball {{animation:baseball-flight {turn}s linear infinite}}
+@keyframes baseball-flight {{
+  0%,{pct(pitch - .001)} {{opacity:0;transform:translate(169px,114px)}}
+  {pct(pitch)} {{opacity:1;transform:translate(169px,114px)}}
+  {pct(contact - .17)} {{opacity:1;transform:translate(174px,125px)}}
+  {pct(contact)} {{opacity:1;transform:translate(173px,136px)}}
+  {pct(1.61)} {{opacity:1;transform:translate(153px,107px)}}
+  {pct(1.83)} {{opacity:1;transform:translate(129px,84px)}}
+  {pct(2.07)} {{opacity:1;transform:translate(108px,78px)}}
+  {pct(2.27)} {{opacity:1;transform:translate(91px,87px)}}
+  {pct(2.4)} {{opacity:1;transform:translate(83px,102px)}}
+  {pct(2.51)} {{opacity:.86;transform:translate(78px,97px)}}
+  {pct(2.79)},100% {{opacity:0;transform:translate(70px,102px)}}
+}}
+.swing-flash {{animation:swing-flash {turn}s ease-out infinite}}
+@keyframes swing-flash {{
+  0%,{pct(contact - .001)} {{opacity:0}}
+  {pct(contact)} {{opacity:1}}
+  {pct(contact + .24)},100% {{opacity:0}}
+}}
+'''
+    labels = "".join(
+        f'<text class="{name}" x="16" y="185" font-size="10" font-weight="700" '
+        f'letter-spacing="1.5" fill="#e7d6ac" opacity="{int(start == 0)}">{label}</text>'
+        for name, label, start, _ in phase_labels
+    )
+    set_pitcher = baseball_pitcher()
+    scene = f'''<g transform="translate(180 124)">
+      <g class="pitcher-set">{set_pitcher}</g>
+      <g class="pitcher-throw" opacity="0">{baseball_pitcher(throwing=True)}</g>
+      <g class="pitcher-reset" opacity="0">{set_pitcher}</g>
+    </g>
+    {"".join(batters)}
+    <g class="swing-flash" opacity="0" fill="#ffdf97">
+      <path d="M172 128h1v5h-1zm0 11h1v5h-1zm-8-4h5v1h-5zm12 0h5v1h-5z"/>
+    </g>
+    <g class="baseball" opacity="0">
+      <circle r="2.35" fill="#fff3d6" stroke="#524030" stroke-width=".7"/>
+      <path d="M-.75-1.65q1.5 1.6 0 3.3" fill="none" stroke="#c97969" stroke-width=".65"/>
+    </g>
+    {labels}
+    <text x="312" y="187" text-anchor="end" font-size="8" letter-spacing="1.15" fill="#c0d3c8">BATTING ORDER</text>
+    {"".join(indicators)}'''
+    return animation, scene
+
+
 def hero_svg(theme):
-    """A night ballpark with a lit scoreboard and a runner warm-up lane."""
+    """Show a night game next to the profile scoreboard."""
     c = THEMES[theme]
     scene_x = 513
-    scene_width = 361
-    gate_x = 693
-    gate_exit = gate_x + 39
-    runner_x, runner_y, pixel_size = 466, 170, 3
-    road_y = runner_y + len(SPRITE) * pixel_size
-    travel, lap_seconds = 438, 8.4
-    shoulder_x = runner_x + (RUN_JOINTS["shoulder"][0] + .5) * pixel_size
-    scan_enter, scan_lock, scan_release, scan_exit = (
-        100 * (gate_x + offset - shoulder_x) / travel
-        for offset in (-39, -22, 22, 39)
-    )
-    gate_local = gate_x - scene_x
-    scan_a = pose_overlay(runner_x, runner_y, pixel_size, RUN_JOINTS)
-    scan_b = pose_overlay(runner_x, runner_y, pixel_size, STRIDE_JOINTS)
-    runner_colors = THEMES["dark"]
-    outfits = (
-        runner_colors,
-        dict(runner_colors, teal="#ffb782", coral="#79d7f7", amber="#f1a9bf"),
-        dict(runner_colors, teal="#c6adf4", coral="#ff9b9f", amber="#a1ecc5"),
-    )
-    runners = []
-    runner_styles = []
-    footsteps = []
-    # Each cadence divides a full pass, so the planted foot and its light stay
-    # on the same clock when the runner wraps around the scene.
-    for index, (outfit, offset, rest_x, strides) in enumerate(
-        zip(outfits, (1.7, 4.5, 7.3), (88, 212, 318), (20, 15, 24)), 1
-    ):
-        stride_seconds = lap_seconds / strides
-        runner_styles.append(
-            f".runner-{index} {{--run-offset:-{offset}s;--stride-time:{stride_seconds:g}s;"
-            f"transform:translateX({rest_x}px)}}"
-        )
-        runners.append(f'''<g class="track-runner runner-{index}">
-    <rect x="472" y="212" width="26" height="2" fill="#07121c" opacity=".7"/>
-    <g class="pulse-stride">
-      <g class="step-a">{pixel_runner(runner_x, runner_y, pixel_size, outfit)}{scan_a}</g>
-      <g class="step-b">{pixel_runner(runner_x, runner_y, pixel_size, outfit, STRIDE_SPRITE)}{scan_b}</g>
-    </g>
-  </g>''')
-        for step_index in range(2 * strides):
-            at = step_index * stride_seconds / 2
-            distance = travel * at / lap_seconds
-            # The front shoes occupy columns 10–11 in pose A and 9–10 in B.
-            foot_col = 11 if step_index % 2 == 0 else 10
-            foot_x = runner_x + foot_col * pixel_size + distance
-            if shoulder_x + distance >= gate_exit and foot_x < scene_x + scene_width:
-                delay = -((offset - at) % lap_seconds)
-                footsteps.append(footstep_light(foot_x, road_y, delay, outfit["teal"]))
-    runner_css = "\n".join(runner_styles)
-    lane_x = gate_exit - scene_x + 5
-    lane_tiles = "".join(
-        f'<rect x="{x}" y="172" width="7" height="2" fill="#735344"/>'
-        for x in range(lane_x, scene_width - 7, 12)
-    )
+    play_css, play = baseball_play()
     trace = "M338 205h19l4-3 4 3h10l4 5 6-14 6 16 5-7h13l4-3 4 3h9l4 5 6-14 6 16 5-7h17"
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="274" viewBox="0 0 900 274" role="img" aria-labelledby="hero-title hero-desc">
 <title id="hero-title">taku0193 — Motion. Rhythm. Code.</title>
-<desc id="hero-desc">A night baseball stadium with taku0193 on its scoreboard. Three runners cross a motion capture gate and send pulses of light down the warm-up lane.</desc>
+<desc id="hero-desc">A pitcher throws, a batter makes contact, and the batter runs to first under the lights at Motion Lab Field.</desc>
 <style>
 .trace-light {{stroke-dasharray:9 91; animation:trace 3.2s linear infinite}}
-.track-runner {{animation:pass-through {lap_seconds}s linear infinite;animation-delay:var(--run-offset)}}
-{runner_css}
-.pose-scan {{animation:scan-pose {lap_seconds}s linear infinite;animation-delay:var(--run-offset)}}
-.pulse-stride {{animation:stride var(--stride-time) ease-in-out infinite;animation-delay:var(--run-offset)}}
-.step-a {{animation:step-a var(--stride-time) step-end infinite;animation-delay:var(--run-offset)}}
-.step-b {{opacity:0;animation:step-b var(--stride-time) step-end infinite;animation-delay:var(--run-offset)}}
-.beat-contact {{animation:beat-contact {lap_seconds}s linear infinite;animation-delay:var(--beat-delay)}}
-.beat-ray {{animation:beat-ray {lap_seconds}s ease-out infinite;animation-delay:var(--beat-delay)}}
-@keyframes pass-through {{from {{transform:translateX(0)}} to {{transform:translateX({travel}px)}}}}
-@keyframes scan-pose {{
-  0%,{scan_enter:.4f}% {{opacity:0}}
-  {scan_lock:.4f}%,{scan_release:.4f}% {{opacity:1}}
-  {scan_exit:.4f}%,100% {{opacity:0}}
-}}
-@keyframes step-a {{0%,100% {{opacity:1}} 50% {{opacity:0}}}}
-@keyframes step-b {{0%,100% {{opacity:0}} 50% {{opacity:1}}}}
-@keyframes trace {{to {{stroke-dashoffset:-100}}}}
-@keyframes stride {{0%,50%,100% {{transform:translateY(0)}} 25%,75% {{transform:translateY(-1px)}}}}
-@keyframes beat-contact {{
-  0% {{opacity:1}}
-  {.19 / lap_seconds * 100:.4f}%,100% {{opacity:0}}
-}}
-@keyframes beat-ray {{
-  0% {{opacity:0;transform:translateX(0)}}
-  {.045 / lap_seconds * 100:.4f}% {{opacity:.82;transform:translateX(4px)}}
-  {.29 / lap_seconds * 100:.4f}%,100% {{opacity:0;transform:translateX(20px)}}
-}}
+{play_css}
 @media (prefers-reduced-motion: reduce) {{
   .trace-light {{display:none}}
-  .track-runner, .pulse-stride, .step-a, .step-b, .pose-scan,
-  .beat-contact, .beat-ray {{animation:none}}
+  * {{animation:none !important}}
 }}
 </style>
 <defs>
   <clipPath id="hero-scene-clip"><rect x="513" y="52" width="361" height="200"/></clipPath>
   <clipPath id="stadium-frame"><rect x="25" y="52" width="849" height="200" rx="5"/></clipPath>
-  <clipPath id="runner-track"><rect x="513" y="156" width="361" height="60"/></clipPath>
   <pattern id="scoreboard-leds" width="5" height="5" patternUnits="userSpaceOnUse">
     <rect x="1" y="1" width="1" height="1" fill="#75c1b8" opacity=".14"/>
   </pattern>
@@ -318,17 +432,8 @@ def hero_svg(theme):
   <path d="M25 241.5H513" stroke="#564132"/>
   <g clip-path="url(#hero-scene-clip)"><g transform="translate({scene_x} 52)">
     {ballpark_scene()}
-    {lane_tiles}
-    <g transform="translate({gate_local} 0)">
-      <rect x="-39" y="108" width="78" height="55" fill="#71efd4" opacity=".055"/>
-      <path d="M-39 121v-13h11m56 0h11v13m0 29v13h-11m-56 0h-11v-13"
-            fill="none" stroke="#71efd4" stroke-width="1.2" opacity=".72"/>
-      <path d="M-39 124v24m78-24v24" fill="none" stroke="#71efd4"
-            stroke-dasharray="1 4" opacity=".5"/>
-      <text x="0" y="193" text-anchor="middle" font-size="8" letter-spacing="1.35" fill="#91d6c9">POSE GATE</text>
-    </g>
+    {play}
     <text x="16" y="23" font-size="10" letter-spacing="1.1" fill="#c4d7d8">STAGE 01 / NIGHT GAME</text>
-    <text x="345" y="193" text-anchor="end" font-size="8" letter-spacing="1.6" fill="#c0d3c8">BEAT TRACK</text>
   </g></g>
   <g aria-label="Stadium scoreboard">
     <path d="M66 207h13v37H66zm385 0h13v37h-13z" fill="#15252d"/>
@@ -345,8 +450,6 @@ def hero_svg(theme):
     <path d="{trace}" fill="none" stroke="#5d9e9d" stroke-width="1.4" opacity=".55"/>
     <path class="trace-light" d="{trace}" pathLength="100" fill="none" stroke="#a1f4de" stroke-width="1.7"/>
   </g>
-  <g clip-path="url(#hero-scene-clip)" aria-hidden="true">{''.join(footsteps)}</g>
-  <g clip-path="url(#runner-track)">{''.join(runners)}</g>
   </g>
   <rect x="25" y="52" width="849" height="200" rx="5" fill="none" stroke="#50616a"/>
 </g></svg>'''
