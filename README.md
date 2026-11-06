@@ -12,12 +12,6 @@ I build apps that connect body movement, music, and heart-rate data.
 - 🎮 **Interactive Games** — Turning body movement into game controls and exploring AI-generated music
 - 💓 **Web / macOS Apps** — Working with heart-rate data in web apps and native macOS apps built with SwiftUI
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/pulse-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/pulse-light.svg">
-  <img src="./assets/pulse-light.svg" width="100%" alt="Today's GitHub contribution count (UTC). The waveform grows taller and moves faster as contributions increase.">
-</picture>
-
 ## 🧰 Tech Stack
 
 **Web / macOS Development**
@@ -58,6 +52,12 @@ I build apps that connect body movement, music, and heart-rate data.
 </picture>
 
 ## 🐍 Contributions
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/pulse-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/pulse-light.svg">
+  <img src="./assets/pulse-light.svg" width="100%" alt="Today's GitHub contribution count (UTC). The waveform grows taller and moves faster as contributions increase.">
+</picture>
 
 A year of building, one contribution at a time.
 
