@@ -40,7 +40,21 @@ I build apps that connect body movement, music, and heart-rate data.
 
 <details>
   <summary>More tools</summary>
-  <p>Claude, ChatGPT, Cursor, Ollama, JavaScript, HTML5, CSS, React, Next.js, Vite, Node.js, SQLite, PostgreSQL, Google Cloud, AppKit, Ultralytics YOLO, Transformers, MusicGen, librosa, NumPy, Vitest, Playwright, pytest, Ruff, MATLAB, LaTeX, Overleaf, Notion, Obsidian, Figma, Blender, Docker, Git, GitHub Actions, uv, Linux, macOS</p>
+
+  <table>
+    <thead><tr><th scope="col">Area</th><th scope="col">Tools</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">AI Assistants</th><td>Claude · ChatGPT · Cursor</td></tr>
+      <tr><th scope="row">LLM Inference</th><td>TensorRT-LLM · vLLM · Ollama</td></tr>
+      <tr><th scope="row">Vision, Audio &amp; Data</th><td>Ultralytics YOLO · Transformers · MusicGen · librosa · NumPy</td></tr>
+      <tr><th scope="row">Web Development</th><td>JavaScript · HTML5 · CSS · React · Next.js · Vite · Node.js</td></tr>
+      <tr><th scope="row">Databases &amp; Cloud</th><td>SQLite · PostgreSQL · Google Cloud</td></tr>
+      <tr><th scope="row">Testing</th><td>Vitest · Playwright · pytest</td></tr>
+      <tr><th scope="row">Development Environment</th><td>Docker · Git · GitHub Actions · Linux · macOS</td></tr>
+      <tr><th scope="row">Research &amp; Writing</th><td>MATLAB · LaTeX · Overleaf · Notion · Obsidian</td></tr>
+      <tr><th scope="row">3D Graphics</th><td>Blender</td></tr>
+    </tbody>
+  </table>
 </details>
 
 ## ⚡ Activity Summary
