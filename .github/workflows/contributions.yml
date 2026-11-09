@@ -2,7 +2,7 @@ name: Refresh profile activity
 
 on:
   schedule:
-    - cron: '17,47 * * * *' # Every 30 minutes; GitHub may delay scheduled runs.
+    - cron: '2-57/5 * * * *' # Every 5 minutes, offset from the hour; GitHub may delay or skip scheduled runs.
   workflow_dispatch:
   push:
     branches: [main]
