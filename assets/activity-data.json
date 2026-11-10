@@ -3,7 +3,7 @@
   "username": "taku0193",
   "source": "https://api.github.com/graphql",
   "calendar_timezone": "UTC",
-  "updated_at": "2026-11-10T15:46:48Z",
+  "updated_at": "2026-11-10T17:14:44Z",
   "period_start": "2025-11-10",
   "period_end": "2026-11-10",
   "today_date": "2026-11-10",
@@ -16,12 +16,12 @@
     {
       "key": "commits",
       "label": "Commits",
-      "count": 113
+      "count": 279
     },
     {
       "key": "pull_requests",
       "label": "Pull requests",
-      "count": 2
+      "count": 16
     },
     {
       "key": "reviews",
@@ -31,17 +31,17 @@
     {
       "key": "issues",
       "label": "Issues",
-      "count": 0
+      "count": 12
     },
     {
       "key": "repositories",
       "label": "Repositories created",
-      "count": 5
+      "count": 9
     },
     {
       "key": "private",
       "label": "Private · count only",
-      "count": 295
+      "count": 99
     }
   ],
   "days": {
