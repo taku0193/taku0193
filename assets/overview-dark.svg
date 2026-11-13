@@ -7,7 +7,7 @@
 <text x="868" y="32" text-anchor="end" font-size="11" font-weight="600" fill="#93a7b6">PAST YEAR</text>
 <text x="32" y="119" font-size="59" font-weight="650" letter-spacing="-2" fill="#f0f6fc">439</text>
 <text x="34" y="145" font-size="11" font-weight="650" letter-spacing="1.4" fill="#93a7b6">TOTAL CONTRIBUTIONS</text>
-<text x="34" y="183" font-size="13" fill="#93a7b6">Last 7 days</text><text x="285" y="183" text-anchor="end" font-size="15" font-weight="600" fill="#f0f6fc">134</text>
+<text x="34" y="183" font-size="13" fill="#93a7b6">Last 7 days</text><text x="285" y="183" text-anchor="end" font-size="15" font-weight="600" fill="#f0f6fc">79</text>
 <text x="34" y="211" font-size="13" fill="#93a7b6">Active days</text><text x="285" y="211" text-anchor="end" font-size="15" font-weight="600" fill="#f0f6fc">42</text>
 <text x="34" y="239" font-size="13" fill="#93a7b6">Longest streak</text><text x="285" y="239" text-anchor="end" font-size="15" font-weight="600" fill="#f0f6fc">10 days</text>
 <path d="M322 61V250" stroke="#2a3e48"/>
@@ -31,6 +31,6 @@
 <rect x="510" y="220" width="62.870" height="7" rx="3.5" fill="#48b59b"/>
 <text x="853" y="229" text-anchor="end" font-size="14" font-weight="600" fill="#f0f6fc">115</text>
 <path d="M28 263H872" stroke="#2a3e48"/>
-<text x="28" y="284" font-size="10" fill="#93a7b6">2025-11-12 — 2026-11-12 (UTC) · Includes anonymized private counts</text>
-<text x="868" y="284" text-anchor="end" font-size="10" fill="#93a7b6">Updated 11/13 07:58 JST</text>
+<text x="28" y="284" font-size="10" fill="#93a7b6">2025-11-13 — 2026-11-13 (UTC) · Includes anonymized private counts</text>
+<text x="868" y="284" text-anchor="end" font-size="10" fill="#93a7b6">Updated 11/13 09:15 JST</text>
 </g></svg>
