@@ -3,13 +3,13 @@
   "username": "taku0193",
   "source": "https://api.github.com/graphql",
   "calendar_timezone": "UTC",
-  "updated_at": "2026-11-20T02:55:05Z",
+  "updated_at": "2026-11-20T03:00:11Z",
   "period_start": "2025-11-20",
   "period_end": "2026-11-20",
   "today_date": "2026-11-20",
-  "today_contributions": 5,
-  "year_contributions": 497,
-  "last_7_days": 58,
+  "today_contributions": 7,
+  "year_contributions": 499,
+  "last_7_days": 60,
   "active_days": 48,
   "longest_streak": 10,
   "mix": [
@@ -41,7 +41,7 @@
     {
       "key": "private",
       "label": "Private · count only",
-      "count": 171
+      "count": 173
     }
   ],
   "days": {
@@ -410,6 +410,6 @@
     "2026-11-17": 11,
     "2026-11-18": 7,
     "2026-11-19": 21,
-    "2026-11-20": 5
+    "2026-11-20": 7
   }
 }
