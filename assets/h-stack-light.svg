@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="190" height="36" viewBox="0 0 190 36" role="img">
+  <title>Tech stack</title>
+  <path d="M2 8h24v20H2zM2 14h24" fill="none" stroke="#087f8c" stroke-width="2" shape-rendering="crispEdges"/>
+  <path d="M6 18l4 3-4 3m7 0h6" fill="none" stroke="#17273a" stroke-width="2"/>
+  <text x="36" y="25" fill="#17273a" font-family="monospace" font-size="22" font-weight="700" letter-spacing="1">TECH STACK</text>
+</svg>

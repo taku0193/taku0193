@@ -14,31 +14,35 @@ I build apps that connect body movement, music, and heart-rate data.
 - 🎮 **Interactive Games** — Turning body movement into game controls and exploring AI-generated music
 - 💓 **Web / macOS Apps** — Working with heart-rate data in web apps and native macOS apps built with SwiftUI
 
-## 🧰 Tech Stack
+<h3><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/h-stack-dark.svg"><img src="./assets/h-stack-light.svg" alt="Tech stack"></picture></h3>
 
-**Web / macOS Development**
+<a href="https://www.onorca.dev/"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/mini-orca-dark.png"><img src="./assets/mini-orca-light.png" align="right" alt="Orca"></picture></a>
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Swift](https://img.shields.io/badge/Swift-F05138?style=for-the-badge&logo=swift&logoColor=white)
-![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![SwiftUI](https://img.shields.io/badge/SwiftUI-175EAB?style=for-the-badge&logo=swift&logoColor=white)
-![CoreBluetooth](https://img.shields.io/badge/CoreBluetooth-0082FC?style=for-the-badge&logo=bluetooth&logoColor=white)
+#### Languages
 
-**Computer Vision / Games**
+![Python](./assets/stack/python.svg "Python")
+![TypeScript](./assets/stack/typescript.svg "TypeScript")
+![Swift](./assets/stack/swift.svg "Swift")
 
-![MediaPipe](https://img.shields.io/badge/MediaPipe-087F8C?style=for-the-badge)
-![OpenCV](https://img.shields.io/badge/OpenCV-4865A8?style=for-the-badge&logo=opencv&logoColor=white)
-![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
-![Unity](https://img.shields.io/badge/Unity-222C37?style=for-the-badge&logo=unity&logoColor=white)
+#### Web / macOS Development
 
-**AI Tools / Editors**
+![Vue.js](./assets/stack/vue.svg "Vue.js")
+![FastAPI](./assets/stack/fastapi.svg "FastAPI")
+![SwiftUI](./assets/stack/swiftui.svg "SwiftUI")
+![CoreBluetooth](./assets/stack/corebluetooth.svg "CoreBluetooth")
 
-![Codex](https://img.shields.io/badge/Codex-202123?style=for-the-badge)
-![Claude Code](https://img.shields.io/badge/Claude%20Code-D97757?style=for-the-badge&logo=claudecode&logoColor=white)
-![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?style=for-the-badge)
-[![Orca](./assets/orca-badge.svg)](https://www.onorca.dev/)
+#### Computer Vision / Games
+
+![MediaPipe](./assets/stack/mediapipe.svg "MediaPipe")
+![OpenCV](./assets/stack/opencv.svg "OpenCV")
+![PyTorch](./assets/stack/pytorch.svg "PyTorch")
+![Unity](./assets/stack/unity.svg "Unity")
+
+#### AI Tools / Editors
+
+![Codex](./assets/stack/codex.svg "Codex")
+![Claude Code](./assets/stack/claude-code.svg "Claude Code")
+![VS Code](./assets/stack/vscode.svg "VS Code")
 
 <details>
   <summary>More tools</summary>

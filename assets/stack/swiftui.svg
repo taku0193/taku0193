@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52" role="img">
+  <title>SwiftUI</title>
+  <rect x="4" y="4" width="48" height="48" fill="#10365e"/>
+  <rect width="48" height="48" fill="#175eab"/>
+  <g transform="translate(10 10) scale(1.166667)">
+    <path d="M12 2.5 22 8 12 13.5 2 8zM2 12l10 5.5L22 12M2 16l10 5.5L22 16" fill="none" stroke="#e5f4ff" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>
+  </g>
+</svg>
