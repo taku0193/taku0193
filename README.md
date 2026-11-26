@@ -16,8 +16,6 @@ I build apps that connect body movement, music, and heart-rate data.
 
 <h3><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/h-stack-dark.svg"><img src="./assets/h-stack-light.svg" alt="Tech stack"></picture></h3>
 
-<a href="https://www.onorca.dev/"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/mini-orca-dark.png"><img src="./assets/mini-orca-light.png" align="right" alt="Orca"></picture></a>
-
 #### Languages
 
 ![Python](./assets/stack/python.svg "Python")
@@ -43,6 +41,7 @@ I build apps that connect body movement, music, and heart-rate data.
 ![Codex](./assets/stack/codex.svg "Codex")
 ![Claude Code](./assets/stack/claude-code.svg "Claude Code")
 ![VS Code](./assets/stack/vscode.svg "VS Code")
+<a href="https://www.onorca.dev/"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/mini-orca-dark.png"><img src="./assets/mini-orca-light.png" width="52" height="52" alt="Orca" title="Orca"></picture></a>
 
 <details>
   <summary>More tools</summary>
