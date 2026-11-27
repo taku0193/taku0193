@@ -123,14 +123,6 @@ def summarize(payload, username):
     }
 
 
-def colors(theme):
-    return (
-        ('#0b141b', '#f0f6fc', '#93a7b6', '#62e4d1', '#1b303a', '#2a3e48')
-        if theme == 'dark' else
-        ('#f6f9fc', '#172b3e', '#526579', '#087f8c', '#e1ebf0', '#d9e3ed')
-    )
-
-
 def pulse_svg(data, theme):
     count = nonnegative_int(data['today_contributions'])
     params = pulse_parameters(count)
@@ -186,32 +178,41 @@ def pulse_svg(data, theme):
 
 
 def overview_svg(data, theme):
-    bg, ink, muted, accent, grid, border = colors(theme)
+    c = THEMES[theme]
+    ink, muted, accent, track, border = c['ink'], c['muted'], c['led'], c['blank'], c['edge']
     total = data['year_contributions']
-    palette = [accent, '#4b9be8', '#b497ec', '#d9a241', '#8499ac', '#48b59b', '#a0a9b1']
+    formatted_total = f'{total:,}'
+    total_font_size = min(58, 350 // len(formatted_total))
+    palette = (
+        (accent, '#4b9be8', '#b497ec', '#d9a241', '#8499ac', '#48b59b', '#a0a9b1')
+        if theme == 'dark' else
+        (accent, '#1b679f', '#744fb2', '#8f5c0a', '#52697f', '#2a775d', '#5c6873')
+    )
     rows = []
-    spacing = 29 if len(data['mix']) <= 6 else 25
+    spacing = 28 if len(data['mix']) <= 6 else 24
+    bar_width = 214
     for i, item in enumerate(data['mix']):
-        y = 80 + i * spacing
-        width = 240 * item['count'] / total if total else 0
-        rows.append(f'''<text x="356" y="{y + 4}" font-size="12" fill="{muted}">{escape(item['label'])}</text>
-<rect x="510" y="{y - 5}" width="240" height="7" rx="3.5" fill="{grid}"/>
-<rect x="510" y="{y - 5}" width="{width:.3f}" height="7" rx="3.5" fill="{palette[i]}"/>
-<text x="853" y="{y + 4}" text-anchor="end" font-size="14" font-weight="600" fill="{ink}">{item['count']:,}</text>''')
+        y = 91 + i * spacing
+        width = bar_width * item['count'] / total if total else 0
+        rows.append(f'''<text x="351" y="{y + 4}" font-size="13" fill="{muted}">{escape(item['label'])}</text>
+<rect x="528" y="{y - 5}" width="{bar_width}" height="8" rx="2" fill="{track}"/>
+<rect x="528" y="{y - 5}" width="{width:.3f}" height="8" rx="2" fill="{palette[i]}"/>
+<text x="854" y="{y + 4}" text-anchor="end" font-size="14" font-weight="600" fill="{ink}">{item['count']:,}</text>''')
     updated = instant(data['updated_at']).astimezone(JST).strftime('%m/%d %H:%M JST')
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="300" viewBox="0 0 900 300" role="img" aria-labelledby="overview-title overview-desc">
 <title id="overview-title">Activity summary — {total} contributions in the past year</title>
 <desc id="overview-desc">{'; '.join(f"{escape(x['label'])}: {x['count']}" for x in data['mix'])}. Public activity and anonymized private counts. Bars show shares of all contributions.</desc>
-<rect x=".5" y=".5" width="899" height="299" rx="14" fill="{bg}" stroke="{border}"/>
-<g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif">
-<text x="28" y="33" font-size="12" font-weight="650" letter-spacing="1.6" fill="{accent}">ACTIVITY SUMMARY</text>
-<text x="868" y="32" text-anchor="end" font-size="11" font-weight="600" fill="{muted}">PAST YEAR</text>
-<text x="32" y="119" font-size="59" font-weight="650" letter-spacing="-2" fill="{ink}">{total:,}</text>
-<text x="34" y="145" font-size="11" font-weight="650" letter-spacing="1.4" fill="{muted}">TOTAL CONTRIBUTIONS</text>
-<text x="34" y="183" font-size="13" fill="{muted}">Last 7 days</text><text x="285" y="183" text-anchor="end" font-size="15" font-weight="600" fill="{ink}">{data['last_7_days']:,}</text>
-<text x="34" y="211" font-size="13" fill="{muted}">Active days</text><text x="285" y="211" text-anchor="end" font-size="15" font-weight="600" fill="{ink}">{data['active_days']}</text>
-<text x="34" y="239" font-size="13" fill="{muted}">Longest streak</text><text x="285" y="239" text-anchor="end" font-size="15" font-weight="600" fill="{ink}">{data['longest_streak']} days</text>
-<path d="M322 61V250" stroke="{border}"/>
+<g font-family="{SCOREBOARD_FONT}">
+{terminal_frame(c, 300, "Activity Summary")}
+<text x="868" y="22" text-anchor="end" font-size="11" fill="{muted}">PAST YEAR</text>
+<rect x="28" y="53" width="291" height="195" rx="5" fill="{c['bar']}" stroke="{border}"/>
+<text x="48" y="118" font-size="{total_font_size}" font-weight="800" letter-spacing="-1.5" fill="{accent}">{formatted_total}</text>
+<text x="48" y="139" font-size="11" font-weight="650" letter-spacing="1" fill="{muted}">TOTAL CONTRIBUTIONS</text>
+<path d="M48 152H299" stroke="{border}"/>
+<text x="48" y="177" font-size="13" fill="{muted}">Last 7 days</text><text x="299" y="177" text-anchor="end" font-size="15" font-weight="600" fill="{ink}">{data['last_7_days']:,}</text>
+<text x="48" y="205" font-size="13" fill="{muted}">Active days</text><text x="299" y="205" text-anchor="end" font-size="15" font-weight="600" fill="{ink}">{data['active_days']}</text>
+<text x="48" y="233" font-size="13" fill="{muted}">Longest streak</text><text x="299" y="233" text-anchor="end" font-size="15" font-weight="600" fill="{ink}">{data['longest_streak']} days</text>
+<text x="351" y="66" font-size="11" font-weight="650" letter-spacing="1" fill="{muted}">BY CONTRIBUTION TYPE</text>
 {''.join(rows)}
 <path d="M28 263H872" stroke="{border}"/>
 <text x="28" y="284" font-size="10" fill="{muted}">{data['period_start']} — {data['period_end']} (UTC) · Includes anonymized private counts</text>

@@ -147,7 +147,9 @@ def baseball_batter(colors, swing=False):
     skin, pants = "#f8dcba", "#e5eaf1"
     if swing:
         head = '<path d="M-1-22h6v2h3v2H0v-1h-1z"/><path d="M0-18h6v4H1v-1H0z" fill="#f8dcba"/>'
-        bat = '<path d="M6-12 19-15h3v2L7-10z" fill="#e9b978" stroke="#72533a" stroke-width=".55"/>'
+        bat = '''<g transform="translate(6 -12)">
+        <path class="swing-bat" d="M0 0 13-3h3v2L1 2z" fill="#e9b978" stroke="#72533a" stroke-width=".55"/>
+      </g>'''
         body = f'''
         <path d="M-3-14h7v3H3v4H-4v-5h1z" fill="{shirt}"/>
         <path d="M-1-13h4v1H1v5h-2z" fill="{trim}"/>
@@ -341,8 +343,8 @@ def catcher_view(pitcher, batters):
     """Look past the batter and the catcher's mitt toward the mound."""
     return f'''<g class="catcher-view" opacity="0">
       <rect width="361" height="200" fill="url(#ballpark-sky)"/>
-      <circle cx="273" cy="25" r="7" fill="#d7ddbc"/>
-      <circle cx="276" cy="22" r="7" fill="#0d172a"/>
+      <circle cx="236" cy="25" r="7" fill="#d7ddbc"/>
+      <circle cx="239" cy="22" r="7" fill="#0d172a"/>
       <ellipse cx="48" cy="43" rx="43" ry="27" fill="url(#ballpark-lamp-glow)"/>
       <ellipse cx="313" cy="43" rx="43" ry="27" fill="url(#ballpark-lamp-glow)"/>
       <use href="#ballpark-light-tower" x="48" y="43"/>
@@ -357,12 +359,15 @@ def catcher_view(pitcher, batters):
       <ellipse cx="180" cy="111" rx="28" ry="6" fill="#78553e"/>
       <path d="M175 108h10v1.5h-10z" fill="#e8d9bd"/>
       <path d="M59 141Q180 119 302 141L361 175H0Z" fill="#724d37"/>
-      <path d="M180 153 0 101m181 52 180-52M110 145h42l-7 16H94zm101 0h40l16 16h-49z"
+      <path d="M0 101 180 162 361 101M110 155h42l-7 18H94zm101 0h40l16 18h-49z"
             fill="none" stroke="#e0cda6" stroke-opacity=".8" stroke-width="1.2"/>
-      <path d="M168 147h24v6l-12 5-12-5z" fill="#fff2d7" stroke="#b69a79"/>
+      <path d="M168 156h24v6l-12 5-12-5z" fill="#fff2d7" stroke="#b69a79"/>
       <g transform="translate(180 110) scale(1.2)">{pitcher}</g>
       {batters}
-      <g class="catcher-pitch-ball" opacity="0"><use href="#baseball-sprite"/></g>
+      <g class="catcher-pitch-ball" opacity="0">
+        <path d="M-1.6 -1.5 -3.8 -7.5 .6 -3.8 1.3 -1.5Z" fill="#ffe8b5" opacity=".55"/>
+        <use href="#baseball-sprite"/>
+      </g>
       <g shape-rendering="crispEdges">
         <path d="M232 176h29l-4-14-13-5-16 6z" fill="#364453" stroke="#1c252e" stroke-width="2"/>
         <path d="M230 167l-12-7-3-9 3-6 5 1 4 7 3-12 5-3 6 2 6 8 4 1 3 6-5 10-8 4z"
@@ -389,6 +394,7 @@ def baseball_play():
     zoom_release, wide = 8.95, 9.46
     box = (159, 148)
     home = (180, 151)
+    impact = (173, 136)
     zoom = 2.65
     zoom_transform = f"translate({180 - zoom * home[0]:g}px,{145 - zoom * home[1]:g}px) scale({zoom:g})"
     route = (
@@ -452,7 +458,7 @@ def baseball_play():
         swing = swing_pose + baseball_swing_scan()
         replay_players.append(f'<g class="{order}" opacity="{int(index == 0)}">{swing}</g>')
         close_batters.append(f'''<g class="{order}" opacity="{int(index == 0)}">
-      <g transform="translate(126 158) scale(2.4)">
+      <g transform="translate(126 170) scale(2.4)">
         <g class="catcher-batter-set">{ready_pose}</g>
         <g class="catcher-batter-swing" opacity="0">{swing_pose}</g>
       </g>
@@ -544,20 +550,25 @@ def baseball_play():
   {pct(.045)} {{opacity:.76;transform:translateX(3px)}}
   {pct(.27)},100% {{opacity:0;transform:translateX(15px)}}
 }}
+.catcher-batter-swing .swing-bat {{animation:catcher-swing-bat {turn}s linear infinite;transform-origin:0 0}}
+@keyframes catcher-swing-bat {{
+  0%,{pct(close_swing)} {{transform:rotate(-105deg);animation-timing-function:ease-out}}
+  {pct(contact)},100% {{transform:rotate(0deg)}}
+}}
 .catcher-pitch-ball {{animation:catcher-pitch-ball {turn}s linear infinite;transform-origin:0 0}}
 @keyframes catcher-pitch-ball {{
-  0%,{pct(pitch - .001)} {{opacity:0;transform:translate(166px,94px) scale(.55)}}
-  {pct(pitch)} {{opacity:1;transform:translate(166px,94px) scale(.55)}}
-  {pct(contact - .17)} {{opacity:1;transform:translate(171px,108px) scale(1.1)}}
-  {pct(contact)} {{opacity:1;transform:translate(174px,123px) scale(1.6)}}
-  {pct(contact + .001)},100% {{opacity:0;transform:translate(174px,123px) scale(1.6)}}
+  0%,{pct(pitch - .001)} {{opacity:0;transform:translate(166px,94px) scale(.65)}}
+  {pct(pitch)} {{opacity:1;transform:translate(166px,94px) scale(.65)}}
+  {pct(contact - .17)} {{opacity:1;transform:translate(164px,116px) scale(1.18)}}
+  {pct(contact)} {{opacity:1;transform:{move_to(impact)} scale(1.6)}}
+  {pct(contact + .001)},100% {{opacity:0;transform:{move_to(impact)} scale(1.6)}}
 }}
 .baseball {{animation:baseball-flight {turn}s linear infinite}}
 @keyframes baseball-flight {{
   0%,{pct(pitch - .001)} {{opacity:0;transform:translate(169px,114px)}}
   {pct(pitch)} {{opacity:1;transform:translate(169px,114px)}}
   {pct(contact - .17)} {{opacity:1;transform:translate(174px,125px)}}
-  {pct(contact)} {{opacity:1;transform:translate(173px,136px)}}
+  {pct(contact)} {{opacity:1;transform:{move_to(impact)}}}
   {pct(1.61)} {{opacity:1;transform:translate(190px,105px)}}
   {pct(1.83)} {{opacity:1;transform:translate(209px,77px)}}
   {pct(2.07)} {{opacity:1;transform:translate(231px,57px)}}
@@ -585,8 +596,8 @@ def baseball_play():
 }}
 .swing-replay {{animation:swing-replay {turn}s ease-out infinite}}
 @keyframes swing-replay {{
-  0%,{pct(contact)} {{opacity:0}}
-  {pct(contact + .12)},{pct(4.2)} {{opacity:1}}
+  0%,{pct(wall + .2)} {{opacity:0}}
+  {pct(wall + .4)},{pct(4.2)} {{opacity:1}}
   {pct(4.48)},100% {{opacity:0}}
 }}
 .home-camera {{animation:home-camera {turn}s ease-in-out infinite;transform-origin:0 0}}
@@ -633,8 +644,8 @@ def baseball_play():
     <g class="crowd-cheer" opacity="0">{crowd_cheer()}</g>
     <g class="field-pitcher" transform="translate(180 124)">{pitcher}</g>
     {"".join(batters)}
-    <g class="swing-flash" opacity="0" fill="#ffdf97">
-      <path d="M172 128h1v5h-1zm0 11h1v5h-1zm-8-4h5v1h-5zm12 0h5v1h-5z"/>
+    <g class="swing-flash" transform="translate({impact[0]} {impact[1]})" opacity="0" fill="#ffdf97">
+      <path d="M-1-8h1v5h-1zm0 11h1v5h-1zm-8-4h5v1h-5zm12 0h5v1h-5z"/>
     </g>
     <g class="baseball" opacity="0">
       <path class="baseball-tail" opacity="0" d="M-14 6l10-5 2 1-11 6z" fill="#ffd585"/>

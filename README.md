@@ -2,11 +2,10 @@
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="./assets/header-dark-still.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="./assets/header-light-still.svg">
   <source media="(prefers-color-scheme: dark)" srcset="./assets/header-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/header-light.svg">
-  <img src="./assets/header-light.svg" width="100%" alt="taku0193 — Motion. Rhythm. Code. Pose tracking, interactive games, and live heart-rate tools. The floodlights brighten with today’s GitHub contributions. From the catcher’s point of view, a pitch approaches home plate. The view cuts wide as the batter hits a home run. At home plate, the camera zooms in on the celebration jump and traces the batter’s joints.">
+  <img src="./assets/header-light.svg" width="100%" alt="taku0193 — Motion. Rhythm. Code. At a night ballpark, the view cuts from the catcher to a wide shot as the batter hits a home run, then zooms in to track the celebration jump. The floodlights brighten with today’s GitHub contributions.">
 </picture>
 
-## 👋 About Me
+## About Me
 
 I build apps that connect body movement, music, and heart-rate data.
 
@@ -14,29 +13,29 @@ I build apps that connect body movement, music, and heart-rate data.
 - 🎮 **Interactive Games** — Turning body movement into game controls and exploring AI-generated music
 - 💓 **Web / macOS Apps** — Working with heart-rate data in web apps and native macOS apps built with SwiftUI
 
-<h3><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/h-stack-dark.svg"><img src="./assets/h-stack-light.svg" alt="Tech stack"></picture></h3>
+## Tech Stack
 
-#### Languages
+### Languages
 
 ![Python](./assets/stack/python.svg "Python")
 ![TypeScript](./assets/stack/typescript.svg "TypeScript")
 ![Swift](./assets/stack/swift.svg "Swift")
 
-#### Web / macOS Development
+### Web / macOS Development
 
 ![Vue.js](./assets/stack/vue.svg "Vue.js")
 ![FastAPI](./assets/stack/fastapi.svg "FastAPI")
 ![SwiftUI](./assets/stack/swiftui.svg "SwiftUI")
 ![CoreBluetooth](./assets/stack/corebluetooth.svg "CoreBluetooth")
 
-#### Computer Vision / Games
+### Computer Vision / Games
 
 ![MediaPipe](./assets/stack/mediapipe.svg "MediaPipe")
 ![OpenCV](./assets/stack/opencv.svg "OpenCV")
 ![PyTorch](./assets/stack/pytorch.svg "PyTorch")
 ![Unity](./assets/stack/unity.svg "Unity")
 
-#### AI Tools / Editors
+### AI Tools / Editors
 
 ![Codex](./assets/stack/codex.svg "Codex")
 ![Claude Code](./assets/stack/claude-code.svg "Claude Code")
@@ -46,27 +45,22 @@ I build apps that connect body movement, music, and heart-rate data.
 <details>
   <summary>More tools</summary>
 
-  <table>
-    <thead><tr><th scope="col">Area</th><th scope="col">Tools</th></tr></thead>
-    <tbody>
-      <tr><th scope="row"><img src="./assets/tool-icons/assistants.svg" width="24" height="24" alt="">&nbsp; AI Assistants</th><td>Claude · ChatGPT · Cursor</td></tr>
-      <tr><th scope="row"><img src="./assets/tool-icons/inference.svg" width="24" height="24" alt="">&nbsp; LLM Inference</th><td>TensorRT-LLM · vLLM · Ollama</td></tr>
-      <tr><th scope="row"><img src="./assets/tool-icons/signals.svg" width="24" height="24" alt="">&nbsp; Vision, Audio &amp; Data</th><td>Ultralytics YOLO · Transformers · MusicGen · librosa · NumPy</td></tr>
-      <tr><th scope="row"><img src="./assets/tool-icons/browser.svg" width="24" height="24" alt="">&nbsp; Web Development</th><td>JavaScript · HTML5 · CSS · React · Next.js · Vite · Node.js</td></tr>
-      <tr><th scope="row"><img src="./assets/tool-icons/database.svg" width="24" height="24" alt="">&nbsp; Databases &amp; Cloud</th><td>SQLite · PostgreSQL · Google Cloud</td></tr>
-      <tr><th scope="row"><img src="./assets/tool-icons/testing.svg" width="24" height="24" alt="">&nbsp; Testing</th><td>Vitest · Playwright · pytest</td></tr>
-      <tr><th scope="row"><img src="./assets/tool-icons/terminal.svg" width="24" height="24" alt="">&nbsp; Development Environment</th><td>Docker · Git · GitHub Actions · Linux · macOS</td></tr>
-      <tr><th scope="row"><img src="./assets/tool-icons/notebook.svg" width="24" height="24" alt="">&nbsp; Research &amp; Writing</th><td>MATLAB · LaTeX · Overleaf · Notion · Obsidian</td></tr>
-      <tr><th scope="row"><img src="./assets/tool-icons/cube.svg" width="24" height="24" alt="">&nbsp; 3D Graphics</th><td>Blender</td></tr>
-    </tbody>
-  </table>
+- <img src="./assets/tool-icons/assistants.svg" width="20" height="20" alt=""> **AI Assistants** — Claude · ChatGPT · Cursor
+- <img src="./assets/tool-icons/inference.svg" width="20" height="20" alt=""> **LLM Inference** — TensorRT-LLM · vLLM · Ollama
+- <img src="./assets/tool-icons/signals.svg" width="20" height="20" alt=""> **Vision, Audio & Data** — Ultralytics YOLO · Transformers · MusicGen · librosa · NumPy
+- <img src="./assets/tool-icons/browser.svg" width="20" height="20" alt=""> **Web Development** — JavaScript · HTML5 · CSS · React · Next.js · Vite · Node.js
+- <img src="./assets/tool-icons/database.svg" width="20" height="20" alt=""> **Databases & Cloud** — SQLite · PostgreSQL · Google Cloud
+- <img src="./assets/tool-icons/testing.svg" width="20" height="20" alt=""> **Testing** — Vitest · Playwright · pytest
+- <img src="./assets/tool-icons/terminal.svg" width="20" height="20" alt=""> **Development Environment** — Docker · Git · GitHub Actions · Linux · macOS
+- <img src="./assets/tool-icons/notebook.svg" width="20" height="20" alt=""> **Research & Writing** — MATLAB · LaTeX · Overleaf · Notion · Obsidian
+- <img src="./assets/tool-icons/cube.svg" width="20" height="20" alt=""> **3D Graphics** — Blender
+
 </details>
 
-## ⚡ Activity Summary
+## Activity Summary
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/overview-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/overview-light.svg">
   <img src="./assets/overview-light.svg" width="100%" alt="Activity over the past year: total contributions, recent activity, active days, longest streak, and contribution types. Includes anonymized private counts.">
 </picture>
 
@@ -74,7 +68,6 @@ I build apps that connect body movement, music, and heart-rate data.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/pulse-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/pulse-light.svg">
   <img src="./assets/pulse-light.svg" width="100%" alt="Today's GitHub contribution count (UTC). The waveform grows taller and moves faster as contributions increase.">
 </picture>
 
@@ -82,11 +75,9 @@ I build apps that connect body movement, music, and heart-rate data.
   <source media="(prefers-reduced-motion: reduce) and (prefers-color-scheme: dark)" srcset="./assets/beat-runner-dark-still.svg">
   <source media="(prefers-reduced-motion: reduce)" srcset="./assets/beat-runner-light-still.svg">
   <source media="(prefers-color-scheme: dark)" srcset="./assets/beat-runner-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/beat-runner-light.svg">
-    <img src="./assets/beat-runner-light.svg" width="100%" alt="Beat Runner collects energy drinks from my contribution calendar, then returns to the center to hydrate and recover.">
+  <img src="./assets/beat-runner-light.svg" width="100%" alt="Beat Runner collects energy drinks from my contribution calendar, then returns to the center to hydrate and recover.">
 </picture>
 
 ---
 
 <p align="center"><i>Motion. Rhythm. Code.</i></p>
-
