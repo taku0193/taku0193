@@ -2,26 +2,15 @@
 """Render the Motion Lab header and Beat Runner from profile activity data."""
 from argparse import ArgumentParser
 from datetime import date, timedelta
-from html import escape
 import json
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
+if __package__:
+    from .scoreboard import SCOREBOARD_FONT, THEMES, activity_intensity, terminal_frame
+else:
+    from scoreboard import SCOREBOARD_FONT, THEMES, activity_intensity, terminal_frame
 
-THEMES = {
-    "dark": {
-        "body": "#101929", "bar": "#17273a", "ink": "#f0f7ff",
-        "muted": "#a6bfd2", "edge": "#314a60", "teal": "#71efd4",
-        "coral": "#ff928d", "amber": "#ffd585", "blank": "#1d3043",
-        "levels": ("#28566b", "#377c88", "#4eaaab", "#79ead3"),
-    },
-    "light": {
-        "body": "#f0f7f9", "bar": "#dcebf0", "ink": "#142c41",
-        "muted": "#465f75", "edge": "#afc8d4", "teal": "#08786f",
-        "coral": "#a6404a", "amber": "#855500", "blank": "#d9e7ed",
-        "levels": ("#a1d4d0", "#6fb6b5", "#369b94", "#08786f"),
-    },
-}
 
 SPRITE = (
     ".....YYYY...",
@@ -60,17 +49,6 @@ def pixel_runner(x, y, size, colors, pose=SPRITE):
     return f'<g transform="translate({x} {y})" shape-rendering="crispEdges">{"".join(pixels)}</g>'
 
 
-def terminal_frame(colors, height, label):
-    return f'''
-<rect x=".5" y=".5" width="899" height="{height-1}" rx="10" fill="{colors["body"]}" stroke="{colors["edge"]}"/>
-<path d="M10 1H890Q899 1 899 10V34H1V10Q1 1 10 1Z" fill="{colors["bar"]}"/>
-<path d="M1 34H899" stroke="{colors["edge"]}"/>
-<rect x="16" y="15" width="6" height="6" fill="{colors["coral"]}"/>
-<rect x="28" y="15" width="6" height="6" fill="{colors["amber"]}"/>
-<rect x="40" y="15" width="6" height="6" fill="{colors["teal"]}"/>
-<text x="59" y="22" font-size="13" fill="{colors["muted"]}">{escape(label)}</text>'''
-
-
 def footstep_light(x, y, delay, color, direction):
     """Leave a lit tile under the planted shoe and send a pulse down the lane."""
     return f'''<g transform="translate({x:.2f} {y:g}) scale({.65 * direction:g} .65)" fill="{color}" style="--beat-delay:{delay:.6f}s">
@@ -86,8 +64,13 @@ def footstep_light(x, y, delay, color, direction):
 </g>'''
 
 
-def ballpark_scene():
+def ballpark_scene(today_contributions=0):
     """Night baseball park viewed from the near side of the warm-up lane."""
+    intensity = activity_intensity(today_contributions)
+    led = THEMES["dark"]["led"]
+    glow_opacity = .22 + .56 * intensity
+    beam_opacity = .07 + .28 * intensity
+    bulb_opacity = .40 + .60 * intensity
     spectators = []
     crowd_colors = ("#527888", "#7a8f93", "#977b68", "#43667c", "#a1a98d")
     for row in range(3):
@@ -104,12 +87,12 @@ def ballpark_scene():
         <stop stop-color="#0b1527"/><stop offset="1" stop-color="#20394b"/>
       </linearGradient>
       <radialGradient id="ballpark-lamp-glow">
-        <stop stop-color="#e8f4c4" stop-opacity=".34"/>
-        <stop offset="1" stop-color="#e8f4c4" stop-opacity="0"/>
+        <stop stop-color="{led}" stop-opacity="{glow_opacity:.3f}"/>
+        <stop offset="1" stop-color="{led}" stop-opacity="0"/>
       </radialGradient>
       <linearGradient id="ballpark-beam" x2="0" y2="1">
-        <stop stop-color="#f0f3d1" stop-opacity=".17"/>
-        <stop offset="1" stop-color="#f0f3d1" stop-opacity="0"/>
+        <stop stop-color="{led}" stop-opacity="{beam_opacity:.3f}"/>
+        <stop offset="1" stop-color="{led}" stop-opacity="0"/>
       </linearGradient>
       <path id="ballpark-turf" d="M0 109 37 98 83 90 132 85 180 84 229 85 278 90 324 98 361 109V154H0Z"/>
       <clipPath id="ballpark-grass-clip"><use href="#ballpark-turf"/></clipPath>
@@ -117,7 +100,7 @@ def ballpark_scene():
         <path d="M-12 49 -3 7H3l9 42Z" fill="#223f4d"/>
         <path d="M-7 38H7M-5 29H5M-4 20H4M-7 38l11-18M7 38-4 20" fill="none" stroke="#406071"/>
         <rect x="-17" y="-6" width="34" height="13" fill="#182d3d" stroke="#70858a"/>
-        <path d="M-14-3h4v3h-4zm6 0h4v3h-4zm6 0h4v3h-4zm6 0h4v3H4zm6 0h4v3h-4zM-14 2h4v2h-4zm6 0h4v2h-4zm6 0h4v2h-4zm6 0h4v2H4zm6 0h4v2h-4z" fill="#f2f1c9"/>
+        <path d="M-14-3h4v3h-4zm6 0h4v3h-4zm6 0h4v3h-4zm6 0h4v3H4zm6 0h4v3h-4zM-14 2h4v2h-4zm6 0h4v2h-4zm6 0h4v2h-4zm6 0h4v2H4zm6 0h4v2h-4z" fill="{led}" opacity="{bulb_opacity:.3f}"/>
       </g>
     </defs>
     <rect width="361" height="200" fill="url(#ballpark-sky)"/>
@@ -617,15 +600,16 @@ def baseball_play():
     return animation, scene, hud, replay
 
 
-def hero_svg(theme):
+def hero_svg(theme, today_contributions=0):
     """Show a night game next to the profile scoreboard."""
     c = THEMES[theme]
+    led = THEMES["dark"]["led"]
     scene_x = 513
     play_css, play, hud, replay = baseball_play()
     trace = "M338 205h19l4-3 4 3h10l4 5 6-14 6 16 5-7h13l4-3 4 3h9l4 5 6-14 6 16 5-7h17"
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="274" viewBox="0 0 900 274" role="img" aria-labelledby="hero-title hero-desc">
 <title id="hero-title">taku0193 — Motion. Rhythm. Code.</title>
-<desc id="hero-desc">A batter hits a home run and circles the bases as the crowd cheers. At home plate the camera zooms in on a celebration jump with joint landmarks.</desc>
+<desc id="hero-desc">The floodlights brighten as today's GitHub contributions increase. A batter hits a home run and circles the bases as the crowd cheers. At home plate the camera zooms in on a celebration jump with joint landmarks.</desc>
 <style>
 .trace-light {{stroke-dasharray:9 91; animation:trace 3.2s linear infinite}}
 @keyframes trace {{to {{stroke-dashoffset:-100}}}}
@@ -642,7 +626,7 @@ def hero_svg(theme):
     <rect x="1" y="1" width="1" height="1" fill="#75c1b8" opacity=".14"/>
   </pattern>
 </defs>
-<g font-family="ui-monospace, Menlo, Consolas, monospace">
+<g font-family="{SCOREBOARD_FONT}">
   {terminal_frame(c, 274, "taku0193@github: ~/motion-lab")}
   <g clip-path="url(#stadium-frame)">
   <rect x="25" y="52" width="849" height="200" fill="#0c1726"/>
@@ -657,7 +641,7 @@ def hero_svg(theme):
   <path d="M25 241.5H513" stroke="#564132"/>
   <g clip-path="url(#hero-scene-clip)"><g transform="translate({scene_x} 52)">
     <g class="home-camera">
-      {ballpark_scene()}
+      {ballpark_scene(today_contributions)}
       {play}
     </g>
     {hud}
@@ -672,11 +656,11 @@ def hero_svg(theme):
     <rect x="56" y="80" width="4" height="4" fill="#ffd585"/>
     <text x="67" y="85" font-size="10" letter-spacing="1.65" fill="#a6bfd2">MOTION LAB FIELD</text>
     <text x="56" y="133" font-size="53" font-weight="800" letter-spacing="-2" fill="#f0f7ff">taku0193</text>
-    <text x="58" y="158" font-size="23" font-weight="650" fill="#89efd6">Motion. Rhythm. Code.</text>
+    <text x="58" y="158" font-size="23" font-weight="650" fill="{led}">Motion. Rhythm. Code.</text>
     <text x="56" y="194" font-size="12" fill="#b7cad6">POSE TRACKING / INTERACTIVE GAMES</text>
     <text x="56" y="214" font-size="12" fill="#b7cad6">LIVE HEART-RATE TOOLS</text>
     <path d="{trace}" fill="none" stroke="#5d9e9d" stroke-width="1.4" opacity=".55"/>
-    <path class="trace-light" d="{trace}" pathLength="100" fill="none" stroke="#a1f4de" stroke-width="1.7"/>
+    <path class="trace-light" d="{trace}" pathLength="100" fill="none" stroke="{led}" stroke-width="1.7"/>
     {replay}
   </g>
   </g>
@@ -874,6 +858,9 @@ def pickup_animation(pickups, start, week_width):
 
 def runner_svg(data, theme):
     c = THEMES[theme]
+    total = data['year_contributions']
+    formatted_total = f'{total:,}'
+    total_font_size = min(22, 175 // len(formatted_total))
     weeks, cells = contribution_grid(data['days'])
     first_x, first_y = 78, 114
     step = 744 / weeks
@@ -921,7 +908,7 @@ def runner_svg(data, theme):
     <g class="stand-pose" opacity="0"><g class="breathing">{stand}</g></g>
     <g class="drink-pose" opacity="0">{sipping}<g class="sip-arm"><path d="M1-13h4v-4h5" fill="none" stroke="{c['ink']}" stroke-width="2.8"/><g transform="translate(7 -22) scale(.65)">{drink(0,0,c['teal'],c['ink'])}</g></g></g></g>''' if timeline else stand
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="265" viewBox="0 0 900 265" role="img" aria-labelledby="runner-title runner-desc">
-<title id="runner-title">Beat Runner — {data['year_contributions']} contributions, energy pickups and a recovery pit stop</title>
+<title id="runner-title">Beat Runner — {total} contributions, energy pickups and a recovery pit stop</title>
 <desc id="runner-desc">One drink for each active day. A runner collects them, returns to the center, drinks and catches their breath before the next lap.</desc>
 <style>
 {animation}
@@ -932,10 +919,12 @@ def runner_svg(data, theme):
 @keyframes jog {{0%,50%,100% {{transform:translateY(0)}} 25%,75% {{transform:translateY(-1.4px)}}}}
 @media (prefers-reduced-motion: reduce) {{* {{animation:none !important}}}}
 </style>
-<g font-family="ui-monospace, Menlo, Consolas, monospace">
+<g font-family="{SCOREBOARD_FONT}">
   {terminal_frame(c,265,'taku0193@github: ~/contributions')}
-  <text x="32" y="68" font-size="14" font-weight="700" fill="{c['teal']}">$ ./beat-runner</text>
-  <text x="868" y="68" text-anchor="end" font-size="13" fill="{c['muted']}">{data['year_contributions']:,} contributions / past year</text>
+  <text x="32" y="70" font-size="14" font-weight="700" fill="{c['led']}">$ ./beat-runner</text>
+  <rect x="550" y="47" width="318" height="38" rx="4" fill="{c['bar']}" stroke="{c['edge']}"/>
+  <text x="563" y="70" font-size="11" letter-spacing=".5" fill="{c['muted']}">CONTRIBUTIONS / PAST YEAR</text>
+  <text x="854" y="74" text-anchor="end" font-size="{total_font_size}" font-weight="800" fill="{c['led']}">{formatted_total}</text>
   <path d="M76 107H822" stroke="{c['edge']}"/>
   {''.join(rows)}{''.join(cans)}{''.join(sparks)}{motion}
   <g class="runner-presence"><g class="pickup-runner" style="transform:translate({start[0]}px,{start[1]}px)"><g class="runner-facing">{pose_markup}</g></g></g>
@@ -960,7 +949,7 @@ def main():
     activity = json.loads((args.assets / 'activity-data.json').read_text(encoding='utf-8'))
     files = {}
     for theme in THEMES:
-        files[f'header-{theme}.svg'] = hero_svg(theme)
+        files[f'header-{theme}.svg'] = hero_svg(theme, activity['today_contributions'])
         files[f'beat-runner-{theme}.svg'] = runner_svg(activity, theme)
         for name in ('header', 'beat-runner'):
             files[f'{name}-{theme}-still.svg'] = still_svg(files[f'{name}-{theme}.svg'])

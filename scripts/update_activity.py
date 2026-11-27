@@ -17,6 +17,12 @@ import re
 import urllib.request
 import xml.etree.ElementTree as ET
 
+if __package__:
+    from .scoreboard import SCOREBOARD_FONT, THEMES, activity_intensity, terminal_frame
+else:
+    from scoreboard import SCOREBOARD_FONT, THEMES, activity_intensity, terminal_frame
+
+
 JST = timezone(timedelta(hours=9))
 QUERY = """query($login:String!,$to:DateTime!){
   user(login:$login){ contributionsCollection(to:$to){
@@ -53,7 +59,7 @@ def instant(value):
 
 def pulse_parameters(count):
     count = nonnegative_int(count)
-    intensity = count / (count + 12)
+    intensity = activity_intensity(count)
     return {
         'intensity': intensity,
         'amplitude': 0.0 if count == 0 else 6 + 44 * intensity,
@@ -129,14 +135,15 @@ def pulse_svg(data, theme):
     count = nonnegative_int(data['today_contributions'])
     params = pulse_parameters(count)
     amplitude, period = params['amplitude'], params['period_seconds']
-    bg, ink, muted, accent, grid, border = colors(theme)
+    c = THEMES[theme]
+    accent, muted, border = c['led'], c['muted'], c['edge']
     baseline = 113
     p, q, r, s, t = (baseline - amplitude * .15, baseline + amplitude * .2,
                       baseline - amplitude, baseline + amplitude * .65, baseline - amplitude * .4)
     path = f'M0 113H17C22 113 22 {p:.3f} 27 {p:.3f}S32 113 38 113H47L52 {q:.3f}L59 {r:.3f}L66 {s:.3f}L73 113H85Q96 113 100 {t:.3f}Q108 {t:.3f} 115 113H140'
     cycles = ''.join(f'<path transform="translate({i * 140} 0)" d="{path}"/>' for i in range(6))
     formatted = f'{count:,}'
-    font_size = 49 if len(formatted) <= 3 else 39 if len(formatted) <= 5 else 29
+    font_size = min(49, 190 // len(formatted))
     updated = instant(data['updated_at']).astimezone(JST).strftime('%m/%d %H:%M JST')
     signal_label = 'No contributions yet · calm signal' if count == 0 else 'More contributions. Stronger pulse.'
     animation = 'none' if count == 0 else f'beat {period:.6f}s ease-out infinite'
@@ -144,7 +151,7 @@ def pulse_svg(data, theme):
 <title id="pulse-title">{count} contributions today — {data['today_date']} UTC</title>
 <desc id="pulse-desc">The count is from today's GitHub contribution calendar. The waveform grows taller and moves faster as contributions increase. Updated {escape(updated)}.</desc>
 <defs>
-  <pattern id="pulse-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" stroke="{grid}" stroke-width=".7" fill="none"/></pattern>
+  <pattern id="pulse-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" stroke="{border}" stroke-opacity=".65" stroke-width=".7" fill="none"/></pattern>
   <clipPath id="pulse-window"><rect x="276" y="60" width="592" height="112" rx="5"/></clipPath>
   <linearGradient id="pulse-fade"><stop stop-color="white" stop-opacity=".12"/><stop offset=".08" stop-color="white"/><stop offset=".92" stop-color="white"/><stop offset="1" stop-color="white" stop-opacity=".12"/></linearGradient>
   <mask id="pulse-mask"><rect x="276" y="60" width="592" height="112" fill="url(#pulse-fade)"/></mask>
@@ -158,18 +165,18 @@ def pulse_svg(data, theme):
   @keyframes meter{{0%,45%,100%{{opacity:.55}}10%,30%{{opacity:1}}}}
   @media(prefers-reduced-motion:reduce){{.wave,.heart,.meter{{animation:none}}}}
 </style>
-<rect x=".5" y=".5" width="899" height="229" rx="14" fill="{bg}" stroke="{border}"/>
-<g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif">
-  <text x="28" y="33" font-size="12" font-weight="650" letter-spacing="1.6" fill="{accent}">CONTRIBUTION PULSE</text>
-  <text x="868" y="32" text-anchor="end" font-size="11" font-weight="600" fill="{muted}">TODAY (UTC) · {data['today_date']}</text>
+<g font-family="{SCOREBOARD_FONT}">
+{terminal_frame(c, 230, "Contribution Pulse")}
+  <text x="868" y="22" text-anchor="end" font-size="11" fill="{muted}">TODAY (UTC) · {data['today_date']}</text>
   <path d="M239 59V196" stroke="{border}"/>
   <circle cx="120" cy="130" r="64" stroke="{border}" stroke-width="4" fill="none"/>
   <circle cx="120" cy="130" r="74" stroke="{border}" stroke-width="3" stroke-dasharray="1 10.6" fill="none"/>
-  <circle class="meter" cx="120" cy="130" r="64" stroke="{accent}" stroke-width="4" stroke-dasharray="{params['ring_length']:.3f} 403" stroke-linecap="round" transform="rotate(128 120 130)" fill="none"/>
+  <circle class="meter" cx="120" cy="130" r="64" stroke="{accent}" stroke-width="4" stroke-dasharray="{params['ring_length']:.3f} 403" stroke-linecap="round" opacity="{int(count > 0)}" transform="rotate(128 120 130)" fill="none"/>
   <path class="heart" d="M120 99L112 91C105 84 113 76 120 84C127 76 135 84 128 91Z" fill="{accent}"/>
-  <text x="120" y="143" text-anchor="middle" font-size="{font_size}" font-weight="650" letter-spacing="-1.5" fill="{ink}">{formatted}</text>
+  <text x="120" y="143" text-anchor="middle" font-size="{font_size}" font-weight="800" letter-spacing="-1.5" fill="{accent}">{formatted}</text>
   <text x="120" y="160" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="1.2" fill="{muted}">TODAY'S</text>
   <text x="120" y="175" text-anchor="middle" font-size="9.5" font-weight="650" letter-spacing=".5" fill="{muted}">CONTRIBUTIONS</text>
+  <rect x="276" y="60" width="592" height="112" rx="5" fill="{c['bar']}" stroke="{border}"/>
   <rect x="276" y="60" width="592" height="112" rx="5" fill="url(#pulse-grid)"/>
   <path d="M276 113H868" stroke="{accent}" stroke-opacity=".15" fill="none"/>
   <g clip-path="url(#pulse-window)" mask="url(#pulse-mask)"><g transform="translate(276 0)"><g class="wave" fill="none" stroke="{accent}" stroke-width="{params['stroke_width']:.3f}" stroke-linecap="round" stroke-linejoin="round">{cycles}</g></g></g>

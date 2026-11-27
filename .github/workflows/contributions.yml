@@ -10,6 +10,7 @@ on:
       - '.github/workflows/contributions.yml'
       - 'scripts/update_activity.py'
       - 'scripts/motion_lab.py'
+      - 'scripts/scoreboard.py'
 
 permissions:
   contents: read
