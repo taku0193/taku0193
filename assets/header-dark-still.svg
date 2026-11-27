@@ -209,11 +209,11 @@
         <stop stop-color="#0b1527"/><stop offset="1" stop-color="#20394b"/>
       </linearGradient>
       <radialGradient id="ballpark-lamp-glow">
-        <stop stop-color="#89efd6" stop-opacity="0.263"/>
+        <stop stop-color="#89efd6" stop-opacity="0.300"/>
         <stop offset="1" stop-color="#89efd6" stop-opacity="0"/>
       </radialGradient>
       <linearGradient id="ballpark-beam" x2="0" y2="1">
-        <stop stop-color="#89efd6" stop-opacity="0.092"/>
+        <stop stop-color="#89efd6" stop-opacity="0.110"/>
         <stop offset="1" stop-color="#89efd6" stop-opacity="0"/>
       </linearGradient>
       <path id="ballpark-turf" d="M0 109 37 98 83 90 132 85 180 84 229 85 278 90 324 98 361 109V154H0Z"/>
@@ -222,7 +222,7 @@
         <path d="M-12 49 -3 7H3l9 42Z" fill="#223f4d"/>
         <path d="M-7 38H7M-5 29H5M-4 20H4M-7 38l11-18M7 38-4 20" fill="none" stroke="#406071"/>
         <rect x="-17" y="-6" width="34" height="13" fill="#182d3d" stroke="#70858a"/>
-        <path d="M-14-3h4v3h-4zm6 0h4v3h-4zm6 0h4v3h-4zm6 0h4v3H4zm6 0h4v3h-4zM-14 2h4v2h-4zm6 0h4v2h-4zm6 0h4v2h-4zm6 0h4v2H4zm6 0h4v2h-4z" fill="#89efd6" opacity="0.446"/>
+        <path d="M-14-3h4v3h-4zm6 0h4v3h-4zm6 0h4v3h-4zm6 0h4v3H4zm6 0h4v3h-4zM-14 2h4v2h-4zm6 0h4v2h-4zm6 0h4v2h-4zm6 0h4v2H4zm6 0h4v2h-4z" fill="#89efd6" opacity="0.486"/>
       </g>
     </defs>
     <rect width="361" height="200" fill="url(#ballpark-sky)"/>
