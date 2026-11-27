@@ -202,8 +202,7 @@ def baseball_pitcher(throwing=False):
       <path d="M-3-20h6v2h2v2h-8z" fill="#ff9b89"/>
       <path d="M-3-16h6v3h-1v1h-4v-1h-1z" fill="#f6d8b4"/>
       <path d="M-3-13h7v2h1v4h-9v-2h-1v-2h2z" fill="#739ed0"/>
-      <path d="M-1-12h1v4h-1z" fill="#b9d7ee"/>
-      {limbs}
+      <path d="M-1-12h1v4h-1z" fill="#b9d7ee"/>{limbs}
     </g>'''
 
 
@@ -338,10 +337,53 @@ def baseball_celebration(colors, pose):
     </g>'''
 
 
+def catcher_view(pitcher, batters):
+    """Look past the batter and the catcher's mitt toward the mound."""
+    return f'''<g class="catcher-view" opacity="0">
+      <rect width="361" height="200" fill="url(#ballpark-sky)"/>
+      <circle cx="273" cy="25" r="7" fill="#d7ddbc"/>
+      <circle cx="276" cy="22" r="7" fill="#0d172a"/>
+      <ellipse cx="48" cy="43" rx="43" ry="27" fill="url(#ballpark-lamp-glow)"/>
+      <ellipse cx="313" cy="43" rx="43" ry="27" fill="url(#ballpark-lamp-glow)"/>
+      <use href="#ballpark-light-tower" x="48" y="43"/>
+      <use href="#ballpark-light-tower" x="313" y="43"/>
+      <path d="M0 73Q180 52 361 73V106H0Z" fill="#152938"/>
+      <path d="M0 74Q180 53 361 74M0 81Q180 60 361 81M0 88Q180 67 361 88"
+            fill="none" stroke="#36505e" stroke-width="1.4"/>
+      <path d="M0 97Q180 80 361 97V175H0Z" fill="#284337"/>
+      <path d="M38 94l23-3L0 136v-16zm67-6 22-2-43 89H53zm72-4h13l12 91h-29zm62 2 18 2 55 87h-31zm63 5 22 3 37 27v17z"
+            fill="#355747"/>
+      <path d="M28 47h39l109 124H0ZM293 47h40l28 124H190Z" fill="url(#ballpark-beam)"/>
+      <ellipse cx="180" cy="111" rx="28" ry="6" fill="#78553e"/>
+      <path d="M175 108h10v1.5h-10z" fill="#e8d9bd"/>
+      <path d="M59 141Q180 119 302 141L361 175H0Z" fill="#724d37"/>
+      <path d="M180 153 0 101m181 52 180-52M110 145h42l-7 16H94zm101 0h40l16 16h-49z"
+            fill="none" stroke="#e0cda6" stroke-opacity=".8" stroke-width="1.2"/>
+      <path d="M168 147h24v6l-12 5-12-5z" fill="#fff2d7" stroke="#b69a79"/>
+      <g transform="translate(180 110) scale(1.2)">{pitcher}</g>
+      {batters}
+      <g class="catcher-pitch-ball" opacity="0"><use href="#baseball-sprite"/></g>
+      <g shape-rendering="crispEdges">
+        <path d="M232 176h29l-4-14-13-5-16 6z" fill="#364453" stroke="#1c252e" stroke-width="2"/>
+        <path d="M230 167l-12-7-3-9 3-6 5 1 4 7 3-12 5-3 6 2 6 8 4 1 3 6-5 10-8 4z"
+              fill="#b98259" stroke="#382821" stroke-width="2"/>
+        <path d="M222 151l8 9 11 2 7-6m-17-13 6 9m-1-10 7 8" fill="none" stroke="#f0c48b"/>
+        <path d="m231 153 7 1 6-3-2 6-5 2z" fill="#704a39"/>
+      </g>
+      <rect y="175" width="361" height="25" fill="#302521"/>
+      <path d="M0 175.5H361" stroke="#886549"/>
+      <rect x="255" y="12" width="94" height="16" rx="2" fill="#0c1c27" stroke="#3b6b6c"/>
+      <circle cx="265" cy="20" r="2" fill="#a5f1dc"/>
+      <text x="272" y="23" font-size="8" letter-spacing=".65" fill="#d0f2ea">CATCHER POV</text>
+    </g>'''
+
+
 def baseball_play():
     """Choreograph the pitch, home run and celebration for each batter."""
     turn = 9.6
     pitch, contact, run_start, wall = .88, 1.44, 1.8, 2.35
+    catcher_start = pitch - .38
+    close_swing = contact - .12
     first, third, finish, fade = 3.4, 5.8, 7.0, 9.05
     zoom_ready, launch, apex, landing = 7.38, 7.53, 7.8, 8.09
     zoom_release, wide = 8.95, 9.46
@@ -392,7 +434,7 @@ def baseball_play():
                 stride_landings.append((at, x0 + (x1 - x0) * progress + shoe_x,
                                         y0 + (y1 - y0) * progress, facing))
                 break
-    batters, styles, indicators, replay_players = [], [], [], []
+    batters, close_batters, styles, indicators, replay_players = [], [], [], [], []
     for index, outfit in enumerate(outfits):
         order = f"batting-turn-{index + 1}"
         duration = turn * len(outfits)
@@ -405,11 +447,19 @@ def baseball_play():
             footstep_light(x, y, at - turn, outfit["teal"], facing)
             for at, x, y, facing in stride_landings
         )
-        swing = baseball_batter(outfit, swing=True) + baseball_swing_scan()
+        ready_pose = baseball_batter(outfit)
+        swing_pose = baseball_batter(outfit, swing=True)
+        swing = swing_pose + baseball_swing_scan()
         replay_players.append(f'<g class="{order}" opacity="{int(index == 0)}">{swing}</g>')
+        close_batters.append(f'''<g class="{order}" opacity="{int(index == 0)}">
+      <g transform="translate(126 158) scale(2.4)">
+        <g class="catcher-batter-set">{ready_pose}</g>
+        <g class="catcher-batter-swing" opacity="0">{swing_pose}</g>
+      </g>
+    </g>''')
         batters.append(f'''<g class="{order}" opacity="{int(index == 0)}">
       <g class="batter-at-plate" transform="translate({box[0]} {box[1]})">
-        <g class="batter-set">{baseball_batter(outfit)}</g>
+        <g class="batter-set">{ready_pose}</g>
         <g class="batter-hit" opacity="0">{swing}</g>
       </g>
       <g class="basepath-lights" opacity="0">{lights}</g>
@@ -443,6 +493,9 @@ def baseball_play():
     for name, _, start, end in phase_labels:
         styles.append(phase_rule(name, start, end, initial=int(start == 0)))
     for name, start, end, initial in (
+        ("catcher-view", catcher_start, contact, 0),
+        ("catcher-batter-set", 0, close_swing, 1),
+        ("catcher-batter-swing", close_swing, contact, 0),
         ("pitcher-set", 0, pitch, 1),
         ("pitcher-throw", pitch, 1.7, 0),
         ("pitcher-reset", 1.7, turn, 0),
@@ -490,6 +543,14 @@ def baseball_play():
   0% {{opacity:0;transform:translateX(0)}}
   {pct(.045)} {{opacity:.76;transform:translateX(3px)}}
   {pct(.27)},100% {{opacity:0;transform:translateX(15px)}}
+}}
+.catcher-pitch-ball {{animation:catcher-pitch-ball {turn}s linear infinite;transform-origin:0 0}}
+@keyframes catcher-pitch-ball {{
+  0%,{pct(pitch - .001)} {{opacity:0;transform:translate(166px,94px) scale(.55)}}
+  {pct(pitch)} {{opacity:1;transform:translate(166px,94px) scale(.55)}}
+  {pct(contact - .17)} {{opacity:1;transform:translate(171px,108px) scale(1.1)}}
+  {pct(contact)} {{opacity:1;transform:translate(174px,123px) scale(1.6)}}
+  {pct(contact + .001)},100% {{opacity:0;transform:translate(174px,123px) scale(1.6)}}
 }}
 .baseball {{animation:baseball-flight {turn}s linear infinite}}
 @keyframes baseball-flight {{
@@ -559,22 +620,28 @@ def baseball_play():
         for name, label, start, _ in phase_labels
     )
     set_pitcher = baseball_pitcher()
-    scene = f'''<g class="crowd-cheer" opacity="0">{crowd_cheer()}</g>
-    <g class="field-pitcher" transform="translate(180 124)">
+    pitcher = f'''
       <g class="pitcher-set">{set_pitcher}</g>
       <g class="pitcher-throw" opacity="0">{baseball_pitcher(throwing=True)}</g>
-      <g class="pitcher-reset" opacity="0">{set_pitcher}</g>
-    </g>
+      <g class="pitcher-reset" opacity="0">{set_pitcher}</g>'''
+    scene = f'''<defs>
+      <g id="baseball-sprite">
+        <circle r="2.35" fill="#fff3d6" stroke="#524030" stroke-width=".7"/>
+        <path d="M-.75-1.65q1.5 1.6 0 3.3" fill="none" stroke="#c97969" stroke-width=".65"/>
+      </g>
+    </defs>
+    <g class="crowd-cheer" opacity="0">{crowd_cheer()}</g>
+    <g class="field-pitcher" transform="translate(180 124)">{pitcher}</g>
     {"".join(batters)}
     <g class="swing-flash" opacity="0" fill="#ffdf97">
       <path d="M172 128h1v5h-1zm0 11h1v5h-1zm-8-4h5v1h-5zm12 0h5v1h-5z"/>
     </g>
     <g class="baseball" opacity="0">
       <path class="baseball-tail" opacity="0" d="M-14 6l10-5 2 1-11 6z" fill="#ffd585"/>
-      <circle r="2.35" fill="#fff3d6" stroke="#524030" stroke-width=".7"/>
-      <path d="M-.75-1.65q1.5 1.6 0 3.3" fill="none" stroke="#c97969" stroke-width=".65"/>
+      <use href="#baseball-sprite"/>
     </g>'''
-    hud = f'''<g class="homer-banner" opacity="0">
+    hud = f'''{catcher_view(pitcher, "".join(close_batters))}
+    <g class="homer-banner" opacity="0">
       <rect x="94" y="32" width="173" height="24" rx="2" fill="#281f1c" stroke="#b98952"/>
       <path d="M102 44h8m140 0h8" stroke="#ffbc73"/>
       <text x="180.5" y="50" text-anchor="middle" font-size="18" font-weight="800"
@@ -609,7 +676,7 @@ def hero_svg(theme, today_contributions=0):
     trace = "M338 205h19l4-3 4 3h10l4 5 6-14 6 16 5-7h13l4-3 4 3h9l4 5 6-14 6 16 5-7h17"
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="274" viewBox="0 0 900 274" role="img" aria-labelledby="hero-title hero-desc">
 <title id="hero-title">taku0193 — Motion. Rhythm. Code.</title>
-<desc id="hero-desc">The floodlights brighten as today's GitHub contributions increase. A batter hits a home run and circles the bases as the crowd cheers. At home plate the camera zooms in on a celebration jump with joint landmarks.</desc>
+<desc id="hero-desc">The floodlights brighten as today's GitHub contributions increase. From the catcher's point of view, a pitch approaches the plate. The view cuts wide on contact as the batter hits a home run and circles the bases. At home plate the camera zooms in on a celebration jump with joint landmarks.</desc>
 <style>
 .trace-light {{stroke-dasharray:9 91; animation:trace 3.2s linear infinite}}
 @keyframes trace {{to {{stroke-dashoffset:-100}}}}

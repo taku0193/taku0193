@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="274" viewBox="0 0 900 274" role="img" aria-labelledby="hero-title hero-desc">
 <title id="hero-title">taku0193 — Motion. Rhythm. Code.</title>
-<desc id="hero-desc">The floodlights brighten as today's GitHub contributions increase. A batter hits a home run and circles the bases as the crowd cheers. At home plate the camera zooms in on a celebration jump with joint landmarks.</desc>
+<desc id="hero-desc">The floodlights brighten as today's GitHub contributions increase. From the catcher's point of view, a pitch approaches the plate. The view cuts wide on contact as the batter hits a home run and circles the bases. At home plate the camera zooms in on a celebration jump with joint landmarks.</desc>
 <style>
 .trace-light {stroke-dasharray:9 91; animation:trace 3.2s linear infinite}
 @keyframes trace {to {stroke-dashoffset:-100}}
@@ -22,6 +22,12 @@
 @keyframes play-home {0% {opacity:0} 72.91667% {opacity:1} 76.87500% {opacity:0}}
 .play-celebrate {animation:play-celebrate 9.6s step-end infinite}
 @keyframes play-celebrate {0% {opacity:0} 76.87500% {opacity:1}}
+.catcher-view {animation:catcher-view 9.6s step-end infinite}
+@keyframes catcher-view {0% {opacity:0} 5.20833% {opacity:1} 15.00000% {opacity:0}}
+.catcher-batter-set {animation:catcher-batter-set 9.6s step-end infinite}
+@keyframes catcher-batter-set {0% {opacity:1} 13.75000% {opacity:0}}
+.catcher-batter-swing {animation:catcher-batter-swing 9.6s step-end infinite}
+@keyframes catcher-batter-swing {0% {opacity:0} 13.75000% {opacity:1} 15.00000% {opacity:0}}
 .pitcher-set {animation:pitcher-set 9.6s step-end infinite}
 @keyframes pitcher-set {0% {opacity:1} 9.16667% {opacity:0}}
 .pitcher-throw {animation:pitcher-throw 9.6s step-end infinite}
@@ -92,6 +98,14 @@
   0% {opacity:0;transform:translateX(0)}
   0.46875% {opacity:.76;transform:translateX(3px)}
   2.81250%,100% {opacity:0;transform:translateX(15px)}
+}
+.catcher-pitch-ball {animation:catcher-pitch-ball 9.6s linear infinite;transform-origin:0 0}
+@keyframes catcher-pitch-ball {
+  0%,9.15625% {opacity:0;transform:translate(166px,94px) scale(.55)}
+  9.16667% {opacity:1;transform:translate(166px,94px) scale(.55)}
+  13.22917% {opacity:1;transform:translate(171px,108px) scale(1.1)}
+  15.00000% {opacity:1;transform:translate(174px,123px) scale(1.6)}
+  15.01042%,100% {opacity:0;transform:translate(174px,123px) scale(1.6)}
 }
 .baseball {animation:baseball-flight 9.6s linear infinite}
 @keyframes baseball-flight {
@@ -247,7 +261,13 @@
     <path d="M0 160H361" stroke="#a3856a" stroke-opacity=".55"/>
     <path d="M0 189.5H361" stroke="#564132"/>
     <path d="M12 164h2m10 21h3m56-22h3m18 24h4m16-20h2m35 16h2m43-17h3m47 20h2m34-20h3m30 17h2m28-20h3" stroke="#8b6a53" stroke-opacity=".5"/>
-      <g class="crowd-cheer" opacity="0"><defs>
+      <defs>
+      <g id="baseball-sprite">
+        <circle r="2.35" fill="#fff3d6" stroke="#524030" stroke-width=".7"/>
+        <path d="M-.75-1.65q1.5 1.6 0 3.3" fill="none" stroke="#c97969" stroke-width=".65"/>
+      </g>
+    </defs>
+    <g class="crowd-cheer" opacity="0"><defs>
       <g id="ballpark-raised-arms" shape-rendering="crispEdges">
         <path d="M-3-6h1v2h1v1h2v-1h1v-2h1v3H2v1H1.5v2h-3v-2H-2v-1h-1z"/>
         <path d="M-1-6h2v2h-2zM-3-7h1v1h-1zM2-7h1v1H2z" fill="#efd1a0"/>
@@ -264,7 +284,6 @@
       <path d="M-3-16h6v3h-1v1h-4v-1h-1z" fill="#f6d8b4"/>
       <path d="M-3-13h7v2h1v4h-9v-2h-1v-2h2z" fill="#739ed0"/>
       <path d="M-1-12h1v4h-1z" fill="#b9d7ee"/>
-      
         <path d="M-4-13h2v2h5v2h-7v-1h-2v-2h2z" fill="#f6d8b4"/>
         <path d="M1-12h5v4H1z" fill="#ae7754"/>
         <path d="M-4-8h8v3h1v4H2v-3H-1v3h-4v-4h1z" fill="#cfdeeb"/>
@@ -276,7 +295,6 @@
       <path d="M-3-16h6v3h-1v1h-4v-1h-1z" fill="#f6d8b4"/>
       <path d="M-3-13h7v2h1v4h-9v-2h-1v-2h2z" fill="#739ed0"/>
       <path d="M-1-12h1v4h-1z" fill="#b9d7ee"/>
-      
         <path d="M-4-13h-3v2h-5v2h6v-1h4z" fill="#f6d8b4"/>
         <path d="M2-12h4v4H4v-1H2z" fill="#ae7754"/>
         <path d="M-4-8h7v3h4v3H4L1-4h-3l-3 3h-4v-2l4-3z" fill="#cfdeeb"/>
@@ -288,13 +306,11 @@
       <path d="M-3-16h6v3h-1v1h-4v-1h-1z" fill="#f6d8b4"/>
       <path d="M-3-13h7v2h1v4h-9v-2h-1v-2h2z" fill="#739ed0"/>
       <path d="M-1-12h1v4h-1z" fill="#b9d7ee"/>
-      
         <path d="M-4-13h2v2h5v2h-7v-1h-2v-2h2z" fill="#f6d8b4"/>
         <path d="M1-12h5v4H1z" fill="#ae7754"/>
         <path d="M-4-8h8v3h1v4H2v-3H-1v3h-4v-4h1z" fill="#cfdeeb"/>
         <path d="M-6-2h5v2h-6v-1h1zm8 0h4v1h2v1H2z" fill="#182330"/>
-    </g></g>
-    </g>
+    </g></g></g>
     <g class="batting-turn-1" opacity="1">
       <g class="batter-at-plate" transform="translate(159 148)">
         <g class="batter-set"><g shape-rendering="crispEdges">
@@ -1378,9 +1394,141 @@
     </g>
     <g class="baseball" opacity="0">
       <path class="baseball-tail" opacity="0" d="M-14 6l10-5 2 1-11 6z" fill="#ffd585"/>
-      <circle r="2.35" fill="#fff3d6" stroke="#524030" stroke-width=".7"/>
-      <path d="M-.75-1.65q1.5 1.6 0 3.3" fill="none" stroke="#c97969" stroke-width=".65"/>
+      <use href="#baseball-sprite"/>
     </g>
+    </g>
+    <g class="catcher-view" opacity="0">
+      <rect width="361" height="200" fill="url(#ballpark-sky)"/>
+      <circle cx="273" cy="25" r="7" fill="#d7ddbc"/>
+      <circle cx="276" cy="22" r="7" fill="#0d172a"/>
+      <ellipse cx="48" cy="43" rx="43" ry="27" fill="url(#ballpark-lamp-glow)"/>
+      <ellipse cx="313" cy="43" rx="43" ry="27" fill="url(#ballpark-lamp-glow)"/>
+      <use href="#ballpark-light-tower" x="48" y="43"/>
+      <use href="#ballpark-light-tower" x="313" y="43"/>
+      <path d="M0 73Q180 52 361 73V106H0Z" fill="#152938"/>
+      <path d="M0 74Q180 53 361 74M0 81Q180 60 361 81M0 88Q180 67 361 88"
+            fill="none" stroke="#36505e" stroke-width="1.4"/>
+      <path d="M0 97Q180 80 361 97V175H0Z" fill="#284337"/>
+      <path d="M38 94l23-3L0 136v-16zm67-6 22-2-43 89H53zm72-4h13l12 91h-29zm62 2 18 2 55 87h-31zm63 5 22 3 37 27v17z"
+            fill="#355747"/>
+      <path d="M28 47h39l109 124H0ZM293 47h40l28 124H190Z" fill="url(#ballpark-beam)"/>
+      <ellipse cx="180" cy="111" rx="28" ry="6" fill="#78553e"/>
+      <path d="M175 108h10v1.5h-10z" fill="#e8d9bd"/>
+      <path d="M59 141Q180 119 302 141L361 175H0Z" fill="#724d37"/>
+      <path d="M180 153 0 101m181 52 180-52M110 145h42l-7 16H94zm101 0h40l16 16h-49z"
+            fill="none" stroke="#e0cda6" stroke-opacity=".8" stroke-width="1.2"/>
+      <path d="M168 147h24v6l-12 5-12-5z" fill="#fff2d7" stroke="#b69a79"/>
+      <g transform="translate(180 110) scale(1.2)">
+      <g class="pitcher-set"><g shape-rendering="crispEdges">
+      <ellipse cy=".4" rx="9" ry="1.2" fill="#15232b" opacity=".42"/>
+      <path d="M-3-20h6v2h2v2h-8z" fill="#ff9b89"/>
+      <path d="M-3-16h6v3h-1v1h-4v-1h-1z" fill="#f6d8b4"/>
+      <path d="M-3-13h7v2h1v4h-9v-2h-1v-2h2z" fill="#739ed0"/>
+      <path d="M-1-12h1v4h-1z" fill="#b9d7ee"/>
+        <path d="M-4-13h2v2h5v2h-7v-1h-2v-2h2z" fill="#f6d8b4"/>
+        <path d="M1-12h5v4H1z" fill="#ae7754"/>
+        <path d="M-4-8h8v3h1v4H2v-3H-1v3h-4v-4h1z" fill="#cfdeeb"/>
+        <path d="M-6-2h5v2h-6v-1h1zm8 0h4v1h2v1H2z" fill="#182330"/>
+    </g></g>
+      <g class="pitcher-throw" opacity="0"><g shape-rendering="crispEdges">
+      <ellipse cy=".4" rx="9" ry="1.2" fill="#15232b" opacity=".42"/>
+      <path d="M-3-20h6v2h2v2h-8z" fill="#ff9b89"/>
+      <path d="M-3-16h6v3h-1v1h-4v-1h-1z" fill="#f6d8b4"/>
+      <path d="M-3-13h7v2h1v4h-9v-2h-1v-2h2z" fill="#739ed0"/>
+      <path d="M-1-12h1v4h-1z" fill="#b9d7ee"/>
+        <path d="M-4-13h-3v2h-5v2h6v-1h4z" fill="#f6d8b4"/>
+        <path d="M2-12h4v4H4v-1H2z" fill="#ae7754"/>
+        <path d="M-4-8h7v3h4v3H4L1-4h-3l-3 3h-4v-2l4-3z" fill="#cfdeeb"/>
+        <path d="M-10-2h6v2h-7v-1h1zm14-1h5v2H4z" fill="#182330"/>
+    </g></g>
+      <g class="pitcher-reset" opacity="0"><g shape-rendering="crispEdges">
+      <ellipse cy=".4" rx="9" ry="1.2" fill="#15232b" opacity=".42"/>
+      <path d="M-3-20h6v2h2v2h-8z" fill="#ff9b89"/>
+      <path d="M-3-16h6v3h-1v1h-4v-1h-1z" fill="#f6d8b4"/>
+      <path d="M-3-13h7v2h1v4h-9v-2h-1v-2h2z" fill="#739ed0"/>
+      <path d="M-1-12h1v4h-1z" fill="#b9d7ee"/>
+        <path d="M-4-13h2v2h5v2h-7v-1h-2v-2h2z" fill="#f6d8b4"/>
+        <path d="M1-12h5v4H1z" fill="#ae7754"/>
+        <path d="M-4-8h8v3h1v4H2v-3H-1v3h-4v-4h1z" fill="#cfdeeb"/>
+        <path d="M-6-2h5v2h-6v-1h1zm8 0h4v1h2v1H2z" fill="#182330"/>
+    </g></g></g>
+      <g class="batting-turn-1" opacity="1">
+      <g transform="translate(126 158) scale(2.4)">
+        <g class="catcher-batter-set"><g shape-rendering="crispEdges">
+      <ellipse cy=".4" rx="10" ry="1.35" fill="#15232b" opacity=".42"/>
+      <path d="m-6-12-8-11v-3h2l9 13z" fill="#e9b978" stroke="#72533a" stroke-width=".55"/><g fill="#ffd585"><path d="M-3-22h6v2h3v2h-9z"/><path d="M-2-18h6v3H2v1h-3v-1h-1z" fill="#f8dcba"/></g>
+        <path d="M-3-14h7v3H3v4h-6v-2h-2v-3h2z" fill="#71efd4"/>
+        <path d="M-1-13h2v6h-2z" fill="#ff928d"/>
+        <path d="M0-13v2h-4v-2h-3v-2h4v1h5v1z" fill="#f8dcba"/>
+        <path d="M-4-8h8v3h1v3h2v1H3L1-5h-2l-2 3h-1v1h-3v-2l2-1z" fill="#e5eaf1"/>
+        <path d="M-8-2h5v2h-6v-1h1zm11 0h3v1h3v1H3z" fill="#19212e"/>
+    </g></g>
+        <g class="catcher-batter-swing" opacity="0"><g shape-rendering="crispEdges">
+      <ellipse cy=".4" rx="10" ry="1.35" fill="#15232b" opacity=".42"/>
+      <path d="M6-12 19-15h3v2L7-10z" fill="#e9b978" stroke="#72533a" stroke-width=".55"/><g fill="#ffd585"><path d="M-1-22h6v2h3v2H0v-1h-1z"/><path d="M0-18h6v4H1v-1H0z" fill="#f8dcba"/></g>
+        <path d="M-3-14h7v3H3v4H-4v-5h1z" fill="#71efd4"/>
+        <path d="M-1-13h4v1H1v5h-2z" fill="#ff928d"/>
+        <path d="M2-14h3v2h5v2H5v-1H1z" fill="#f8dcba"/>
+        <path d="M-4-8h7v3H2v3h2v1H0l-2-4-2 2h-2v2h-2v-3l3-2z" fill="#e5eaf1"/>
+        <path d="M-9-2h5v2h-6v-1h1zm9 0h4v1h3v1H0z" fill="#19212e"/>
+    </g></g>
+      </g>
+    </g><g class="batting-turn-2" opacity="0">
+      <g transform="translate(126 158) scale(2.4)">
+        <g class="catcher-batter-set"><g shape-rendering="crispEdges">
+      <ellipse cy=".4" rx="10" ry="1.35" fill="#15232b" opacity=".42"/>
+      <path d="m-6-12-8-11v-3h2l9 13z" fill="#e9b978" stroke="#72533a" stroke-width=".55"/><g fill="#f1a9bf"><path d="M-3-22h6v2h3v2h-9z"/><path d="M-2-18h6v3H2v1h-3v-1h-1z" fill="#f8dcba"/></g>
+        <path d="M-3-14h7v3H3v4h-6v-2h-2v-3h2z" fill="#ffb782"/>
+        <path d="M-1-13h2v6h-2z" fill="#79d7f7"/>
+        <path d="M0-13v2h-4v-2h-3v-2h4v1h5v1z" fill="#f8dcba"/>
+        <path d="M-4-8h8v3h1v3h2v1H3L1-5h-2l-2 3h-1v1h-3v-2l2-1z" fill="#e5eaf1"/>
+        <path d="M-8-2h5v2h-6v-1h1zm11 0h3v1h3v1H3z" fill="#19212e"/>
+    </g></g>
+        <g class="catcher-batter-swing" opacity="0"><g shape-rendering="crispEdges">
+      <ellipse cy=".4" rx="10" ry="1.35" fill="#15232b" opacity=".42"/>
+      <path d="M6-12 19-15h3v2L7-10z" fill="#e9b978" stroke="#72533a" stroke-width=".55"/><g fill="#f1a9bf"><path d="M-1-22h6v2h3v2H0v-1h-1z"/><path d="M0-18h6v4H1v-1H0z" fill="#f8dcba"/></g>
+        <path d="M-3-14h7v3H3v4H-4v-5h1z" fill="#ffb782"/>
+        <path d="M-1-13h4v1H1v5h-2z" fill="#79d7f7"/>
+        <path d="M2-14h3v2h5v2H5v-1H1z" fill="#f8dcba"/>
+        <path d="M-4-8h7v3H2v3h2v1H0l-2-4-2 2h-2v2h-2v-3l3-2z" fill="#e5eaf1"/>
+        <path d="M-9-2h5v2h-6v-1h1zm9 0h4v1h3v1H0z" fill="#19212e"/>
+    </g></g>
+      </g>
+    </g><g class="batting-turn-3" opacity="0">
+      <g transform="translate(126 158) scale(2.4)">
+        <g class="catcher-batter-set"><g shape-rendering="crispEdges">
+      <ellipse cy=".4" rx="10" ry="1.35" fill="#15232b" opacity=".42"/>
+      <path d="m-6-12-8-11v-3h2l9 13z" fill="#e9b978" stroke="#72533a" stroke-width=".55"/><g fill="#a1ecc5"><path d="M-3-22h6v2h3v2h-9z"/><path d="M-2-18h6v3H2v1h-3v-1h-1z" fill="#f8dcba"/></g>
+        <path d="M-3-14h7v3H3v4h-6v-2h-2v-3h2z" fill="#c6adf4"/>
+        <path d="M-1-13h2v6h-2z" fill="#ff9b9f"/>
+        <path d="M0-13v2h-4v-2h-3v-2h4v1h5v1z" fill="#f8dcba"/>
+        <path d="M-4-8h8v3h1v3h2v1H3L1-5h-2l-2 3h-1v1h-3v-2l2-1z" fill="#e5eaf1"/>
+        <path d="M-8-2h5v2h-6v-1h1zm11 0h3v1h3v1H3z" fill="#19212e"/>
+    </g></g>
+        <g class="catcher-batter-swing" opacity="0"><g shape-rendering="crispEdges">
+      <ellipse cy=".4" rx="10" ry="1.35" fill="#15232b" opacity=".42"/>
+      <path d="M6-12 19-15h3v2L7-10z" fill="#e9b978" stroke="#72533a" stroke-width=".55"/><g fill="#a1ecc5"><path d="M-1-22h6v2h3v2H0v-1h-1z"/><path d="M0-18h6v4H1v-1H0z" fill="#f8dcba"/></g>
+        <path d="M-3-14h7v3H3v4H-4v-5h1z" fill="#c6adf4"/>
+        <path d="M-1-13h4v1H1v5h-2z" fill="#ff9b9f"/>
+        <path d="M2-14h3v2h5v2H5v-1H1z" fill="#f8dcba"/>
+        <path d="M-4-8h7v3H2v3h2v1H0l-2-4-2 2h-2v2h-2v-3l3-2z" fill="#e5eaf1"/>
+        <path d="M-9-2h5v2h-6v-1h1zm9 0h4v1h3v1H0z" fill="#19212e"/>
+    </g></g>
+      </g>
+    </g>
+      <g class="catcher-pitch-ball" opacity="0"><use href="#baseball-sprite"/></g>
+      <g shape-rendering="crispEdges">
+        <path d="M232 176h29l-4-14-13-5-16 6z" fill="#364453" stroke="#1c252e" stroke-width="2"/>
+        <path d="M230 167l-12-7-3-9 3-6 5 1 4 7 3-12 5-3 6 2 6 8 4 1 3 6-5 10-8 4z"
+              fill="#b98259" stroke="#382821" stroke-width="2"/>
+        <path d="M222 151l8 9 11 2 7-6m-17-13 6 9m-1-10 7 8" fill="none" stroke="#f0c48b"/>
+        <path d="m231 153 7 1 6-3-2 6-5 2z" fill="#704a39"/>
+      </g>
+      <rect y="175" width="361" height="25" fill="#302521"/>
+      <path d="M0 175.5H361" stroke="#886549"/>
+      <rect x="255" y="12" width="94" height="16" rx="2" fill="#0c1c27" stroke="#3b6b6c"/>
+      <circle cx="265" cy="20" r="2" fill="#a5f1dc"/>
+      <text x="272" y="23" font-size="8" letter-spacing=".65" fill="#d0f2ea">CATCHER POV</text>
     </g>
     <g class="homer-banner" opacity="0">
       <rect x="94" y="32" width="173" height="24" rx="2" fill="#281f1c" stroke="#b98952"/>
