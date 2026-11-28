@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="230" viewBox="0 0 900 230" role="img" aria-labelledby="pulse-title pulse-desc">
-<title id="pulse-title">3 contributions today — 2026-11-27 UTC</title>
-<desc id="pulse-desc">The count is from today's GitHub contribution calendar. The waveform grows taller and moves faster as contributions increase. Updated 11/28 08:57 JST.</desc>
+<title id="pulse-title">0 contributions today — 2026-11-28 UTC</title>
+<desc id="pulse-desc">The count is from today's GitHub contribution calendar. The waveform grows taller and moves faster as contributions increase. Updated 11/28 09:02 JST.</desc>
 <defs>
   <pattern id="pulse-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" stroke="#afc8d4" stroke-opacity=".65" stroke-width=".7" fill="none"/></pattern>
   <clipPath id="pulse-window"><rect x="276" y="60" width="592" height="112" rx="5"/></clipPath>
@@ -8,9 +8,9 @@
   <mask id="pulse-mask"><rect x="276" y="60" width="592" height="112" fill="url(#pulse-fade)"/></mask>
 </defs>
 <style>
-  .wave{animation:trace 2.200000s linear infinite}
-  .heart{transform-box:fill-box;transform-origin:center;animation:beat 2.200000s ease-out infinite}
-  .meter{animation:meter 2.200000s ease-out infinite}
+  .wave{animation:none}
+  .heart{transform-box:fill-box;transform-origin:center;animation:none}
+  .meter{animation:none}
   @keyframes trace{to{transform:translateX(-140px)}}
   @keyframes beat{0%,45%,100%{transform:scale(1)}10%{transform:scale(1.2)}23%{transform:scale(1)}31%{transform:scale(1.09)}}
   @keyframes meter{0%,45%,100%{opacity:.55}10%,30%{opacity:1}}
@@ -25,19 +25,19 @@
 <rect x="28" y="15" width="6" height="6" fill="#855500"/>
 <rect x="40" y="15" width="6" height="6" fill="#08786f"/>
 <text x="59" y="22" font-size="13" fill="#465f75">Contribution Pulse</text>
-  <text x="868" y="22" text-anchor="end" font-size="11" fill="#465f75">TODAY (UTC) · 2026-11-27</text>
+  <text x="868" y="22" text-anchor="end" font-size="11" fill="#465f75">TODAY (UTC) · 2026-11-28</text>
   <path d="M239 59V196" stroke="#afc8d4"/>
   <circle cx="120" cy="130" r="64" stroke="#afc8d4" stroke-width="4" fill="none"/>
   <circle cx="120" cy="130" r="74" stroke="#afc8d4" stroke-width="3" stroke-dasharray="1 10.6" fill="none"/>
-  <circle class="meter" cx="120" cy="130" r="64" stroke="#08786f" stroke-width="4" stroke-dasharray="76.000 403" stroke-linecap="round" opacity="1" transform="rotate(128 120 130)" fill="none"/>
+  <circle class="meter" cx="120" cy="130" r="64" stroke="#08786f" stroke-width="4" stroke-dasharray="0.000 403" stroke-linecap="round" opacity="0" transform="rotate(128 120 130)" fill="none"/>
   <path class="heart" d="M120 99L112 91C105 84 113 76 120 84C127 76 135 84 128 91Z" fill="#08786f"/>
-  <text x="120" y="143" text-anchor="middle" font-size="49" font-weight="800" letter-spacing="-1.5" fill="#08786f">3</text>
+  <text x="120" y="143" text-anchor="middle" font-size="49" font-weight="800" letter-spacing="-1.5" fill="#08786f">0</text>
   <text x="120" y="160" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="1.2" fill="#465f75">TODAY'S</text>
   <text x="120" y="175" text-anchor="middle" font-size="9.5" font-weight="650" letter-spacing=".5" fill="#465f75">CONTRIBUTIONS</text>
   <rect x="276" y="60" width="592" height="112" rx="5" fill="#dcebf0" stroke="#afc8d4"/>
   <rect x="276" y="60" width="592" height="112" rx="5" fill="url(#pulse-grid)"/>
   <path d="M276 113H868" stroke="#08786f" stroke-opacity=".15" fill="none"/>
-  <g clip-path="url(#pulse-window)" mask="url(#pulse-mask)"><g transform="translate(276 0)"><g class="wave" fill="none" stroke="#08786f" stroke-width="2.240" stroke-linecap="round" stroke-linejoin="round"><path transform="translate(0 0)" d="M0 113H17C22 113 22 110.780 27 110.780S32 113 38 113H47L52 115.960L59 98.200L66 122.620L73 113H85Q96 113 100 107.080Q108 107.080 115 113H140"/><path transform="translate(140 0)" d="M0 113H17C22 113 22 110.780 27 110.780S32 113 38 113H47L52 115.960L59 98.200L66 122.620L73 113H85Q96 113 100 107.080Q108 107.080 115 113H140"/><path transform="translate(280 0)" d="M0 113H17C22 113 22 110.780 27 110.780S32 113 38 113H47L52 115.960L59 98.200L66 122.620L73 113H85Q96 113 100 107.080Q108 107.080 115 113H140"/><path transform="translate(420 0)" d="M0 113H17C22 113 22 110.780 27 110.780S32 113 38 113H47L52 115.960L59 98.200L66 122.620L73 113H85Q96 113 100 107.080Q108 107.080 115 113H140"/><path transform="translate(560 0)" d="M0 113H17C22 113 22 110.780 27 110.780S32 113 38 113H47L52 115.960L59 98.200L66 122.620L73 113H85Q96 113 100 107.080Q108 107.080 115 113H140"/><path transform="translate(700 0)" d="M0 113H17C22 113 22 110.780 27 110.780S32 113 38 113H47L52 115.960L59 98.200L66 122.620L73 113H85Q96 113 100 107.080Q108 107.080 115 113H140"/></g></g></g>
-  <text x="276" y="198" font-size="11" fill="#465f75">More contributions. Stronger pulse.</text>
-  <text x="868" y="198" text-anchor="end" font-size="10" fill="#465f75">Updated 11/28 08:57 JST</text>
+  <g clip-path="url(#pulse-window)" mask="url(#pulse-mask)"><g transform="translate(276 0)"><g class="wave" fill="none" stroke="#08786f" stroke-width="2.000" stroke-linecap="round" stroke-linejoin="round"><path transform="translate(0 0)" d="M0 113H17C22 113 22 113.000 27 113.000S32 113 38 113H47L52 113.000L59 113.000L66 113.000L73 113H85Q96 113 100 113.000Q108 113.000 115 113H140"/><path transform="translate(140 0)" d="M0 113H17C22 113 22 113.000 27 113.000S32 113 38 113H47L52 113.000L59 113.000L66 113.000L73 113H85Q96 113 100 113.000Q108 113.000 115 113H140"/><path transform="translate(280 0)" d="M0 113H17C22 113 22 113.000 27 113.000S32 113 38 113H47L52 113.000L59 113.000L66 113.000L73 113H85Q96 113 100 113.000Q108 113.000 115 113H140"/><path transform="translate(420 0)" d="M0 113H17C22 113 22 113.000 27 113.000S32 113 38 113H47L52 113.000L59 113.000L66 113.000L73 113H85Q96 113 100 113.000Q108 113.000 115 113H140"/><path transform="translate(560 0)" d="M0 113H17C22 113 22 113.000 27 113.000S32 113 38 113H47L52 113.000L59 113.000L66 113.000L73 113H85Q96 113 100 113.000Q108 113.000 115 113H140"/><path transform="translate(700 0)" d="M0 113H17C22 113 22 113.000 27 113.000S32 113 38 113H47L52 113.000L59 113.000L66 113.000L73 113H85Q96 113 100 113.000Q108 113.000 115 113H140"/></g></g></g>
+  <text x="276" y="198" font-size="11" fill="#465f75">No contributions yet · calm signal</text>
+  <text x="868" y="198" text-anchor="end" font-size="10" fill="#465f75">Updated 11/28 09:02 JST</text>
 </g></svg>
