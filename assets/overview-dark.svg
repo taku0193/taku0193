@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="300" viewBox="0 0 900 300" role="img" aria-labelledby="overview-title overview-desc">
-<title id="overview-title">Activity summary — 574 contributions in the past year</title>
-<desc id="overview-desc">Commits: 364; Pull requests: 16; Code reviews: 0; Issues: 12; Repositories created: 10; Private · count only: 172. Public activity and anonymized private counts. Bars show shares of all contributions.</desc>
+<title id="overview-title">Activity summary — 579 contributions in the past year</title>
+<desc id="overview-desc">Commits: 364; Pull requests: 16; Code reviews: 0; Issues: 12; Repositories created: 10; Private · count only: 177. Public activity and anonymized private counts. Bars show shares of all contributions.</desc>
 <g font-family="ui-monospace, Menlo, Consolas, monospace">
 
 <rect x=".5" y=".5" width="899" height="299" rx="10" fill="#101929" stroke="#314a60"/>
@@ -12,33 +12,33 @@
 <text x="59" y="22" font-size="13" fill="#a6bfd2">Activity Summary</text>
 <text x="868" y="22" text-anchor="end" font-size="11" fill="#a6bfd2">PAST YEAR</text>
 <rect x="28" y="53" width="291" height="195" rx="5" fill="#17273a" stroke="#314a60"/>
-<text x="48" y="118" font-size="58" font-weight="800" letter-spacing="-1.5" fill="#89efd6">574</text>
+<text x="48" y="118" font-size="58" font-weight="800" letter-spacing="-1.5" fill="#89efd6">579</text>
 <text x="48" y="139" font-size="11" font-weight="650" letter-spacing="1" fill="#a6bfd2">TOTAL CONTRIBUTIONS</text>
 <path d="M48 152H299" stroke="#314a60"/>
-<text x="48" y="177" font-size="13" fill="#a6bfd2">Last 7 days</text><text x="299" y="177" text-anchor="end" font-size="15" font-weight="600" fill="#f0f7ff">40</text>
-<text x="48" y="205" font-size="13" fill="#a6bfd2">Active days</text><text x="299" y="205" text-anchor="end" font-size="15" font-weight="600" fill="#f0f7ff">55</text>
-<text x="48" y="233" font-size="13" fill="#a6bfd2">Longest streak</text><text x="299" y="233" text-anchor="end" font-size="15" font-weight="600" fill="#f0f7ff">12 days</text>
+<text x="48" y="177" font-size="13" fill="#a6bfd2">Last 7 days</text><text x="299" y="177" text-anchor="end" font-size="15" font-weight="600" fill="#f0f7ff">45</text>
+<text x="48" y="205" font-size="13" fill="#a6bfd2">Active days</text><text x="299" y="205" text-anchor="end" font-size="15" font-weight="600" fill="#f0f7ff">56</text>
+<text x="48" y="233" font-size="13" fill="#a6bfd2">Longest streak</text><text x="299" y="233" text-anchor="end" font-size="15" font-weight="600" fill="#f0f7ff">13 days</text>
 <text x="351" y="66" font-size="11" font-weight="650" letter-spacing="1" fill="#a6bfd2">BY CONTRIBUTION TYPE</text>
 <text x="351" y="95" font-size="13" fill="#a6bfd2">Commits</text>
 <rect x="528" y="86" width="214" height="8" rx="2" fill="#1d3043"/>
-<rect x="528" y="86" width="135.707" height="8" rx="2" fill="#89efd6"/>
+<rect x="528" y="86" width="134.535" height="8" rx="2" fill="#89efd6"/>
 <text x="854" y="95" text-anchor="end" font-size="14" font-weight="600" fill="#f0f7ff">364</text><text x="351" y="123" font-size="13" fill="#a6bfd2">Pull requests</text>
 <rect x="528" y="114" width="214" height="8" rx="2" fill="#1d3043"/>
-<rect x="528" y="114" width="5.965" height="8" rx="2" fill="#4b9be8"/>
+<rect x="528" y="114" width="5.914" height="8" rx="2" fill="#4b9be8"/>
 <text x="854" y="123" text-anchor="end" font-size="14" font-weight="600" fill="#f0f7ff">16</text><text x="351" y="151" font-size="13" fill="#a6bfd2">Code reviews</text>
 <rect x="528" y="142" width="214" height="8" rx="2" fill="#1d3043"/>
 <rect x="528" y="142" width="0.000" height="8" rx="2" fill="#b497ec"/>
 <text x="854" y="151" text-anchor="end" font-size="14" font-weight="600" fill="#f0f7ff">0</text><text x="351" y="179" font-size="13" fill="#a6bfd2">Issues</text>
 <rect x="528" y="170" width="214" height="8" rx="2" fill="#1d3043"/>
-<rect x="528" y="170" width="4.474" height="8" rx="2" fill="#d9a241"/>
+<rect x="528" y="170" width="4.435" height="8" rx="2" fill="#d9a241"/>
 <text x="854" y="179" text-anchor="end" font-size="14" font-weight="600" fill="#f0f7ff">12</text><text x="351" y="207" font-size="13" fill="#a6bfd2">Repositories created</text>
 <rect x="528" y="198" width="214" height="8" rx="2" fill="#1d3043"/>
-<rect x="528" y="198" width="3.728" height="8" rx="2" fill="#8499ac"/>
+<rect x="528" y="198" width="3.696" height="8" rx="2" fill="#8499ac"/>
 <text x="854" y="207" text-anchor="end" font-size="14" font-weight="600" fill="#f0f7ff">10</text><text x="351" y="235" font-size="13" fill="#a6bfd2">Private · count only</text>
 <rect x="528" y="226" width="214" height="8" rx="2" fill="#1d3043"/>
-<rect x="528" y="226" width="64.125" height="8" rx="2" fill="#48b59b"/>
-<text x="854" y="235" text-anchor="end" font-size="14" font-weight="600" fill="#f0f7ff">172</text>
+<rect x="528" y="226" width="65.420" height="8" rx="2" fill="#48b59b"/>
+<text x="854" y="235" text-anchor="end" font-size="14" font-weight="600" fill="#f0f7ff">177</text>
 <path d="M28 263H872" stroke="#314a60"/>
 <text x="28" y="284" font-size="10" fill="#a6bfd2">2025-11-28 — 2026-11-28 (UTC) · Includes anonymized private counts</text>
-<text x="868" y="284" text-anchor="end" font-size="10" fill="#a6bfd2">Updated 11/28 10:08 JST</text>
+<text x="868" y="284" text-anchor="end" font-size="10" fill="#a6bfd2">Updated 11/28 10:13 JST</text>
 </g></svg>
